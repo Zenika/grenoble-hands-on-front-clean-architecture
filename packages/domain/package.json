@@ -1,0 +1,10 @@
+{
+  "name": "hands-on-domain",
+  "version": "0.0.0",
+  "author": "Martin Choraine <martin.choraine@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
