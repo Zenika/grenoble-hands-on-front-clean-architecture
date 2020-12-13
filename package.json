@@ -4,5 +4,8 @@
   "devDependencies": {
     "lerna": "^3.22.1",
     "typescript": "^4.1.3"
+  },
+  "scripts": {
+    "test": "lerna exec jest"
   }
 }

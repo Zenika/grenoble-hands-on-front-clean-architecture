@@ -1,35 +1,23 @@
 import {WeatherRepository} from "@grenoble-hands-on/domain/src/ports/repositories/WeatherRepository";
 import {GeoPosition} from "@grenoble-hands-on/domain/src/entities/GeoPosition";
 import {DailyWeather} from "@grenoble-hands-on/domain/src/entities/DailyWeather";
+import {WeatherMapper} from "./mapper/WeatherMapper";
+import {Weather7Timer} from "./dto/Weather7Timer";
 
-interface HttpClient {
+export interface HttpClient {
     get<T>(url: string): Promise<T>
-}
-
-interface Weather7Timer {
-    date: string
-    temp2m: { max: number, min: number }
-    weather: string
-    wind10m_max: number
-}
-
-export class WeatherMapper {
-    static toEntity(weather: Weather7Timer): DailyWeather {
-        return {
-            day: new Date(),
-            temperatureMax: weather.temp2m.max,
-            temperatureMin: weather.temp2m.min,
-            weather: weather.weather
-        }
-    }
 }
 
 export class WeatherRepositoryHttp implements WeatherRepository {
 
-    constructor(private http: HttpClient) {}
+    private BASE_URL = `http://www.7timer.info/bin/api.pl`;
+
+    constructor(private http: HttpClient) {
+    }
 
     getWeekWeather(geoPosition: GeoPosition): Promise<DailyWeather[]> {
-        return this.http.get<Weather7Timer[]>("/mon/api").then((res) => res.map(weather => WeatherMapper.toEntity(weather)))
+        return this.http.get<Weather7Timer>(`${this.BASE_URL}?lon=${geoPosition.longitude}&lat=${geoPosition.latitude}&product=civillight&output=json`)
+            .then((res) => WeatherMapper.toDomain(res))
     }
 
 }
