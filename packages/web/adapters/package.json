@@ -1,14 +1,14 @@
 {
-  "name": "@grenoble-hands-on/domain",
+  "name": "@grenoble-hands-on/web-adapters",
   "version": "0.0.0",
   "author": "Martin Choraine <martin.choraine@gmail.com>",
   "homepage": "",
   "license": "ISC",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "jest",
-    "prepublish": "tsc"
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@grenoble-hands-on/domain": "0.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
