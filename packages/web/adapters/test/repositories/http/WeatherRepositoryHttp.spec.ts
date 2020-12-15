@@ -1,5 +1,5 @@
-import {HttpClient, WeatherRepositoryHttp} from "../../../src/repositories/http/WeatherRepositoryHttp";
-import {Weather7Timer} from "../../../src/repositories/http/dto/Weather7Timer";
+import {HttpClient, WeatherRepositoryHttp} from "../../../src";
+import { Weather7Timer } from "../../../src/repositories/http/dto/Weather7Timer";
 
 describe('WeatherRepository HTTP', () => {
     test('get week weather', async () => {

@@ -1,5 +1,4 @@
-import {GetCitiesUseCase} from "../../../../domain/src/usecases/GetCitiesUseCase";
-import {City} from "../../../../domain/src/entities/City";
+import {City, GetCitiesUseCase} from "@grenoble-hands-on/domain";
 import {Presenter} from "./Presenter";
 
 export class CitiesPresenterVM {

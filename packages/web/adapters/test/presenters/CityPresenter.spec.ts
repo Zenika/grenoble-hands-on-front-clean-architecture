@@ -1,11 +1,13 @@
-import {CityPresenter} from "../../src/presenters/CityPresenter";
-import {GetCityUseCase} from "../../../../domain/src/usecases/GetCityUseCase";
-import {RetrieveCityWeatherUseCase} from "../../../../domain/src/usecases/RetrieveCityWeatherUseCase";
-import {GetCityRequest} from "../../../../domain/src/ports/request/GetCityRequest";
-import {GetCityPresenter} from "../../../../domain/src/ports/presenters/GetCityPresenter";
-import {GeoPosition} from "../../../../domain/src/entities/GeoPosition";
-import {RetrieveWeatherRequest} from "../../../../domain/src/ports/request/RetrieveWeatherRequest";
-import {RetrieveWeatherPresenter} from "../../../../domain/src/ports/presenters/RetrieveWeatherPresenter";
+import {
+    GeoPosition,
+    GetCityPresenter,
+    GetCityRequest,
+    GetCityUseCase,
+    RetrieveWeatherPresenter,
+    RetrieveWeatherRequest,
+    RetrieveCityWeatherUseCase
+} from "@grenoble-hands-on/domain";
+import {CityPresenter} from "../../src";
 
 function createGetCityUseCase(partialUseCase: Partial<GetCityUseCase>) {
     return partialUseCase as GetCityUseCase;

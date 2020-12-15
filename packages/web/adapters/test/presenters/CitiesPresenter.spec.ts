@@ -1,7 +1,5 @@
-import {GetCitiesPresenter} from "../../../../domain/src/ports/presenters/GetCitiesPresenter";
-import {GeoPosition} from "../../../../domain/src/entities/GeoPosition";
-import {GetCitiesUseCase} from "../../../../domain/src/usecases/GetCitiesUseCase";
-import {CitiesPresenter} from "../../src/presenters/CitiesPresenter";
+import {GeoPosition, GetCitiesPresenter, GetCitiesUseCase} from "@grenoble-hands-on/domain";
+import { CitiesPresenter } from "../../src";
 
 function createUseCase(partialUseCase: Partial<GetCitiesUseCase>) {
     return partialUseCase as GetCitiesUseCase;

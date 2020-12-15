@@ -1,8 +1,6 @@
-import {WeatherRepository} from "@grenoble-hands-on/domain/src/ports/repositories/WeatherRepository";
-import {GeoPosition} from "@grenoble-hands-on/domain/src/entities/GeoPosition";
-import {DailyWeather} from "@grenoble-hands-on/domain/src/entities/DailyWeather";
 import {WeatherMapper} from "./mapper/WeatherMapper";
 import {Weather7Timer} from "./dto/Weather7Timer";
+import {DailyWeather, GeoPosition, WeatherRepository} from "@grenoble-hands-on/domain";
 
 export interface HttpClient {
     get<T>(url: string): Promise<T>

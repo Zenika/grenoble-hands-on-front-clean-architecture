@@ -1,11 +1,11 @@
-import {DailyWeather} from "@grenoble-hands-on/domain/src/entities/DailyWeather";
+import {DailyWeather} from "@grenoble-hands-on/domain";
 import {Weather7Timer} from "../dto/Weather7Timer";
 
 export class WeatherMapper {
     static toDomain(weather: Weather7Timer): DailyWeather[] {
         return weather.dataseries.map(serie => {
             return {
-                day: this.parseDate(serie.date),
+                day: this.parseDate(serie.date.toString()),
                 temperatureMax: serie.temp2m.max,
                 temperatureMin: serie.temp2m.min,
                 weather: serie.weather

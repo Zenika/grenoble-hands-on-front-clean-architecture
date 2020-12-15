@@ -1,11 +1,13 @@
-import {City} from "../../../../domain/src/entities/City";
-import {RetrieveWeatherPresenter} from "../../../../domain/src/ports/presenters/RetrieveWeatherPresenter";
-import {DailyWeather} from "../../../../domain/src/entities/DailyWeather";
 import {Presenter} from "./Presenter";
-import {GetCityUseCase} from "../../../../domain/src/usecases/GetCityUseCase";
-import {RetrieveCityWeatherUseCase} from "../../../../domain/src/usecases/RetrieveCityWeatherUseCase";
-import {GetCityRequest} from "@grenoble-hands-on/domain/src/ports/request/GetCityRequest";
-import {RetrieveWeatherRequest} from "../../../../domain/src/ports/request/RetrieveWeatherRequest";
+import {
+    City,
+    DailyWeather,
+    GetCityRequest,
+    GetCityUseCase,
+    RetrieveWeatherPresenter,
+    RetrieveWeatherRequest
+} from "@grenoble-hands-on/domain";
+import {RetrieveCityWeatherUseCase} from "@grenoble-hands-on/domain/dist/usecases/RetrieveCityWeatherUseCase";
 
 export class CityPresenterVM {
     city: City | undefined

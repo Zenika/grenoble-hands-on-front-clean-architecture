@@ -1,6 +1,4 @@
-import {CityRepository} from "@grenoble-hands-on/domain/src/ports/repositories/CityRepository";
-import {City} from "@grenoble-hands-on/domain/src/entities/City";
-import {GeoPosition} from "@grenoble-hands-on/domain/src/entities/GeoPosition";
+import {City, CityRepository, GeoPosition} from "@grenoble-hands-on/domain";
 
 const INITIAL_CITIES: City[] = [
     {name: "GRENOBLE", position: new GeoPosition(45.183916, 5.703630)},

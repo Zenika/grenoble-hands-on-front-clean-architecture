@@ -2,13 +2,14 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outFile": "dist/index.js",
-    "strict": true
+    "module": "CommonJS",
+    "target": "ES6",
+    "outDir": "dist"
   },
   "files": [
-    "src/index.ts"
+    "./src/index.ts"
   ],
   "include": [
-    "src/**/*.d.ts"
+    "./src/**/*"
   ]
 }
