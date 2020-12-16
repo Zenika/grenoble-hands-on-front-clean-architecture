@@ -1,4 +1,6 @@
 export * from './presenters/CitiesPresenter'
 export * from './presenters/CityPresenter'
+export * from './presenters/CitiesPresenterFactory'
+export * from './presenters/CityPresenterFactory'
 export * from './repositories/http/WeatherRepositoryHttp'
 export * from './repositories/inmemory/CityRepositoryInMemory'

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {CitiesPresenter, CitiesPresenterVM} from "@grenoble-hands-on/web-adapters";
-import {GetCitiesUseCase} from "@grenoble-hands-on/domain";
+import {CitiesPresenter, CitiesPresenterFactory, CitiesPresenterVM} from "@grenoble-hands-on/web-adapters";
 
 @Component({
   selector: 'app-cities',
@@ -9,8 +8,8 @@ import {GetCitiesUseCase} from "@grenoble-hands-on/domain";
   providers: [
     {
       provide: CitiesPresenter,
-      useFactory: (getCitiesUseCase: GetCitiesUseCase) => new CitiesPresenter(getCitiesUseCase),
-      deps: [GetCitiesUseCase]
+      useFactory: (presenterFactory: CitiesPresenterFactory) => presenterFactory.createCitiesPresenter(),
+      deps: [CitiesPresenterFactory]
     }
   ]
 })
@@ -22,7 +21,6 @@ export class CitiesComponent implements OnInit {
   ngOnInit(): void {
     this.citiesPresenter.fetchCities()
     this.citiesPresenter.onVmUpdate(vm => {
-      console.log(vm)
       this.vm = vm
     })
   }

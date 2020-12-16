@@ -1,6 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CitiesComponent } from './cities.component';
+import {CitiesComponent} from './cities.component';
+import {CitiesPresenterFactory, CitiesPresenterVM} from "@grenoble-hands-on/web-adapters";
 
 describe('CitiesComponent', () => {
   let component: CitiesComponent;
@@ -8,9 +9,27 @@ describe('CitiesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CitiesComponent ]
+      declarations: [CitiesComponent],
+      providers: [
+        {
+          provide: CitiesPresenterFactory,
+          useValue: {
+            createCitiesPresenter() {
+              return {
+                vm: new CitiesPresenterVM(),
+                onVmUpdate() {
+
+                },
+                fetchCities() {
+
+                }
+              }
+            }
+          }
+        }
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

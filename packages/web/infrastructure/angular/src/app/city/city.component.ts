@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {CityPresenter, CityPresenterVM} from "@grenoble-hands-on/web-adapters";
+import {CityPresenter, CityPresenterFactory, CityPresenterVM} from "@grenoble-hands-on/web-adapters";
 import {ActivatedRoute} from "@angular/router";
-import {GetCityUseCase, RetrieveCityWeatherUseCase} from "@grenoble-hands-on/domain";
 
 @Component({
   selector: 'app-city',
@@ -10,8 +9,8 @@ import {GetCityUseCase, RetrieveCityWeatherUseCase} from "@grenoble-hands-on/dom
   providers: [
     {
       provide: CityPresenter,
-      useFactory: (getCityUseCase: GetCityUseCase, retrieveCityWeatherUseCase: RetrieveCityWeatherUseCase) => new CityPresenter(getCityUseCase, retrieveCityWeatherUseCase),
-      deps: [GetCityUseCase, RetrieveCityWeatherUseCase]
+      useFactory: (presenterFactory: CityPresenterFactory) => presenterFactory.createCityPresenter(),
+      deps: [CityPresenterFactory]
     }
   ]
 })
