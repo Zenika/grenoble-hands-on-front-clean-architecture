@@ -3,7 +3,7 @@
   <div class="panel-heading"><h2>{{vm.city?.name}}</h2></div>
   <ng-container>
     <div class="panel-block" *ngIf="vm.weather?.length">
-      <table class="table">
+      <table id="daily-weather" class="table" >
         <tr>
           <th>Date</th>
           <th>Weather</th>
@@ -12,7 +12,7 @@
         </tr>
         <tr *ngFor="let weather of vm.weather">
           <td>{{weather.day}}</td>
-          <td><img [src]="'http://www.7timer.info/img/misc/about_civil_'+weather.weather+'.png'" alt=""></td>
+          <td><img [src]="'http://www.7timer.info/img/misc/about_civil_'+weather.weather+'.png'" alt="" width="50"></td>
           <td>{{weather.temperatureMax}}</td>
           <td>{{weather.temperatureMin}}</td>
         </tr>
