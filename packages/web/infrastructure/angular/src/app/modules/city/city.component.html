@@ -1,5 +1,5 @@
 <h1 class="title">Cities weather</h1>
-<article class="panel is-primary">
+<article class="panel is-primary" *ngIf="vm$ | async as vm">
   <div class="panel-heading"><h2>{{vm.city?.name}}</h2></div>
   <ng-container>
     <div class="panel-block" *ngIf="vm.weather?.length">

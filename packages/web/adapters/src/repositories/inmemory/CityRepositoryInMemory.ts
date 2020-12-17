@@ -31,4 +31,9 @@ export class CityRepositoryInMemory implements CityRepository {
         }
     }
 
+    addCity(city: City): Promise<void> {
+        this.cities = [...this.cities, city];
+        return Promise.resolve()
+    }
+
 }

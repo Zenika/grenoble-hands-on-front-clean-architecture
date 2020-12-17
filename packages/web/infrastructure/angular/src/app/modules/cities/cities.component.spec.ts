@@ -17,8 +17,8 @@ describe('CitiesComponent', () => {
             createCitiesPresenter() {
               return {
                 vm: new CitiesPresenterVM(),
-                onVmUpdate() {
-
+                onVmUpdate(subscriber: (vm: CitiesPresenterVM) => void) {
+                  subscriber(this.vm)
                 },
                 fetchCities() {
 

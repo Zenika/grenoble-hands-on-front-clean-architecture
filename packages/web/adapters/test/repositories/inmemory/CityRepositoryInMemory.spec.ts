@@ -44,4 +44,19 @@ describe('CityRepositoryInMemory', () => {
         // Then
         expect(request).toThrowError("NOWHERE doesn't exist in this repository")
     });
+
+    test('add new city', async () => {
+        // Given
+        const cities: City[] = [];
+        const cityRepository = new CityRepositoryInMemory(cities);
+
+        // When
+        const cityToAdd = {name: "GRENOBLE", position: new GeoPosition(45.183916, 5.703630)};
+        await cityRepository.addCity(cityToAdd);
+
+        // Then
+        const cityAdded = await cityRepository.getCity( "GRENOBLE");
+        expect(cityAdded).toEqual(cityToAdd)
+    });
+
 });

@@ -54,9 +54,8 @@ function mountComponent(vm: CityPresenterVM = new CityPresenterVM()) {
         useValue: {
           createCityPresenter() {
             return {
-              vm,
-              onVmUpdate() {
-
+              onVmUpdate(subscriber: (vm: CityPresenterVM) => void) {
+                subscriber(vm)
               },
               fetchCityWithWeather() {
 

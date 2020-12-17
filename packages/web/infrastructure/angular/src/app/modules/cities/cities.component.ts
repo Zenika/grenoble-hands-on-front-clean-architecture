@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CitiesPresenter, CitiesPresenterFactory, CitiesPresenterVM} from "@grenoble-hands-on/web-adapters";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-cities',
@@ -14,15 +15,15 @@ import {CitiesPresenter, CitiesPresenterFactory, CitiesPresenterVM} from "@greno
   ]
 })
 export class CitiesComponent implements OnInit {
-  public vm: CitiesPresenterVM = this.citiesPresenter.vm;
+  vm$: Observable<CitiesPresenterVM> = new Observable<CitiesPresenterVM>(subscriber =>
+    this.citiesPresenter.onVmUpdate(vm => subscriber.next(vm))
+  );
 
-  constructor(private citiesPresenter: CitiesPresenter) { }
+  constructor(private citiesPresenter: CitiesPresenter) {
+  }
 
   ngOnInit(): void {
     this.citiesPresenter.fetchCities()
-    this.citiesPresenter.onVmUpdate(vm => {
-      this.vm = vm
-    })
   }
 
 }

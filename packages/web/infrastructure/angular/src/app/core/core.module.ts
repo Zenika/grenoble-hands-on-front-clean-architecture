@@ -1,12 +1,15 @@
 import {NgModule} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {
+  AddCityPresenterFactory,
   CitiesPresenterFactory,
   CityPresenterFactory,
   CityRepositoryInMemory,
-  HttpClient as IHttpClient, WeatherRepositoryHttp
+  HttpClient as IHttpClient,
+  WeatherRepositoryHttp
 } from "@grenoble-hands-on/web-adapters";
 import {
+  AddNewCityUseCase,
   CityRepository,
   GetCitiesUseCase,
   GetCityUseCase,
@@ -47,6 +50,11 @@ import {
       deps: ['CityRepository']
     },
     {
+      provide: AddNewCityUseCase,
+      useFactory: (cityRepository: CityRepository) => new AddNewCityUseCase(cityRepository),
+      deps: ['CityRepository']
+    },
+    {
       provide: RetrieveCityWeatherUseCase,
       useFactory: (weatherRepository: WeatherRepository) => new RetrieveCityWeatherUseCase(weatherRepository),
       deps: ['WeatherRepository']
@@ -60,6 +68,11 @@ import {
       provide: CitiesPresenterFactory,
       useFactory: (getCitiesUseCase: GetCitiesUseCase) => new CitiesPresenterFactory(getCitiesUseCase),
       deps: [GetCitiesUseCase]
+    },
+    {
+      provide: AddCityPresenterFactory,
+      useFactory: (addNewCityUseCase: AddNewCityUseCase) => new AddCityPresenterFactory(addNewCityUseCase),
+      deps: [AddNewCityUseCase]
     },
   ]
 })

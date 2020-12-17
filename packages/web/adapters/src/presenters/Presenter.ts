@@ -13,5 +13,6 @@ export abstract class Presenter<T> {
 
     onVmUpdate(subscriber: Subscriber<T>) {
         this.subscriber = subscriber
+        this.subscriber(this.vm)
     }
 }

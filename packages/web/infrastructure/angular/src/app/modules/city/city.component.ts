@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CityPresenter, CityPresenterFactory, CityPresenterVM} from "@grenoble-hands-on/web-adapters";
 import {ActivatedRoute} from "@angular/router";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-city',
@@ -15,16 +16,15 @@ import {ActivatedRoute} from "@angular/router";
   ]
 })
 export class CityComponent implements OnInit {
-  public vm: CityPresenterVM = this.cityPresenter.vm;
+  vm$: Observable<CityPresenterVM> = new Observable<CityPresenterVM>(subscriber =>
+    this.cityPresenter.onVmUpdate(vm => subscriber.next(vm))
+  );
 
   constructor(private cityPresenter: CityPresenter, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
     this.cityPresenter.fetchCityWithWeather(this.route.snapshot.params.cityId)
-    this.cityPresenter.onVmUpdate(vm => {
-      this.vm = vm
-    })
   }
 
 }
