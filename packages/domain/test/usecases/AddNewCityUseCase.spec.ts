@@ -13,13 +13,35 @@ describe('Add new city use case', () => {
             const useCase = new AddNewCityUseCase(cityRepository as CityRepository)
 
             // When
-            useCase.execute(new AddCityRequest("Pekin", "-2", "13"), {} as AddNewCityPresenter)
+            const presenter = {
+                notifyNewCityInvalid() {
+                }
+            };
+            useCase.execute(new AddCityRequest("Pekin", "-2", "13"), presenter as AddNewCityPresenter)
         });
 
         // Then
         expect(cityAdded.name).toBe("Pekin")
         expect(cityAdded.position.latitude).toBe(-2)
         expect(cityAdded.position.longitude).toBe(13)
+    });
+
+    test('do no add city to repository when invalid', async () => {
+        // Given
+        const cityRepository: Partial<CityRepository> = {
+            addCity: jest.fn()
+        };
+        const useCase = new AddNewCityUseCase(cityRepository as CityRepository)
+
+        // When
+        const presenter = {
+            notifyNewCityInvalid(_: Map<NewCityFields, string>) {
+            }
+        };
+        await useCase.execute(new AddCityRequest("Pekin", "", ""), presenter as AddNewCityPresenter)
+
+        // Then
+        expect(cityRepository.addCity).not.toHaveBeenCalled()
     });
 
     test('city with empty name display error', async () => {
