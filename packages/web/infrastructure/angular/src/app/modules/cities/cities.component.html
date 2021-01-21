@@ -2,7 +2,7 @@
   <h1 class="title">Offices</h1>
 
   <div class="panel">
-    <a class="panel-block p-4" [routerLink]="['/', city.name]" *ngFor="let city of vm.cities">
+    <a class="panel-block p-4" [routerLink]="['/city', city.name]" *ngFor="let city of vm.cities">
       <h2 class="subtitle">{{ city.name }}</h2>
     </a>
   </div>

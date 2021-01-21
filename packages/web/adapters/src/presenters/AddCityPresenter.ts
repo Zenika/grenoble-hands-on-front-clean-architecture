@@ -1,5 +1,7 @@
-import {AddCityRequest, AddCityPresentation, City, NewCityFields, AddCityUseCase} from "@grenoble-hands-on/domain";
+import {AddCityPresentation, AddCityRequest, AddCityUseCase, City, NewCityFields} from "@grenoble-hands-on/domain";
 import {Presenter} from "./Presenter";
+import {Navigation} from "../router/Navigation";
+import {NavigationRoute} from "../router/NavigationRoute";
 
 export class AddCityPresenterVM {
     cityNameError: string | undefined;
@@ -16,7 +18,7 @@ export class AddCityPresenterVM {
 
 
 export class AddCityPresenter extends Presenter<AddCityPresenterVM>{
-    constructor(private addCityUseCase: AddCityUseCase) {
+    constructor(private addCityUseCase: AddCityUseCase, private navigator: Navigation) {
         super(new AddCityPresenterVM())
     }
 
@@ -61,6 +63,7 @@ export class AddCityPresenter extends Presenter<AddCityPresenterVM>{
                 presenter.vm.canCreateCity = errors.size == 0
             },
             notifyCityAdded(city: City) {
+                presenter.navigator.navigate(NavigationRoute.CITY(city))
             }
         };
     }

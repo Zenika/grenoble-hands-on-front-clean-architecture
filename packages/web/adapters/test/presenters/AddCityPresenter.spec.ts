@@ -1,5 +1,13 @@
-import {AddCityRequest, AddCityPresentation, AddCityUseCase, NewCityFields} from "@grenoble-hands-on/domain";
+import {
+    AddCityRequest,
+    AddCityPresentation,
+    AddCityUseCase,
+    NewCityFields,
+    City,
+    GeoPosition
+} from "@grenoble-hands-on/domain";
 import {AddCityPresenter} from "../../src";
+import {FakeNavigation} from "../../src/router/FakeNavigation";
 
 describe('AddCityPresenter', () => {
     test('display city error on validate name', () => {
@@ -12,7 +20,7 @@ describe('AddCityPresenter', () => {
                 return errors
             }
         } as AddCityUseCase
-        const presenter = new AddCityPresenter(useCase)
+        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
 
         // When
         presenter.validateCityName('')
@@ -32,7 +40,7 @@ describe('AddCityPresenter', () => {
                 return errors
             }
         } as AddCityUseCase
-        const presenter = new AddCityPresenter(useCase)
+        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
 
         // When
         presenter.validateLatitude('')
@@ -52,7 +60,7 @@ describe('AddCityPresenter', () => {
                 return errors
             }
         } as AddCityUseCase
-        const presenter = new AddCityPresenter(useCase)
+        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
 
         // When
         presenter.validateLongitude('')
@@ -73,12 +81,34 @@ describe('AddCityPresenter', () => {
                 presenter.notifyNewCityInvalid(errors)
             }
         } as AddCityUseCase
-        const presenter = new AddCityPresenter(useCase)
+        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
 
         // When
         presenter.create()
 
         // Then
         expect(presenter.vm.canCreateCity).toBeFalsy()
+    });
+
+    test('redirect to city on create success', () => {
+        // Given
+        const city = {
+            name: 'Grenoble',
+            position: new GeoPosition(0, 0)
+        };
+        const navigator = new FakeNavigation()
+        const useCase: Partial<AddCityUseCase> = {
+            execute: function (addCityRequest: AddCityRequest, presenter: AddCityPresentation) {
+                presenter.notifyCityAdded(city)
+                return Promise.resolve()
+            }
+        }
+        const presenter = new AddCityPresenter(useCase as AddCityUseCase, navigator)
+
+        // When
+        presenter.create()
+
+        // Then
+        expect(navigator.currentRoute).toBe(`/city/${city.name}`)
     });
 });

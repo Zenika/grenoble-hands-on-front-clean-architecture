@@ -1,12 +1,13 @@
-import {NgModule} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {InjectionToken, NgModule} from '@angular/core';
+import {HttpClient as AngularHttpClient} from '@angular/common/http';
 import {
   AddCityPresenterFactory,
   CitiesPresenterFactory,
   CityPresenterFactory,
   CityRepositoryInMemory,
-  HttpClient as IHttpClient,
-  WeatherRepositoryHttp
+  Navigation,
+  HttpClient,
+  WeatherRepositoryHttp, NavigationRoute
 } from '@grenoble-hands-on/web-adapters';
 import {
   AddCityUseCase,
@@ -16,52 +17,69 @@ import {
   RetrieveCityWeatherUseCase,
   WeatherRepository
 } from '@grenoble-hands-on/domain';
+import {Router} from '@angular/router';
+
+export const IHttpClient = new InjectionToken<HttpClient>('HttpClient');
+export const INavigation = new InjectionToken<Navigation>('Navigation');
+export const ICityRepository = new InjectionToken<CityRepository>('CityRepository');
+export const IWeatherRepository = new InjectionToken<WeatherRepository>('WeatherRepository');
 
 @NgModule({
   imports: [],
   exports: [],
   providers: [
     {
-      provide: 'IHttpClient',
-      useFactory: (httpClient: HttpClient) => ({
+      provide: IHttpClient,
+      useFactory: (httpClient: AngularHttpClient): HttpClient => ({
         get<T>(url: string): Promise<T> {
           return httpClient.get<T>(url).toPromise();
         }
       }),
-      deps: [HttpClient]
+      deps: [AngularHttpClient]
     },
     {
-      provide: 'CityRepository',
+      provide: INavigation,
+      useFactory: (router: Router): Navigation => ({
+        navigate(route: NavigationRoute): Promise<void> {
+          return router.navigateByUrl(route.toString()).then(() => Promise.resolve());
+        }
+      }),
+      deps: [Router]
+    },
+    {
+      provide: ICityRepository,
       useValue: new CityRepositoryInMemory()
     },
     {
-      provide: 'WeatherRepository',
-      useFactory: (httpClient: IHttpClient) => new WeatherRepositoryHttp(httpClient),
-      deps: ['IHttpClient']
+      provide: IWeatherRepository,
+      useFactory: (httpClient: HttpClient) => new WeatherRepositoryHttp(httpClient),
+      deps: [IHttpClient]
     },
     {
       provide: GetCitiesUseCase,
       useFactory: (cityRepository: CityRepository) => new GetCitiesUseCase(cityRepository),
-      deps: ['CityRepository']
+      deps: [ICityRepository]
     },
     {
       provide: GetCityUseCase,
       useFactory: (cityRepository: CityRepository) => new GetCityUseCase(cityRepository),
-      deps: ['CityRepository']
+      deps: [ICityRepository]
     },
     {
       provide: AddCityUseCase,
       useFactory: (cityRepository: CityRepository) => new AddCityUseCase(cityRepository),
-      deps: ['CityRepository']
+      deps: [ICityRepository]
     },
     {
       provide: RetrieveCityWeatherUseCase,
       useFactory: (weatherRepository: WeatherRepository) => new RetrieveCityWeatherUseCase(weatherRepository),
-      deps: ['WeatherRepository']
+      deps: [IWeatherRepository]
     },
     {
       provide: CityPresenterFactory,
-      useFactory: (getCityUseCase: GetCityUseCase, retrieveCityWeatherUseCase: RetrieveCityWeatherUseCase) => new CityPresenterFactory(getCityUseCase, retrieveCityWeatherUseCase),
+      useFactory: (getCityUseCase: GetCityUseCase, retrieveCityWeatherUseCase: RetrieveCityWeatherUseCase) => (
+        new CityPresenterFactory(getCityUseCase, retrieveCityWeatherUseCase)
+      ),
       deps: [GetCityUseCase, RetrieveCityWeatherUseCase]
     },
     {
@@ -71,8 +89,8 @@ import {
     },
     {
       provide: AddCityPresenterFactory,
-      useFactory: (addNewCityUseCase: AddCityUseCase) => new AddCityPresenterFactory(addNewCityUseCase),
-      deps: [AddCityUseCase]
+      useFactory: (addNewCityUseCase: AddCityUseCase, navigation: Navigation) => new AddCityPresenterFactory(addNewCityUseCase, navigation),
+      deps: [AddCityUseCase, INavigation]
     },
   ]
 })

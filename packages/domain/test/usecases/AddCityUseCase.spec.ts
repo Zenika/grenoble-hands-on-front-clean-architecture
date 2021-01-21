@@ -1,4 +1,4 @@
-import {AddCityRequest, AddCityPresentation, AddCityUseCase, City, CityRepository, NewCityFields} from "../../src";
+import {AddCityRequest, AddCityPresentation, AddCityUseCase, City, CityRepository, NewCityFields} from "@grenoble-hands-on/domain";
 
 describe('Add new city use case', () => {
     test('add city to repository when valid', async () => {
@@ -144,7 +144,7 @@ describe('Add new city use case', () => {
 
     })
 
-    test('notify city added', async () => {
+    test('notify city added on success', async () => {
         const cityAdded: City = await new Promise(resolve => {
             // Given
             const cityRepository: Partial<CityRepository> = {
