@@ -1,4 +1,4 @@
-import {GeoPosition, GetCitiesPresenter, GetCitiesUseCase} from "@grenoble-hands-on/domain";
+import {GeoPosition, GetCitiesPresentation, GetCitiesUseCase} from "@grenoble-hands-on/domain";
 import { CitiesPresenter } from "../../src";
 
 function createUseCase(partialUseCase: Partial<GetCitiesUseCase>) {
@@ -12,7 +12,7 @@ describe('CitiesPresenter', () => {
         const cities = [{name: "GRENOBLE", position: new GeoPosition(45.183916, 5.703630)}];
 
         const getCitiesUseCase = createUseCase({
-            async execute(presenter: GetCitiesPresenter): Promise<void> {
+            async execute(presenter: GetCitiesPresentation): Promise<void> {
                 presenter.displayCities(cities)
             }
         });

@@ -1,9 +1,9 @@
 import {
     GeoPosition,
-    GetCityPresenter,
+    GetCityPresentation,
     GetCityRequest,
     GetCityUseCase,
-    RetrieveWeatherPresenter,
+    RetrieveWeatherPresentation,
     RetrieveWeatherRequest,
     RetrieveCityWeatherUseCase
 } from "@grenoble-hands-on/domain";
@@ -15,7 +15,7 @@ function createGetCityUseCase(partialUseCase: Partial<GetCityUseCase>) {
 
 function createRetrieveWeatherUseCase(partialUseCase: Partial<RetrieveCityWeatherUseCase>) {
     return {
-        async execute(_: RetrieveWeatherRequest, __: RetrieveWeatherPresenter): Promise<void> {
+        async execute(_: RetrieveWeatherRequest, __: RetrieveWeatherPresentation): Promise<void> {
 
         },
         ...partialUseCase
@@ -27,7 +27,7 @@ describe('CityPresenter', () => {
     test('display city update city vm', async () => {
         // Given
         const cityUseCase = createGetCityUseCase({
-            async execute(request: GetCityRequest, presenter: GetCityPresenter): Promise<void> {
+            async execute(request: GetCityRequest, presenter: GetCityPresentation): Promise<void> {
                 presenter.displayCity({
                     name: "GRENOBLE",
                     position: new GeoPosition(45, 5)
@@ -46,7 +46,7 @@ describe('CityPresenter', () => {
     test('display city update weather vm', async () => {
         // Given
         const cityUseCase = createGetCityUseCase({
-            async execute(request: GetCityRequest, presenter: GetCityPresenter): Promise<void> {
+            async execute(request: GetCityRequest, presenter: GetCityPresentation): Promise<void> {
                 presenter.displayCity({
                     name: "GRENOBLE",
                     position: new GeoPosition(45, 5)
@@ -54,7 +54,7 @@ describe('CityPresenter', () => {
             }
         });
         const retrieveCityWeatherUseCase = createRetrieveWeatherUseCase({
-            async execute(request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresenter): Promise<void> {
+            async execute(request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation): Promise<void> {
                 presenter.displayWeather([
                     { day: new Date(), weather: "sunny", temperatureMin: 9, temperatureMax: 19}
                 ])

@@ -1,17 +1,17 @@
 import {Presenter} from "./Presenter";
 import {
     City,
-    DailyWeather,
+    DailyWeather, GetCityPresentation,
     GetCityRequest,
     GetCityUseCase,
-    RetrieveWeatherPresenter,
+    RetrieveWeatherPresentation,
     RetrieveWeatherRequest
 } from "@grenoble-hands-on/domain";
-import {RetrieveCityWeatherUseCase} from "@grenoble-hands-on/domain/dist/usecases/RetrieveCityWeatherUseCase";
+import {RetrieveCityWeatherUseCase} from "@grenoble-hands-on/domain";
 
 export class CityPresenterVM {
     city: City | undefined
-    weather: DailyWeather[] | undefined = undefined
+    weather: DailyWeather[] | undefined
     loading = false
 }
 
@@ -28,7 +28,7 @@ export class CityPresenter extends Presenter<CityPresenterVM> {
         await this.getCityUseCase.execute(new GetCityRequest(city), getCityPresenter)
     }
 
-    private createGetCityPresenter(rootPresenter: CityPresenter, retrieveCityWeatherUseCase: RetrieveCityWeatherUseCase, retrieveWeatherPresenter: RetrieveWeatherPresenter) {
+    private createGetCityPresenter(rootPresenter: CityPresenter, retrieveCityWeatherUseCase: RetrieveCityWeatherUseCase, retrieveWeatherPresenter: RetrieveWeatherPresentation): GetCityPresentation {
         return {
             displayCity(city: City) {
                 rootPresenter.vm.city = city
@@ -38,7 +38,7 @@ export class CityPresenter extends Presenter<CityPresenterVM> {
         };
     }
 
-    private createRetrieveWeatherPresenter(rootPresenter: CityPresenter) {
+    private createRetrieveWeatherPresenter(rootPresenter: CityPresenter): RetrieveWeatherPresentation {
         return {
             displayWeather(weather: DailyWeather[]) {
                 rootPresenter.vm.weather = weather

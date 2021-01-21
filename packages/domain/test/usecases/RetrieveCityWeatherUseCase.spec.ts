@@ -1,11 +1,11 @@
 import {GeoPosition} from "../../src/entities/GeoPosition";
 import {RetrieveCityWeatherUseCase} from "../../src/usecases/RetrieveCityWeatherUseCase";
 import {DailyWeather} from "../../src/entities/DailyWeather";
-import {RetrieveWeatherPresenter} from "../../src/ports/presenters/RetrieveWeatherPresenter";
+import {RetrieveWeatherPresentation} from "../../src/ports/presenters/RetrieveWeatherPresentation";
 import {WeatherRepository} from "../../src/ports/repositories/WeatherRepository";
 import {RetrieveWeatherRequest} from "../../src/ports/request/RetrieveWeatherRequest";
 
-function createPresenter(partialPresenter: Partial<RetrieveWeatherPresenter>): RetrieveWeatherPresenter {
+function createPresenter(partialPresenter: Partial<RetrieveWeatherPresentation>): RetrieveWeatherPresentation {
     return {
         displayWeather(_) {},
         displayStartLoading() {},

@@ -1,4 +1,4 @@
-import {AddCityRequest, AddNewCityUseCase, NewCityFields} from "@grenoble-hands-on/domain";
+import {AddCityRequest, AddCityPresentation, City, NewCityFields, AddCityUseCase} from "@grenoble-hands-on/domain";
 import {Presenter} from "./Presenter";
 
 export class AddCityPresenterVM {
@@ -16,7 +16,7 @@ export class AddCityPresenterVM {
 
 
 export class AddCityPresenter extends Presenter<AddCityPresenterVM>{
-    constructor(private addNewCityUseCase: AddNewCityUseCase) {
+    constructor(private addCityUseCase: AddCityUseCase) {
         super(new AddCityPresenterVM())
     }
 
@@ -39,20 +39,28 @@ export class AddCityPresenter extends Presenter<AddCityPresenterVM>{
     }
 
     create() {
-        this.addNewCityUseCase.execute(new AddCityRequest(this.vm.cityName || '', this.vm.latitude || '', this.vm.longitude || ''), this.createAddNewCityPresenter(this))
+        this.addCityUseCase.execute(
+            new AddCityRequest(this.vm.cityName || '', this.vm.latitude || '', this.vm.longitude || ''),
+            this.createAddNewCityPresenter(this)
+        )
     }
 
     private validate() {
-        this.addNewCityUseCase.validate(new AddCityRequest(this.vm.cityName || '', this.vm.latitude || '', this.vm.longitude || ''), this.createAddNewCityPresenter(this))
+        this.addCityUseCase.validate(
+            new AddCityRequest(this.vm.cityName || '', this.vm.latitude || '', this.vm.longitude || ''),
+            this.createAddNewCityPresenter(this)
+        )
     }
 
-    private createAddNewCityPresenter(presenter: AddCityPresenter) {
+    private createAddNewCityPresenter(presenter: AddCityPresenter): AddCityPresentation {
         return {
             notifyNewCityInvalid(errors: Map<NewCityFields, string>) {
                 presenter.vm.cityNameError = presenter.vm.cityNameTouched ? errors.get(NewCityFields.cityName) : ''
                 presenter.vm.latitudeError = presenter.vm.latitudeTouched ? errors.get(NewCityFields.latitude) : ''
                 presenter.vm.longitudeError = presenter.vm.longitudeTouched ? errors.get(NewCityFields.longitude) : ''
                 presenter.vm.canCreateCity = errors.size == 0
+            },
+            notifyCityAdded(city: City) {
             }
         };
     }

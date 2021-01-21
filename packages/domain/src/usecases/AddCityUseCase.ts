@@ -1,15 +1,15 @@
 import {CityRepository} from "../ports/repositories/CityRepository";
 import {AddCityRequest} from "../ports/request/AddCityRequest";
-import {AddNewCityPresenter, NewCityFields} from "../ports/presenters/AddNewCityPresenter";
+import {AddCityPresentation, NewCityFields} from "../ports/presenters/AddCityPresentation";
 import {City} from "../entities/City";
 import {GeoPosition} from "../entities/GeoPosition";
 
-export class AddNewCityUseCase {
+export class AddCityUseCase {
     constructor(private cityRepository: CityRepository) {
 
     }
 
-    async execute(addCityRequest: AddCityRequest, presenter: AddNewCityPresenter) {
+    async execute(addCityRequest: AddCityRequest, presenter: AddCityPresentation) {
         const errors = this.validate(addCityRequest, presenter);
 
         if (!errors.size) {
@@ -18,10 +18,11 @@ export class AddNewCityUseCase {
                 position: new GeoPosition(+addCityRequest.latitude, +addCityRequest.longitude)
             }
             await this.cityRepository.addCity(city)
+            presenter.notifyCityAdded(city)
         }
     }
 
-    validate(addCityRequest: AddCityRequest, presenter: AddNewCityPresenter) {
+    validate(addCityRequest: AddCityRequest, presenter: AddCityPresentation) {
         const errors = new Map<NewCityFields, string>();
         if (addCityRequest.cityName == null || !addCityRequest.cityName.length) {
             errors.set(NewCityFields.cityName, 'City name is required')

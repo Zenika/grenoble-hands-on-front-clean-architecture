@@ -1,9 +1,9 @@
-import {AddNewCityUseCase} from "@grenoble-hands-on/domain";
+import {AddCityUseCase} from "@grenoble-hands-on/domain";
 import {AddCityPresenter} from "./AddCityPresenter";
 
 export class AddCityPresenterFactory {
 
-    constructor(private addNewCityUseCase: AddNewCityUseCase) {
+    constructor(private addNewCityUseCase: AddCityUseCase) {
     }
 
     createAddCityPresenter(): AddCityPresenter {

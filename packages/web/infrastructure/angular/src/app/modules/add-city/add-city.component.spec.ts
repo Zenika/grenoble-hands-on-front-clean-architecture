@@ -18,12 +18,12 @@ describe('AddCityComponent', () => {
               return {
                 vm: new AddCityPresenterVM(),
                 onVmUpdate(subscriber: (vm: AddCityPresenterVM) => void) {
-                  subscriber(this.vm)
+                  subscriber(this.vm);
                 },
                 fetchCities() {
 
                 }
-              }
+              };
             }
           }
         }

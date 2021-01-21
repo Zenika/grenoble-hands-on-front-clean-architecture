@@ -1,5 +1,5 @@
 import {City} from "../../entities/City";
 
-export interface GetCitiesPresenter {
+export interface GetCitiesPresentation {
     displayCities(cities: City[]): void
 }
