@@ -1,5 +1,5 @@
 export interface DailyWeather {
-    day: Date
+    day: string
     weather: string
     temperatureMax: number
     temperatureMin: number

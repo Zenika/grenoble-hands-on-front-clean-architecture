@@ -1,22 +1,21 @@
-import {GeoPosition, GetCitiesPresentation, GetCitiesUseCase} from "@grenoble-hands-on/domain";
-import { CitiesPresenter } from "../../src";
-
-function createUseCase(partialUseCase: Partial<GetCitiesUseCase>) {
-    return partialUseCase as GetCitiesUseCase;
-}
+import {CityBuilder, GetCitiesPresentation, GetCitiesUseCaseStubBuilder} from "@grenoble-hands-on/domain";
+import {CitiesPresenterBuilder} from "@grenoble-hands-on/web-adapters";
 
 describe('CitiesPresenter', () => {
 
     test('fetch cities update vm', async () => {
         // Given
-        const cities = [{name: "GRENOBLE", position: new GeoPosition(45.183916, 5.703630)}];
+        const cities = [CityBuilder.example().build()];
 
-        const getCitiesUseCase = createUseCase({
-            async execute(presenter: GetCitiesPresentation): Promise<void> {
+        const getCitiesUseCase = new GetCitiesUseCaseStubBuilder()
+            .withExecute((presenter: GetCitiesPresentation) => {
                 presenter.displayCities(cities)
-            }
-        });
-        const presenter = new CitiesPresenter(getCitiesUseCase);
+                return Promise.resolve()
+            })
+            .build()
+        const presenter = new CitiesPresenterBuilder()
+            .withUseCase(getCitiesUseCase)
+            .build();
 
         // When
         await presenter.fetchCities()

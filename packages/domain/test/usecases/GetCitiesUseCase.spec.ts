@@ -1,21 +1,17 @@
-import {GeoPosition} from "../../src/entities/GeoPosition";
-import {City} from "../../src/entities/City";
-import {GetCitiesUseCase} from "../../src/usecases/GetCitiesUseCase";
-import {CityRepository} from "../../src/ports/repositories/CityRepository";
+import {City, GeoPosition, GetCitiesUseCaseBuilder} from "@grenoble-hands-on/domain";
+import {CityRepositoryBuilder} from "@grenoble-hands-on/domain";
 
 describe('Get cities use case', () => {
 
     test('display list of cities', async () => {
         // Given
-        const cityRepository: Partial<CityRepository> = {
-            getCities(): Promise<City[]> {
-                return Promise.resolve([
-                    { name: 'Grenoble', position: new GeoPosition(45, 5)},
-                    { name: 'Lyon', position: new GeoPosition(44, 4)},
-                ])
-            }
-        }
-        const useCase = new GetCitiesUseCase(cityRepository as CityRepository)
+        const cityRepository = new CityRepositoryBuilder()
+            .withGetCities(() => Promise.resolve([
+                {name: 'Grenoble', position: new GeoPosition(45, 5)},
+                {name: 'Lyon', position: new GeoPosition(44, 4)},
+            ]))
+            .build()
+        const useCase = new GetCitiesUseCaseBuilder().withCityRepository(cityRepository).build()
 
         // When
         const cities = await new Promise(resolve => {

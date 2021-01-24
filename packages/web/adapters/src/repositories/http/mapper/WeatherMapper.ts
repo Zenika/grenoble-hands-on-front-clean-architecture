@@ -14,6 +14,6 @@ export class WeatherMapper {
     }
 
     private static parseDate(date: string) {
-        return new Date(+date.substring(0, 4), (+date.substring(4, 6)) - 1, +date.substring(6), 0, 0);
+        return `${date.substring(6)}/${date.substring(4, 6)}/${date.substring(0, 4)}`
     }
 }

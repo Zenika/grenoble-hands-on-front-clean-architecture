@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {CityPresenter, CityPresenterFactory, CityPresenterVM} from "@grenoble-hands-on/web-adapters";
-import {ActivatedRoute} from "@angular/router";
-import {Observable} from "rxjs";
+import {CityPresenter, CityPresenterFactory, CityPresenterVM} from '@grenoble-hands-on/web-adapters';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-city',
@@ -24,7 +24,7 @@ export class CityComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cityPresenter.fetchCityWithWeather(this.route.snapshot.params.cityId)
+    this.cityPresenter.fetchCityWithWeather(this.route.snapshot.params.cityId);
   }
 
 }

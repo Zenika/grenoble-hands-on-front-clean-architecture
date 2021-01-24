@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CitiesPresenter, CitiesPresenterFactory, CitiesPresenterVM} from "@grenoble-hands-on/web-adapters";
+import {CitiesPresenter, CitiesPresenterBuilder, CitiesPresenterVM} from "@grenoble-hands-on/web-adapters";
 import {Observable} from "rxjs";
 
 @Component({
@@ -9,8 +9,8 @@ import {Observable} from "rxjs";
   providers: [
     {
       provide: CitiesPresenter,
-      useFactory: (presenterFactory: CitiesPresenterFactory) => presenterFactory.createCitiesPresenter(),
-      deps: [CitiesPresenterFactory]
+      useFactory: (presenterFactory: CitiesPresenterBuilder) => presenterFactory.build(),
+      deps: [CitiesPresenterBuilder]
     }
   ]
 })

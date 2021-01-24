@@ -1,13 +1,14 @@
 import {InjectionToken, NgModule} from '@angular/core';
 import {HttpClient as AngularHttpClient} from '@angular/common/http';
 import {
-  AddCityPresenterFactory,
-  CitiesPresenterFactory,
+  AddCityPresenterBuilder,
+  CitiesPresenterBuilder,
   CityPresenterFactory,
   CityRepositoryInMemory,
-  Navigation,
   HttpClient,
-  WeatherRepositoryHttp, NavigationRoute
+  Navigation,
+  NavigationRoute,
+  WeatherRepositoryHttp
 } from '@grenoble-hands-on/web-adapters';
 import {
   AddCityUseCase,
@@ -83,13 +84,16 @@ export const IWeatherRepository = new InjectionToken<WeatherRepository>('Weather
       deps: [GetCityUseCase, RetrieveCityWeatherUseCase]
     },
     {
-      provide: CitiesPresenterFactory,
-      useFactory: (getCitiesUseCase: GetCitiesUseCase) => new CitiesPresenterFactory(getCitiesUseCase),
+      provide: CitiesPresenterBuilder,
+      useFactory: (getCitiesUseCase: GetCitiesUseCase) => new CitiesPresenterBuilder()
+        .withUseCase(getCitiesUseCase),
       deps: [GetCitiesUseCase]
     },
     {
-      provide: AddCityPresenterFactory,
-      useFactory: (addNewCityUseCase: AddCityUseCase, navigation: Navigation) => new AddCityPresenterFactory(addNewCityUseCase, navigation),
+      provide: AddCityPresenterBuilder,
+      useFactory: (addNewCityUseCase: AddCityUseCase, navigation: Navigation) => new AddCityPresenterBuilder()
+        .withUseCase(addNewCityUseCase)
+        .withNavigator(navigation),
       deps: [AddCityUseCase, INavigation]
     },
   ]

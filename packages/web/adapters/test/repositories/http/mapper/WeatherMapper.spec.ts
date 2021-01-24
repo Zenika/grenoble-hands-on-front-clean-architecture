@@ -31,7 +31,7 @@ describe('WeatherMapper', () => {
         const weather = WeatherMapper.toDomain(weatherFromApi);
 
         // Then
-        expect(weather[0].day).toEqual(new Date(2020, 11, 13, 0, 0, 0, 0))
+        expect(weather[0].day).toEqual("13/12/2020")
     });
 
     test('map temperature to domain', () => {

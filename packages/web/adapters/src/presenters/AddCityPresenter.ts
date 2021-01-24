@@ -17,7 +17,7 @@ export class AddCityPresenterVM {
 }
 
 
-export class AddCityPresenter extends Presenter<AddCityPresenterVM>{
+export class AddCityPresenter extends Presenter<AddCityPresenterVM> {
     constructor(private addCityUseCase: AddCityUseCase, private navigator: Navigation) {
         super(new AddCityPresenterVM())
     }
@@ -41,10 +41,12 @@ export class AddCityPresenter extends Presenter<AddCityPresenterVM>{
     }
 
     create() {
-        this.addCityUseCase.execute(
-            new AddCityRequest(this.vm.cityName || '', this.vm.latitude || '', this.vm.longitude || ''),
-            this.createAddNewCityPresenter(this)
-        )
+        this.addCityUseCase
+            .execute(
+                new AddCityRequest(this.vm.cityName || '', this.vm.latitude || '', this.vm.longitude || ''),
+                this.createAddNewCityPresenter(this)
+            )
+            .then()
     }
 
     private validate() {
@@ -63,7 +65,7 @@ export class AddCityPresenter extends Presenter<AddCityPresenterVM>{
                 presenter.vm.canCreateCity = errors.size == 0
             },
             notifyCityAdded(city: City) {
-                presenter.navigator.navigate(NavigationRoute.CITY(city))
+                presenter.navigator.navigate(NavigationRoute.CITY(city)).then()
             }
         };
     }

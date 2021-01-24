@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {CitiesComponent} from './cities.component';
-import {CitiesPresenterFactory, CitiesPresenterVM} from '@grenoble-hands-on/web-adapters';
+import {CitiesPresenterBuilder, CitiesPresenterVM} from '@grenoble-hands-on/web-adapters';
 
 describe('CitiesComponent', () => {
   let component: CitiesComponent;
@@ -12,9 +12,9 @@ describe('CitiesComponent', () => {
       declarations: [CitiesComponent],
       providers: [
         {
-          provide: CitiesPresenterFactory,
+          provide: CitiesPresenterBuilder,
           useValue: {
-            createCitiesPresenter() {
+            build() {
               return {
                 vm: new CitiesPresenterVM(),
                 onVmUpdate(subscriber: (vm: CitiesPresenterVM) => void) {

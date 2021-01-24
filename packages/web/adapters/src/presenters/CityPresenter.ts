@@ -1,7 +1,7 @@
 import {Presenter} from "./Presenter";
 import {
     City,
-    DailyWeather, GetCityPresentation,
+    DailyWeather, GeoPosition, GetCityPresentation,
     GetCityRequest,
     GetCityUseCase,
     RetrieveWeatherPresentation,

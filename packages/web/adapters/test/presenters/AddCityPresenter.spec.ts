@@ -1,26 +1,28 @@
 import {
-    AddCityRequest,
     AddCityPresentation,
-    AddCityUseCase,
-    NewCityFields,
-    City,
-    GeoPosition
+    AddCityRequest,
+    AddCityUseCaseStubBuilder,
+    CityBuilder,
+    NewCityFields
 } from "@grenoble-hands-on/domain";
-import {AddCityPresenter} from "../../src";
-import {FakeNavigation} from "../../src/router/FakeNavigation";
+import {AddCityPresenterBuilder, FakeNavigation} from "@grenoble-hands-on/web-adapters";
 
 describe('AddCityPresenter', () => {
     test('display city error on validate name', () => {
         // Given
-        const useCase = {
-            validate(addCityRequest: AddCityRequest, presenter: AddCityPresentation): Map<NewCityFields, string> {
+        const useCase = new AddCityUseCaseStubBuilder()
+            .withValidate((addCityRequest: AddCityRequest, presenter: AddCityPresentation) => {
                 const errors = new Map<NewCityFields, string>();
                 errors.set(NewCityFields.cityName, "City name required")
                 presenter.notifyNewCityInvalid(errors)
                 return errors
-            }
-        } as AddCityUseCase
-        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
+            })
+            .build()
+
+        const presenter = new AddCityPresenterBuilder()
+            .withUseCase(useCase)
+            .withNavigator(new FakeNavigation())
+            .build()
 
         // When
         presenter.validateCityName('')
@@ -32,15 +34,18 @@ describe('AddCityPresenter', () => {
 
     test('display city error on validate latitude', () => {
         // Given
-        const useCase = {
-            validate(addCityRequest: AddCityRequest, presenter: AddCityPresentation): Map<NewCityFields, string> {
+        const useCase = new AddCityUseCaseStubBuilder()
+            .withValidate((addCityRequest: AddCityRequest, presenter: AddCityPresentation) => {
                 const errors = new Map<NewCityFields, string>();
                 errors.set(NewCityFields.latitude, "Latitude required")
                 presenter.notifyNewCityInvalid(errors)
                 return errors
-            }
-        } as AddCityUseCase
-        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
+            })
+            .build()
+        const presenter = new AddCityPresenterBuilder()
+            .withUseCase(useCase)
+            .withNavigator(new FakeNavigation())
+            .build()
 
         // When
         presenter.validateLatitude('')
@@ -52,15 +57,18 @@ describe('AddCityPresenter', () => {
 
     test('display city error on validate longitude', () => {
         // Given
-        const useCase = {
-            validate(addCityRequest: AddCityRequest, presenter: AddCityPresentation): Map<NewCityFields, string> {
+        const useCase = new AddCityUseCaseStubBuilder()
+            .withValidate((addCityRequest: AddCityRequest, presenter: AddCityPresentation) => {
                 const errors = new Map<NewCityFields, string>();
                 errors.set(NewCityFields.longitude, "Longitude required")
                 presenter.notifyNewCityInvalid(errors)
                 return errors
-            }
-        } as AddCityUseCase
-        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
+            })
+            .build()
+        const presenter = new AddCityPresenterBuilder()
+            .withUseCase(useCase)
+            .withNavigator(new FakeNavigation())
+            .build()
 
         // When
         presenter.validateLongitude('')
@@ -72,16 +80,20 @@ describe('AddCityPresenter', () => {
 
     test('display city error on create', () => {
         // Given
-        const useCase = {
-            execute(addCityRequest: AddCityRequest, presenter: AddCityPresentation) {
+        const useCase = new AddCityUseCaseStubBuilder()
+            .withExecute((addCityRequest: AddCityRequest, presenter: AddCityPresentation) => {
                 const errors = new Map<NewCityFields, string>();
                 errors.set(NewCityFields.cityName, "City name required")
                 errors.set(NewCityFields.latitude, "Latitude required")
                 errors.set(NewCityFields.longitude, "Longitude required")
                 presenter.notifyNewCityInvalid(errors)
-            }
-        } as AddCityUseCase
-        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
+                return Promise.resolve()
+            })
+            .build()
+        const presenter = new AddCityPresenterBuilder()
+            .withUseCase(useCase)
+            .withNavigator(new FakeNavigation())
+            .build()
 
         // When
         presenter.create()
@@ -92,23 +104,23 @@ describe('AddCityPresenter', () => {
 
     test('redirect to city on create success', () => {
         // Given
-        const city = {
-            name: 'Grenoble',
-            position: new GeoPosition(0, 0)
-        };
-        const navigator = new FakeNavigation()
-        const useCase: Partial<AddCityUseCase> = {
-            execute: function (addCityRequest: AddCityRequest, presenter: AddCityPresentation) {
+        const city = CityBuilder.example().build();
+        const useCase = new AddCityUseCaseStubBuilder()
+            .withExecute((addCityRequest: AddCityRequest, presenter: AddCityPresentation) => {
                 presenter.notifyCityAdded(city)
                 return Promise.resolve()
-            }
-        }
-        const presenter = new AddCityPresenter(useCase as AddCityUseCase, navigator)
+            })
+            .build()
+        const navigation = new FakeNavigation();
+        const presenter = new AddCityPresenterBuilder()
+            .withUseCase(useCase)
+            .withNavigator(navigation)
+            .build()
 
         // When
         presenter.create()
 
         // Then
-        expect(navigator.currentRoute).toBe(`/city/${city.name}`)
+        expect(navigation.currentRoute).toBe(`/city/${city.name}`)
     });
 });

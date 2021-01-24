@@ -20,8 +20,8 @@ describe('Retrieve city weather use case', () => {
         // Given
         const grenoblePosition = new GeoPosition(45.5, 5.2)
         const weatherData = [
-            {day: new Date(), temperatureMax: 25, temperatureMin: 18, weather: 'sunny'},
-            {day: new Date(), temperatureMax: 22, temperatureMin: 19, weather: 'cloud'}
+            {day: '12/01/2021', temperatureMax: 25, temperatureMin: 18, weather: 'sunny'},
+            {day: '13/01/2021', temperatureMax: 22, temperatureMin: 19, weather: 'cloud'}
         ];
         const weatherRepository: Partial<WeatherRepository> = {
             getWeekWeather(_: GeoPosition): Promise<DailyWeather[]> {

@@ -56,7 +56,7 @@ describe('CityPresenter', () => {
         const retrieveCityWeatherUseCase = createRetrieveWeatherUseCase({
             async execute(request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation): Promise<void> {
                 presenter.displayWeather([
-                    { day: new Date(), weather: "sunny", temperatureMin: 9, temperatureMax: 19}
+                    { day: '12/01/2021', weather: "sunny", temperatureMin: 9, temperatureMax: 19}
                 ])
             }
         });

@@ -1,24 +1,29 @@
-import {AddCityRequest, AddCityPresentation, AddCityUseCase, City, CityRepository, NewCityFields} from "@grenoble-hands-on/domain";
+import {
+    AddCityErrors,
+    AddCityRequest,
+    City,
+    NewCityFields,
+    AddCityUseCaseBuilder,
+    CityRepositoryBuilder,
+    AddCityPresentationBuilder,
+} from "@grenoble-hands-on/domain";
 
 describe('Add new city use case', () => {
     test('add city to repository when valid', async () => {
         const cityAdded: City = await new Promise(resolve => {
             // Given
-            const cityRepository: Partial<CityRepository> = {
-                addCity(city: City) {
+            const cityRepository = new CityRepositoryBuilder()
+                .withAddCity((city: City) => {
                     resolve(city)
                     return Promise.resolve()
-                }
-            };
-            const useCase = new AddCityUseCase(cityRepository as CityRepository)
+                })
+                .build()
+
+            const useCase = new AddCityUseCaseBuilder().withCityRepository(cityRepository).build()
 
             // When
-            const presenter = {
-                notifyNewCityInvalid() {
-                },
-                notifyCityAdded() {}
-            };
-            useCase.execute(new AddCityRequest("Pekin", "-2", "13"), presenter as AddCityPresentation)
+            const presenter = new AddCityPresentationBuilder().build();
+            useCase.execute(new AddCityRequest("Pekin", "-2", "13"), presenter)
         });
 
         // Then
@@ -29,35 +34,36 @@ describe('Add new city use case', () => {
 
     test('do no add city to repository when invalid', async () => {
         // Given
-        const cityRepository: Partial<CityRepository> = {
-            addCity: jest.fn()
-        };
-        const useCase = new AddCityUseCase(cityRepository as CityRepository)
+        const citiesAdded: City[] = [];
+        const cityRepository = new CityRepositoryBuilder()
+            .withAddCity(city => {
+                citiesAdded.push(city);
+                return Promise.resolve()
+            })
+            .build()
+        const useCase = new AddCityUseCaseBuilder().withCityRepository(cityRepository).build()
 
         // When
-        const presenter = {
-            notifyNewCityInvalid(_: Map<NewCityFields, string>) {
-            },
-            notifyCityAdded() {}
-        };
-        await useCase.execute(new AddCityRequest("Pekin", "", ""), presenter as AddCityPresentation)
+        const presenter = new AddCityPresentationBuilder().build();
+        await useCase.execute(new AddCityRequest("Pekin", "", ""), presenter)
 
         // Then
-        expect(cityRepository.addCity).not.toHaveBeenCalled()
+        expect(citiesAdded).toHaveLength(0)
     });
 
     test('city with empty name display error', async () => {
         // Given
-        const cityRepository: Partial<CityRepository> = {};
-        const useCase = new AddCityUseCase(cityRepository as CityRepository)
+        const useCase = new AddCityUseCaseBuilder().build()
 
         // When
-        const errors: Map<NewCityFields, string> = await new Promise(resolve => useCase.execute(new AddCityRequest("", "-2", "13"), {
-            notifyNewCityInvalid(err: Map<NewCityFields, string>) {
-                resolve(err)
-            },
-            notifyCityAdded() {}
-        }));
+        const errors: AddCityErrors = await new Promise(resolve => {
+            const presentation = new AddCityPresentationBuilder()
+                .withNotifyNewCityInvalid((err: AddCityErrors) => {
+                    resolve(err)
+                })
+                .build();
+            return useCase.execute(new AddCityRequest("", "-2", "13"), presentation);
+        });
 
         // Then
         expect(errors.has(NewCityFields.cityName)).toBeTruthy()
@@ -66,16 +72,17 @@ describe('Add new city use case', () => {
 
     test('city with empty latitude display error', async () => {
         // Given
-        const cityRepository: Partial<CityRepository> = {};
-        const useCase = new AddCityUseCase(cityRepository as CityRepository)
+        const useCase = new AddCityUseCaseBuilder().build()
 
         // When
-        const errors: Map<NewCityFields, string> = await new Promise(resolve => useCase.execute(new AddCityRequest("Fontaine", "", "5"), {
-            notifyNewCityInvalid(err: Map<NewCityFields, string>) {
-                resolve(err)
-            },
-            notifyCityAdded() {}
-        }));
+        const errors: AddCityErrors = await new Promise(resolve => {
+            const presentation = new AddCityPresentationBuilder()
+                .withNotifyNewCityInvalid((err: AddCityErrors) => {
+                    resolve(err)
+                })
+                .build();
+            useCase.execute(new AddCityRequest("Fontaine", "", "5"), presentation);
+        });
 
         // Then
         expect(errors.has(NewCityFields.latitude)).toBeTruthy()
@@ -84,16 +91,17 @@ describe('Add new city use case', () => {
 
     test('city with empty longitude display error', async () => {
         // Given
-        const cityRepository: Partial<CityRepository> = {};
-        const useCase = new AddCityUseCase(cityRepository as CityRepository)
+        const useCase = new AddCityUseCaseBuilder().build()
 
         // When
-        const errors: Map<NewCityFields, string> = await new Promise(resolve => useCase.execute(new AddCityRequest("Fontaine", "45", ""), {
-            notifyNewCityInvalid(err: Map<NewCityFields, string>) {
-                resolve(err)
-            },
-            notifyCityAdded() {}
-        }));
+        const errors: AddCityErrors = await new Promise(resolve => {
+            const presentation = new AddCityPresentationBuilder()
+                .withNotifyNewCityInvalid((err: AddCityErrors) => {
+                    resolve(err)
+                })
+                .build();
+            useCase.execute(new AddCityRequest("Fontaine", "45", ""), presentation);
+        });
 
         // Then
         expect(errors.has(NewCityFields.longitude)).toBeTruthy()
@@ -104,16 +112,17 @@ describe('Add new city use case', () => {
 
         test(`city with invalid longitude display error : ${input}`, async () => {
             // Given
-            const cityRepository: Partial<CityRepository> = {};
-            const useCase = new AddCityUseCase(cityRepository as CityRepository)
+            const useCase = new AddCityUseCaseBuilder().build()
 
             // When
-            const errors: Map<NewCityFields, string> = await new Promise(resolve => useCase.execute(new AddCityRequest("Fontaine", "45", input), {
-                notifyNewCityInvalid(err: Map<NewCityFields, string>) {
-                    resolve(err)
-                },
-                notifyCityAdded() {}
-            }));
+            const errors: AddCityErrors = await new Promise(resolve => {
+                const presentation = new AddCityPresentationBuilder()
+                    .withNotifyNewCityInvalid((err: AddCityErrors) => {
+                        resolve(err)
+                    })
+                    .build();
+                useCase.execute(new AddCityRequest("Fontaine", "45", input), presentation);
+            });
 
             // Then
             expect(errors.has(NewCityFields.longitude)).toBeTruthy()
@@ -126,16 +135,17 @@ describe('Add new city use case', () => {
 
         test(`city with invalid latitude display error : ${input}`, async () => {
             // Given
-            const cityRepository: Partial<CityRepository> = {};
-            const useCase = new AddCityUseCase(cityRepository as CityRepository)
+            const useCase = new AddCityUseCaseBuilder().build()
 
             // When
-            const errors: Map<NewCityFields, string> = await new Promise(resolve => useCase.execute(new AddCityRequest("Fontaine", input, "5"), {
-                notifyNewCityInvalid(err: Map<NewCityFields, string>) {
-                    resolve(err)
-                },
-                notifyCityAdded() {}
-            }));
+            const errors: AddCityErrors = await new Promise(resolve => {
+                const presentation = new AddCityPresentationBuilder()
+                    .withNotifyNewCityInvalid((err: AddCityErrors) => {
+                        resolve(err)
+                    })
+                    .build();
+                useCase.execute(new AddCityRequest("Fontaine", input, "5"), presentation);
+            });
 
             // Then
             expect(errors.has(NewCityFields.latitude)).toBeTruthy()
@@ -147,22 +157,16 @@ describe('Add new city use case', () => {
     test('notify city added on success', async () => {
         const cityAdded: City = await new Promise(resolve => {
             // Given
-            const cityRepository: Partial<CityRepository> = {
-                addCity() {
-                    return Promise.resolve()
-                }
-            };
-            const useCase = new AddCityUseCase(cityRepository as CityRepository)
+            const cityRepository = new CityRepositoryBuilder().build();
+            const useCase = new AddCityUseCaseBuilder().withCityRepository(cityRepository).build()
 
             // When
-            const presenter = {
-                notifyNewCityInvalid() {
-                },
-                notifyCityAdded(city: City) {
+            const presentation = new AddCityPresentationBuilder()
+                .withNotifyCityAdded((city: City) => {
                     resolve(city)
-                }
-            };
-            useCase.execute(new AddCityRequest("Pekin", "-2", "13"), presenter as AddCityPresentation)
+                })
+                .build()
+            useCase.execute(new AddCityRequest("Pekin", "-2", "13"), presentation)
         });
 
         // Then

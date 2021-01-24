@@ -26,7 +26,7 @@ describe('CityComponent', () => {
     // Given
     const vm = new CityPresenterVM();
     vm.weather = [
-      {weather: 'sunny', temperatureMin: 8, temperatureMax: 15, day: new Date()}
+      {weather: 'sunny', temperatureMin: 8, temperatureMax: 15, day: '12/01/2021'}
     ];
 
     // When
@@ -36,7 +36,7 @@ describe('CityComponent', () => {
     const weather = fixture.debugElement.queryAll(By.css('#daily-weather tr:not(:first-child)'));
     const weatherCol = weather[0].queryAll(By.css('td'));
     expect(weather.length).toBe(1);
-    // expect(weatherCol[0].nativeElement.textContent).toBe('day')
+    expect(weatherCol[0].nativeElement.textContent).toBe('12/01/2021');
     expect(weatherCol[2].nativeElement.textContent).toBe('15');
     expect(weatherCol[3].nativeElement.textContent).toBe('8');
   });
