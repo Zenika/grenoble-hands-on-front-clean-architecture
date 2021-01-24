@@ -1,13 +1,14 @@
 import {Presenter} from "./Presenter";
 import {
     City,
-    DailyWeather, GeoPosition, GetCityPresentation,
+    DailyWeather,
+    GetCityPresentation,
     GetCityRequest,
     GetCityUseCase,
+    RetrieveCityWeatherUseCase,
     RetrieveWeatherPresentation,
     RetrieveWeatherRequest
 } from "@grenoble-hands-on/domain";
-import {RetrieveCityWeatherUseCase} from "@grenoble-hands-on/domain";
 
 export class CityPresenterVM {
     city: City | undefined
@@ -23,17 +24,15 @@ export class CityPresenter extends Presenter<CityPresenterVM> {
     }
 
     async fetchCityWithWeather(city: string) {
-        const retrieveWeatherPresenter = this.createRetrieveWeatherPresenter(this);
-        const getCityPresenter = this.createGetCityPresenter(this, this.retrieveCityWeatherUseCase, retrieveWeatherPresenter);
-        await this.getCityUseCase.execute(new GetCityRequest(city), getCityPresenter)
+        await this.getCityUseCase.execute(new GetCityRequest(city), this.createGetCityPresenter(this))
+        await this.retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(city), this.createRetrieveWeatherPresenter(this))
     }
 
-    private createGetCityPresenter(rootPresenter: CityPresenter, retrieveCityWeatherUseCase: RetrieveCityWeatherUseCase, retrieveWeatherPresenter: RetrieveWeatherPresentation): GetCityPresentation {
+    private createGetCityPresenter(rootPresenter: CityPresenter): GetCityPresentation {
         return {
             displayCity(city: City) {
                 rootPresenter.vm.city = city
                 rootPresenter.updateVM()
-                retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(city.position), retrieveWeatherPresenter)
             }
         };
     }

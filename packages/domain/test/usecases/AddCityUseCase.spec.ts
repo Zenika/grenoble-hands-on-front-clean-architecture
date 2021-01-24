@@ -1,11 +1,11 @@
 import {
     AddCityErrors,
-    AddCityRequest,
-    City,
-    NewCityFields,
-    AddCityUseCaseBuilder,
-    CityRepositoryBuilder,
     AddCityPresentationBuilder,
+    AddCityRequest,
+    AddCityUseCase,
+    City,
+    CityRepositoryBuilder,
+    NewCityFields,
 } from "@grenoble-hands-on/domain";
 
 describe('Add new city use case', () => {
@@ -19,7 +19,7 @@ describe('Add new city use case', () => {
                 })
                 .build()
 
-            const useCase = new AddCityUseCaseBuilder().withCityRepository(cityRepository).build()
+            const useCase = new AddCityUseCase(cityRepository)
 
             // When
             const presenter = new AddCityPresentationBuilder().build();
@@ -41,7 +41,7 @@ describe('Add new city use case', () => {
                 return Promise.resolve()
             })
             .build()
-        const useCase = new AddCityUseCaseBuilder().withCityRepository(cityRepository).build()
+        const useCase = new AddCityUseCase(cityRepository)
 
         // When
         const presenter = new AddCityPresentationBuilder().build();
@@ -53,7 +53,8 @@ describe('Add new city use case', () => {
 
     test('city with empty name display error', async () => {
         // Given
-        const useCase = new AddCityUseCaseBuilder().build()
+        const cityRepository = new CityRepositoryBuilder().build();
+        const useCase = new AddCityUseCase(cityRepository)
 
         // When
         const errors: AddCityErrors = await new Promise(resolve => {
@@ -72,7 +73,8 @@ describe('Add new city use case', () => {
 
     test('city with empty latitude display error', async () => {
         // Given
-        const useCase = new AddCityUseCaseBuilder().build()
+        const cityRepository = new CityRepositoryBuilder().build();
+        const useCase = new AddCityUseCase(cityRepository)
 
         // When
         const errors: AddCityErrors = await new Promise(resolve => {
@@ -91,7 +93,8 @@ describe('Add new city use case', () => {
 
     test('city with empty longitude display error', async () => {
         // Given
-        const useCase = new AddCityUseCaseBuilder().build()
+        const cityRepository = new CityRepositoryBuilder().build();
+        const useCase = new AddCityUseCase(cityRepository)
 
         // When
         const errors: AddCityErrors = await new Promise(resolve => {
@@ -112,7 +115,8 @@ describe('Add new city use case', () => {
 
         test(`city with invalid longitude display error : ${input}`, async () => {
             // Given
-            const useCase = new AddCityUseCaseBuilder().build()
+            const cityRepository = new CityRepositoryBuilder().build();
+            const useCase = new AddCityUseCase(cityRepository)
 
             // When
             const errors: AddCityErrors = await new Promise(resolve => {
@@ -135,7 +139,8 @@ describe('Add new city use case', () => {
 
         test(`city with invalid latitude display error : ${input}`, async () => {
             // Given
-            const useCase = new AddCityUseCaseBuilder().build()
+            const cityRepository = new CityRepositoryBuilder().build();
+            const useCase = new AddCityUseCase(cityRepository)
 
             // When
             const errors: AddCityErrors = await new Promise(resolve => {
@@ -158,7 +163,7 @@ describe('Add new city use case', () => {
         const cityAdded: City = await new Promise(resolve => {
             // Given
             const cityRepository = new CityRepositoryBuilder().build();
-            const useCase = new AddCityUseCaseBuilder().withCityRepository(cityRepository).build()
+            const useCase = new AddCityUseCase(cityRepository)
 
             // When
             const presentation = new AddCityPresentationBuilder()

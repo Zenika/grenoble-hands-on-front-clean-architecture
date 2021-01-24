@@ -1,5 +1,9 @@
-import {City, GeoPosition, GetCitiesUseCaseBuilder} from "@grenoble-hands-on/domain";
-import {CityRepositoryBuilder} from "@grenoble-hands-on/domain";
+import {
+    CityRepositoryBuilder,
+    GeoPosition,
+    GetCitiesPresentationBuilder,
+    GetCitiesUseCase
+} from "@grenoble-hands-on/domain";
 
 describe('Get cities use case', () => {
 
@@ -11,15 +15,12 @@ describe('Get cities use case', () => {
                 {name: 'Lyon', position: new GeoPosition(44, 4)},
             ]))
             .build()
-        const useCase = new GetCitiesUseCaseBuilder().withCityRepository(cityRepository).build()
+        const useCase = new GetCitiesUseCase(cityRepository)
 
         // When
         const cities = await new Promise(resolve => {
-            useCase.execute({
-                displayCities(cities: City[]) {
-                    resolve(cities)
-                }
-            })
+            const presentation = new GetCitiesPresentationBuilder().withDisplayCities(cities => resolve(cities)).build();
+            useCase.execute(presentation)
         })
 
         // Then

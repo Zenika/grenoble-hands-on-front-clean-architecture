@@ -1,44 +1,82 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
 import {CitiesComponent} from './cities.component';
-import {CitiesPresenterBuilder, CitiesPresenterVM} from '@grenoble-hands-on/web-adapters';
+import {
+  CitiesPresenter,
+  CitiesPresenterBuilder,
+  CitiesPresenterFactory,
+  CitiesPresenterVM
+} from '@grenoble-hands-on/web-adapters';
+import {RouterTestingModule} from '@angular/router/testing';
+import {CityBuilder} from '@grenoble-hands-on/domain';
+import {By} from '@angular/platform-browser';
 
 describe('CitiesComponent', () => {
-  let component: CitiesComponent;
-  let fixture: ComponentFixture<CitiesComponent>;
 
-  beforeEach(async(() => {
+  it('display cities', () => {
+    // Given
+    const vm = new CitiesPresenterVM();
+    vm.cities = [
+      CityBuilder.example().withName('Grenoble').build(),
+      CityBuilder.example().withName('Lyon').build()
+    ];
+    const presenter = new CitiesPresenterBuilder(vm).build();
+
+    // When
+    const {fixture} = new CitiesComponentBuilder().withPresenter(presenter).build();
+
+    // Then
+    const citiesName = fixture.debugElement.queryAll(By.css('.panel-block h2')).map(dom => dom.nativeElement.textContent);
+    expect(citiesName).toEqual(['Grenoble', 'Lyon']);
+  });
+
+  it('fetch cities on init', async () => {
+    const hasFetch = await new Promise<boolean>(resolve => {
+      // Given
+      const presenter = new CitiesPresenterBuilder()
+        .withFetchCities(() => {
+          resolve(true);
+          return Promise.resolve();
+        })
+        .build();
+
+      // When
+      new CitiesComponentBuilder().withPresenter(presenter).build();
+    });
+
+    // Then
+    expect(hasFetch).toBeTruthy();
+  });
+});
+
+
+class CitiesComponentBuilder {
+  private citiesPresenter!: CitiesPresenter;
+
+  withPresenter(citiesPresenter: CitiesPresenter) {
+    this.citiesPresenter = citiesPresenter;
+    return this;
+  }
+
+  build() {
     TestBed.configureTestingModule({
       declarations: [CitiesComponent],
       providers: [
         {
-          provide: CitiesPresenterBuilder,
+          provide: CitiesPresenterFactory,
           useValue: {
-            build() {
-              return {
-                vm: new CitiesPresenterVM(),
-                onVmUpdate(subscriber: (vm: CitiesPresenterVM) => void) {
-                  subscriber(this.vm);
-                },
-                fetchCities() {
-
-                }
-              };
-            }
+            build: () => this.citiesPresenter
           }
         }
+      ],
+      imports: [
+        RouterTestingModule
       ]
     })
       .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(CitiesComponent);
-    component = fixture.componentInstance;
+    const fixture = TestBed.createComponent(CitiesComponent);
+    const component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    return {component, fixture};
+  }
+}

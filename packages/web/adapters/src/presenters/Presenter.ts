@@ -1,4 +1,4 @@
-type Subscriber<T> = (vm: T) => void;
+export type Subscriber<T> = (vm: T) => void;
 
 export abstract class Presenter<T> {
 

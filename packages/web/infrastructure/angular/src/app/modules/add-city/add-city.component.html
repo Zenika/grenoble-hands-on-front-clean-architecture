@@ -2,21 +2,21 @@
 
 <div class="card" *ngIf="vm$ | async as vm">
   <form class="card-content" (submit)="createCity($event)">
-    <div class="field">
+    <div class="field city-name">
       <label for="city-name-input" class="label">Name</label>
       <div class="control">
         <input id="city-name-input" class="input" type="text" (change)="validateCityName($event)" placeholder="City name">
       </div>
       <p class="help is-danger" *ngIf="vm.cityNameError">{{vm.cityNameError}}</p>
     </div>
-    <div class="field">
+    <div class="field latitude">
       <label for="latitude-input"  class="label">Latitude</label>
       <div class="control">
         <input id="latitude-input" class="input" type="text" (change)="validateLatitude($event)" placeholder="Latitude">
       </div>
       <p class="help is-danger" *ngIf="vm.latitudeError">{{vm.latitudeError}}</p>
     </div>
-    <div class="field">
+    <div class="field longitude">
       <label for="longitude-input" class="label">Longitude</label>
       <div class="control">
         <input id="longitude-input" class="input" type="text" (change)="validateLongitude($event)" placeholder="Longitude">

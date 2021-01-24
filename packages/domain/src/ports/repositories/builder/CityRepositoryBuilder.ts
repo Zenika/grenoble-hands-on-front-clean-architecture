@@ -1,8 +1,11 @@
-import {City, CityRepository} from "@grenoble-hands-on/domain";
+import {City} from "../../../entities/City";
+import {CityBuilder} from "../../../entities/builder/CityBuilder";
+import {CityRepository} from "../CityRepository";
 
 export class CityRepositoryBuilder {
-    private addCity: (city: City) => Promise<void> = (() => Promise.resolve());
+    private addCity: (city: City) => Promise<void> = () => Promise.resolve();
     private getCities: () => Promise<City[]> = () => Promise.resolve([]);
+    private getCity: (city: string) => Promise<City> = () => Promise.resolve(CityBuilder.example().build());
 
     withAddCity(addCity: (city: City) => Promise<void>) {
         this.addCity = addCity
@@ -14,11 +17,16 @@ export class CityRepositoryBuilder {
         return this;
     }
 
+    withGetCity(getCity: (city: string) => Promise<City>) {
+        this.getCity = getCity;
+        return this;
+    }
+
     build(): CityRepository {
         return {
             addCity: this.addCity,
             getCities: this.getCities,
-            getCity: () => Promise.resolve({} as City)
+            getCity: this.getCity
         }
     }
 }

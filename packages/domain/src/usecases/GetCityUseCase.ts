@@ -7,8 +7,8 @@ export class GetCityUseCase {
 
     }
 
-    async execute(request: GetCityRequest, presenter: GetCityPresentation) {
-        presenter.displayCity(await this.cityRepository.getCity(request.city))
+    async execute(request: GetCityRequest, presentation: GetCityPresentation) {
+        presentation.displayCity(await this.cityRepository.getCity(request.city))
     }
 
 }

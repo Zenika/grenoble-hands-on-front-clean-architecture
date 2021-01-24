@@ -1,9 +1,13 @@
 import {TestBed} from '@angular/core/testing';
 
 import {CityComponent} from './city.component';
-import {CityPresenterFactory} from '@grenoble-hands-on/web-adapters';
+import {
+  CityPresenter,
+  CityPresenterBuilder,
+  CityPresenterFactory,
+  CityPresenterVM
+} from '@grenoble-hands-on/web-adapters';
 import {RouterTestingModule} from '@angular/router/testing';
-import {CityPresenterVM} from '@grenoble-hands-on/web-adapters';
 import {GeoPosition} from '@grenoble-hands-on/domain';
 import {By} from '@angular/platform-browser';
 
@@ -13,9 +17,10 @@ describe('CityComponent', () => {
     // Given
     const vm = new CityPresenterVM();
     vm.city = {name: 'Grenoble', position: new GeoPosition(45, 5)};
+    const presenter = new CityPresenterBuilder(vm).build();
 
     // When
-    const {fixture} = mountComponent(vm);
+    const {fixture} = new CityComponentBuilder().withPresenter(presenter).build();
 
     // Then
     const header = fixture.debugElement.query(By.css('h2')).nativeElement.textContent;
@@ -30,7 +35,7 @@ describe('CityComponent', () => {
     ];
 
     // When
-    const {fixture} = mountComponent(vm);
+    const {fixture} = new CityComponentBuilder().withPresenter(new CityPresenterBuilder(vm).build()).build();
 
     // Then
     const weather = fixture.debugElement.queryAll(By.css('#daily-weather tr:not(:first-child)'));
@@ -45,33 +50,33 @@ describe('CityComponent', () => {
 });
 
 
-function mountComponent(vm: CityPresenterVM = new CityPresenterVM()) {
-  TestBed.configureTestingModule({
-    declarations: [CityComponent],
-    providers: [
-      {
-        provide: CityPresenterFactory,
-        useValue: {
-          createCityPresenter() {
-            return {
-              onVmUpdate(subscriber: (vm: CityPresenterVM) => void) {
-                subscriber(vm);
-              },
-              fetchCityWithWeather() {
+export class CityComponentBuilder {
+  private presenter!: CityPresenter;
 
-              }
-            };
+  withPresenter(presenter: CityPresenter) {
+    this.presenter = presenter;
+    return this;
+  }
+
+  build() {
+    TestBed.configureTestingModule({
+      declarations: [CityComponent],
+      providers: [
+        {
+          provide: CityPresenterFactory,
+          useValue: {
+            build: () => this.presenter
           }
         }
-      }
-    ],
-    imports: [
-      RouterTestingModule
-    ]
-  })
-    .compileComponents();
-  const fixture = TestBed.createComponent(CityComponent);
-  const component = fixture.componentInstance;
-  fixture.detectChanges();
-  return {component, fixture};
+      ],
+      imports: [
+        RouterTestingModule
+      ]
+    })
+      .compileComponents();
+    const fixture = TestBed.createComponent(CityComponent);
+    const component = fixture.componentInstance;
+    fixture.detectChanges();
+    return {component, fixture};
+  }
 }

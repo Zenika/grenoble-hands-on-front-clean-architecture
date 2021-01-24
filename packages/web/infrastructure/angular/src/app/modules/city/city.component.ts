@@ -10,7 +10,7 @@ import {Observable} from 'rxjs';
   providers: [
     {
       provide: CityPresenter,
-      useFactory: (presenterFactory: CityPresenterFactory) => presenterFactory.createCityPresenter(),
+      useFactory: (presenterFactory: CityPresenterFactory) => presenterFactory.build(),
       deps: [CityPresenterFactory]
     }
   ]

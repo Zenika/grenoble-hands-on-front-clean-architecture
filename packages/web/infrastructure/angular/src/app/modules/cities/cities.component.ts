@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {CitiesPresenter, CitiesPresenterBuilder, CitiesPresenterVM} from "@grenoble-hands-on/web-adapters";
-import {Observable} from "rxjs";
+import {CitiesPresenter, CitiesPresenterFactory, CitiesPresenterVM} from '@grenoble-hands-on/web-adapters';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-cities',
@@ -9,8 +9,8 @@ import {Observable} from "rxjs";
   providers: [
     {
       provide: CitiesPresenter,
-      useFactory: (presenterFactory: CitiesPresenterBuilder) => presenterFactory.build(),
-      deps: [CitiesPresenterBuilder]
+      useFactory: (presenterFactory: CitiesPresenterFactory) => presenterFactory.build(),
+      deps: [CitiesPresenterFactory]
     }
   ]
 })
@@ -23,7 +23,7 @@ export class CitiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.citiesPresenter.fetchCities()
+    this.citiesPresenter.fetchCities().then();
   }
 
 }

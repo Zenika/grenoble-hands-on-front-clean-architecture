@@ -1,11 +1,8 @@
 import {AddCityErrors, AddCityPresentation, City} from "@grenoble-hands-on/domain";
 
-const NOOP = () => {
-};
-
 export class AddCityPresentationBuilder {
-    private notifyNewCityInvalid: (errors: AddCityErrors) => void = NOOP;
-    private notifyCityAdded: (city: City) => void = NOOP;
+    private notifyNewCityInvalid: (errors: AddCityErrors) => void = () => null;
+    private notifyCityAdded: (city: City) => void = () => null;
 
 
     withNotifyCityAdded(notifyCityAdded: (city: City) => void) {

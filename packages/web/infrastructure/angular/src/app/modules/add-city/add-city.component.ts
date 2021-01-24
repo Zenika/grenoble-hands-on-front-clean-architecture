@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {AddCityPresenter, AddCityPresenterBuilder, AddCityPresenterVM} from '@grenoble-hands-on/web-adapters';
-import {Observable} from "rxjs";
+import {AddCityPresenter, AddCityPresenterFactory, AddCityPresenterVM} from '@grenoble-hands-on/web-adapters';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-add-city',
@@ -9,8 +9,8 @@ import {Observable} from "rxjs";
   providers: [
     {
       provide: AddCityPresenter,
-      useFactory: (presenterFactory: AddCityPresenterBuilder) => presenterFactory.build(),
-      deps: [AddCityPresenterBuilder]
+      useFactory: (presenterFactory: AddCityPresenterFactory) => presenterFactory.build(),
+      deps: [AddCityPresenterFactory]
     }
   ]
 })
@@ -22,20 +22,21 @@ export class AddCityComponent {
   constructor(private presenter: AddCityPresenter) {
   }
 
+  // TODO test form
   createCity($event: Event) {
-    this.presenter.create()
-    $event.preventDefault()
+    this.presenter.create();
+    $event.preventDefault();
   }
 
   validateCityName($event: Event) {
-    this.presenter.validateCityName(($event.target as HTMLInputElement).value)
+    this.presenter.validateCityName(($event.target as HTMLInputElement).value);
   }
 
   validateLatitude($event: Event) {
-    this.presenter.validateLatitude(($event.target as HTMLInputElement).value)
+    this.presenter.validateLatitude(($event.target as HTMLInputElement).value);
   }
 
   validateLongitude($event: Event) {
-    this.presenter.validateLongitude(($event.target as HTMLInputElement).value)
+    this.presenter.validateLongitude(($event.target as HTMLInputElement).value);
   }
 }

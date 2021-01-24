@@ -6,8 +6,8 @@ export class GetCitiesUseCase {
 
     }
 
-    async execute(presenter: GetCitiesPresentation) {
+    async execute(presentation: GetCitiesPresentation) {
         const cities = await this.cityRepository.getCities();
-        presenter.displayCities(cities)
+        presentation.displayCities(cities)
     }
 }

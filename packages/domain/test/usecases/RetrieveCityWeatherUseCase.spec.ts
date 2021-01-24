@@ -1,43 +1,32 @@
-import {GeoPosition} from "../../src/entities/GeoPosition";
-import {RetrieveCityWeatherUseCase} from "../../src/usecases/RetrieveCityWeatherUseCase";
-import {DailyWeather} from "../../src/entities/DailyWeather";
-import {RetrieveWeatherPresentation} from "../../src/ports/presenters/RetrieveWeatherPresentation";
-import {WeatherRepository} from "../../src/ports/repositories/WeatherRepository";
-import {RetrieveWeatherRequest} from "../../src/ports/request/RetrieveWeatherRequest";
-
-function createPresenter(partialPresenter: Partial<RetrieveWeatherPresentation>): RetrieveWeatherPresentation {
-    return {
-        displayWeather(_) {},
-        displayStartLoading() {},
-        displayFinishLoading() {},
-        ...partialPresenter
-    };
-}
+import {
+    DailyWeather,
+    RetrieveCityWeatherUseCase,
+    RetrieveWeatherPresentationBuilder,
+    RetrieveWeatherRequest,
+    WeatherRepository,
+    WeatherRepositoryBuilder
+} from "@grenoble-hands-on/domain";
 
 describe('Retrieve city weather use case', () => {
 
     test('display weather for grenoble for next week', async () => {
         // Given
-        const grenoblePosition = new GeoPosition(45.5, 5.2)
         const weatherData = [
             {day: '12/01/2021', temperatureMax: 25, temperatureMin: 18, weather: 'sunny'},
             {day: '13/01/2021', temperatureMax: 22, temperatureMin: 19, weather: 'cloud'}
         ];
-        const weatherRepository: Partial<WeatherRepository> = {
-            getWeekWeather(_: GeoPosition): Promise<DailyWeather[]> {
-                return Promise.resolve(weatherData)
-            }
-        }
-        const useCase = new RetrieveCityWeatherUseCase(weatherRepository as WeatherRepository)
-        const weatherRequest = new RetrieveWeatherRequest(grenoblePosition);
+        const weatherRepository = new WeatherRepositoryBuilder()
+            .withGetCityWeekWeather(_ => Promise.resolve(weatherData))
+            .build()
+        const useCase = new RetrieveCityWeatherUseCase(weatherRepository)
+        const weatherRequest = new RetrieveWeatherRequest("Grenoble");
 
         // When
         const weather: DailyWeather[] = await new Promise(resolve => {
-            useCase.execute(weatherRequest, createPresenter({
-                displayWeather(weather: DailyWeather[]) {
-                    resolve(weather)
-                }
-            }))
+            const presentation = new RetrieveWeatherPresentationBuilder()
+                .withDisplayWeather((weather: DailyWeather[]) => resolve(weather))
+                .build()
+            useCase.execute(weatherRequest, presentation)
         });
 
         // Then
@@ -47,32 +36,48 @@ describe('Retrieve city weather use case', () => {
     });
 
     test('display loader while fetching', async () => {
-        const grenoblePosition = new GeoPosition(45.5, 5.2)
         const weatherRepository: Partial<WeatherRepository> = {
-            getWeekWeather(_: GeoPosition): Promise<DailyWeather[]> {
+            getCityWeekWeather(_: string): Promise<DailyWeather[]> {
                 return Promise.resolve([])
             }
         }
         const useCase = new RetrieveCityWeatherUseCase(weatherRepository as WeatherRepository)
-        const weatherRequest = new RetrieveWeatherRequest(grenoblePosition);
+        const weatherRequest = new RetrieveWeatherRequest("Grenoble");
 
         // When
-        let hasStartedLoading = false
-        let hasFinishedLoading = false
-        await new Promise<void>(resolve => {
-            useCase.execute(weatherRequest, createPresenter({
-                displayStartLoading() {
-                    hasStartedLoading = true
-                },
-                displayFinishLoading() {
-                    hasFinishedLoading = true
-                    resolve()
-                }
-            }))
+        const hasStartedLoading = await new Promise<boolean>(resolve => {
+            const presentation = new RetrieveWeatherPresentationBuilder()
+                .withDisplayStartLoading(() => {
+                    resolve(true)
+                })
+                .build()
+            useCase.execute(weatherRequest, presentation)
         });
 
         // Then
         expect(hasStartedLoading).toBeTruthy()
+    })
+
+    test('hide loader when fetching ended', async () => {
+        const weatherRepository: Partial<WeatherRepository> = {
+            getCityWeekWeather(_: string): Promise<DailyWeather[]> {
+                return Promise.resolve([])
+            }
+        }
+        const useCase = new RetrieveCityWeatherUseCase(weatherRepository as WeatherRepository)
+        const weatherRequest = new RetrieveWeatherRequest("Grenoble");
+
+        // When
+        const hasFinishedLoading = await new Promise<boolean>(resolve => {
+            const presentation = new RetrieveWeatherPresentationBuilder()
+                .withDisplayFinishLoading(() => {
+                    resolve(true)
+                })
+                .build()
+            useCase.execute(weatherRequest, presentation)
+        });
+
+        // Then
         expect(hasFinishedLoading).toBeTruthy()
     })
 

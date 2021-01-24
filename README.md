@@ -1,7 +1,6 @@
 ## TODO
 
-- Test angular
-- Refactorer get weather use case
+- Test angular (form)
 - Conversion C => F
 - Affichage détaillé
 - Créer enum pour la météo

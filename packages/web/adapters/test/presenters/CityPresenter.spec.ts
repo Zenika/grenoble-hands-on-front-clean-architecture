@@ -2,39 +2,26 @@ import {
     GeoPosition,
     GetCityPresentation,
     GetCityRequest,
-    GetCityUseCase,
+    GetCityUseCaseBuilder,
+    RetrieveCityWeatherUseCaseBuilder,
     RetrieveWeatherPresentation,
-    RetrieveWeatherRequest,
-    RetrieveCityWeatherUseCase
+    RetrieveWeatherRequest
 } from "@grenoble-hands-on/domain";
-import {CityPresenter} from "../../src";
-
-function createGetCityUseCase(partialUseCase: Partial<GetCityUseCase>) {
-    return partialUseCase as GetCityUseCase;
-}
-
-function createRetrieveWeatherUseCase(partialUseCase: Partial<RetrieveCityWeatherUseCase>) {
-    return {
-        async execute(_: RetrieveWeatherRequest, __: RetrieveWeatherPresentation): Promise<void> {
-
-        },
-        ...partialUseCase
-    } as RetrieveCityWeatherUseCase;
-}
+import {CityPresenter} from "@grenoble-hands-on/web-adapters";
 
 describe('CityPresenter', () => {
 
     test('display city update city vm', async () => {
         // Given
-        const cityUseCase = createGetCityUseCase({
-            async execute(request: GetCityRequest, presenter: GetCityPresentation): Promise<void> {
+        const cityUseCase = new GetCityUseCaseBuilder()
+            .withExecute((request: GetCityRequest, presenter: GetCityPresentation) => {
                 presenter.displayCity({
                     name: "GRENOBLE",
                     position: new GeoPosition(45, 5)
                 })
-            }
-        });
-        const presenter = new CityPresenter(cityUseCase, createRetrieveWeatherUseCase({}));
+            })
+            .build()
+        const presenter = new CityPresenter(cityUseCase, RetrieveCityWeatherUseCaseBuilder.Stub());
 
         // When
         await presenter.fetchCityWithWeather("GRENOBLE")
@@ -45,21 +32,21 @@ describe('CityPresenter', () => {
 
     test('display city update weather vm', async () => {
         // Given
-        const cityUseCase = createGetCityUseCase({
-            async execute(request: GetCityRequest, presenter: GetCityPresentation): Promise<void> {
+        const cityUseCase = new GetCityUseCaseBuilder()
+            .withExecute((request: GetCityRequest, presenter: GetCityPresentation) => {
                 presenter.displayCity({
                     name: "GRENOBLE",
                     position: new GeoPosition(45, 5)
                 })
-            }
-        });
-        const retrieveCityWeatherUseCase = createRetrieveWeatherUseCase({
-            async execute(request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation): Promise<void> {
+            })
+            .build()
+        const retrieveCityWeatherUseCase = new RetrieveCityWeatherUseCaseBuilder()
+            .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation) => {
                 presenter.displayWeather([
-                    { day: '12/01/2021', weather: "sunny", temperatureMin: 9, temperatureMax: 19}
+                    {day: '12/01/2021', weather: "sunny", temperatureMin: 9, temperatureMax: 19}
                 ])
-            }
-        });
+            })
+            .build()
         const presenter = new CityPresenter(cityUseCase, retrieveCityWeatherUseCase);
 
         // When
