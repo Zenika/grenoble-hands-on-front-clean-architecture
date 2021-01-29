@@ -1,4 +1,4 @@
-import {AddCityErrors, AddCityPresentation, City} from "@grenoble-hands-on/domain";
+import { AddCityErrors, AddCityPresentation, City } from '@grenoble-hands-on/domain'
 
 export class AddCityPresentationBuilder {
     private notifyNewCityInvalid: (errors: AddCityErrors) => void = () => null;

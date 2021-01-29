@@ -1,6 +1,4 @@
-import {City} from "../../../entities/City";
-import {CityBuilder} from "../../../entities/builder/CityBuilder";
-import {CityRepository} from "../CityRepository";
+import { City, CityBuilder, CityRepository } from '@grenoble-hands-on/domain'
 
 export class CityRepositoryBuilder {
     private addCity: (city: City) => Promise<void> = () => Promise.resolve();

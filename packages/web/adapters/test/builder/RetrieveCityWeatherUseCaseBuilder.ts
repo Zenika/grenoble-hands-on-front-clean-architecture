@@ -1,8 +1,4 @@
-import {
-    RetrieveCityWeatherUseCase,
-    RetrieveWeatherPresentation,
-    RetrieveWeatherRequest
-} from "@grenoble-hands-on/domain";
+import { RetrieveCityWeatherUseCase, RetrieveWeatherPresentation, RetrieveWeatherRequest } from '@grenoble-hands-on/domain'
 
 export class RetrieveCityWeatherUseCaseBuilder {
     private execute: (request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation) => void = () => null;
@@ -14,9 +10,5 @@ export class RetrieveCityWeatherUseCaseBuilder {
 
     build(): RetrieveCityWeatherUseCase {
         return {execute: this.execute} as RetrieveCityWeatherUseCase
-    }
-
-    static Stub() {
-        return new RetrieveCityWeatherUseCaseBuilder().build()
     }
 }

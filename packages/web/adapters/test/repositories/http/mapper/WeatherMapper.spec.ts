@@ -1,5 +1,4 @@
-import {Weather7Timer} from "../../../../src/repositories/http/dto/Weather7Timer";
-import {WeatherMapper} from "../../../../src/repositories/http/mapper/WeatherMapper";
+import { Weather7Timer, WeatherMapper } from '@grenoble-hands-on/web-adapters'
 
 describe('WeatherMapper', () => {
     test('map weather from 7timer to domain', () => {

@@ -5,7 +5,7 @@ import {
     RetrieveWeatherRequest,
     WeatherRepository,
     WeatherRepositoryBuilder
-} from "@grenoble-hands-on/domain";
+} from '@grenoble-hands-on/domain'
 
 describe('Retrieve city weather use case', () => {
 

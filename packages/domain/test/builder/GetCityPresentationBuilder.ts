@@ -1,4 +1,4 @@
-import {City, GetCityPresentation} from "@grenoble-hands-on/domain";
+import { City, GetCityPresentation } from '@grenoble-hands-on/domain'
 
 export class GetCityPresentationBuilder {
     private displayCity: (city: City) => void = () => null;

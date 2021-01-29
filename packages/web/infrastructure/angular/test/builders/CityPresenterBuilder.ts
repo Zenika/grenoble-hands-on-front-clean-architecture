@@ -1,5 +1,4 @@
-import {CityPresenter, CityPresenterVM} from "../CityPresenter";
-import {Subscriber} from "../Presenter";
+import { CityPresenter, CityPresenterVM, Subscriber } from '@grenoble-hands-on/web-adapters'
 
 export class CityPresenterBuilder {
     private fetchCityWithWeather: (city: string) => Promise<void> = () => Promise.resolve()
@@ -8,9 +7,9 @@ export class CityPresenterBuilder {
     constructor(private vm: CityPresenterVM = new CityPresenterVM()) {
     }
 
-    withCityWithWeather(fetchCityWithWeather: () => Promise<void>) {
+    withFetchCityWithWeather(fetchCityWithWeather: () => Promise<void>) {
         this.fetchCityWithWeather = fetchCityWithWeather
-        return this;
+        return this
     }
 
     build(): CityPresenter {

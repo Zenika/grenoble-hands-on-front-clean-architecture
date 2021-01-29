@@ -1,5 +1,5 @@
-import {CityRepository} from "../ports/repositories/CityRepository";
-import {GetCitiesPresentation} from "../ports/presenters/GetCitiesPresentation";
+import { CityRepository } from '../ports/repositories/CityRepository'
+import { GetCitiesPresentation } from '../ports/presenters/GetCitiesPresentation'
 
 export class GetCitiesUseCase {
     constructor(private cityRepository: CityRepository) {

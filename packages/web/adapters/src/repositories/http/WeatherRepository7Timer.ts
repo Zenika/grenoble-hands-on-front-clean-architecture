@@ -1,6 +1,6 @@
-import {WeatherMapper} from "./mapper/WeatherMapper";
-import {Weather7Timer} from "./dto/Weather7Timer";
-import {CityRepository, DailyWeather, WeatherRepository} from "@grenoble-hands-on/domain";
+import { WeatherMapper } from './mapper/WeatherMapper'
+import { Weather7Timer } from './dto/Weather7Timer'
+import { CityRepository, DailyWeather, WeatherRepository } from '@grenoble-hands-on/domain'
 
 export interface HttpClient {
     get<T>(url: string): Promise<T>

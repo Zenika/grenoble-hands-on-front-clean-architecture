@@ -1,5 +1,5 @@
-import {NavigationRouteURL} from "./NavigationRoute";
-import {Navigation} from "./Navigation";
+import { NavigationRouteURL } from './NavigationRoute'
+import { Navigation } from './Navigation'
 
 export class FakeNavigation implements Navigation {
 

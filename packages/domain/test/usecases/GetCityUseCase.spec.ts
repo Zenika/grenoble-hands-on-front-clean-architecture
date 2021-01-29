@@ -5,7 +5,7 @@ import {
     GetCityPresentationBuilder,
     GetCityRequest,
     GetCityUseCase
-} from "@grenoble-hands-on/domain";
+} from '@grenoble-hands-on/domain'
 
 describe('Get city use case', () => {
 

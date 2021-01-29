@@ -1,4 +1,4 @@
-import {GetCityPresentation, GetCityRequest, GetCityUseCase} from "@grenoble-hands-on/domain";
+import { GetCityPresentation, GetCityRequest, GetCityUseCase } from '@grenoble-hands-on/domain'
 
 export class GetCityUseCaseBuilder {
     private execute: (request: GetCityRequest, presenter: GetCityPresentation) => void = () => null;

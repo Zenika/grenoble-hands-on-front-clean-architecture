@@ -1,6 +1,6 @@
-import {AddCityUseCase} from "@grenoble-hands-on/domain";
-import {AddCityPresenter} from "../AddCityPresenter";
-import {Navigation} from "../../router/Navigation";
+import { AddCityUseCase } from '@grenoble-hands-on/domain'
+import { AddCityPresenter } from '../AddCityPresenter'
+import { Navigation } from '../../router/Navigation'
 
 export class AddCityPresenterFactory {
 

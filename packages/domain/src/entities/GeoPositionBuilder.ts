@@ -1,4 +1,4 @@
-import {GeoPosition} from "../GeoPosition";
+import { GeoPosition } from './GeoPosition'
 
 export class GeoPositionBuilder {
     private latitude!: number;
@@ -16,11 +16,5 @@ export class GeoPositionBuilder {
 
     build(): GeoPosition {
         return new GeoPosition(this.latitude, this.longitude)
-    }
-
-    static example() {
-        return new GeoPositionBuilder()
-            .withLatitude(45)
-            .withLongitude(5)
     }
 }

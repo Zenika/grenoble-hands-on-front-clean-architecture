@@ -1,4 +1,4 @@
-import {City} from "../../entities/City";
+import { City } from '../../entities/City'
 
 export enum NewCityFields {cityName = 'cityName', latitude = 'latitude', longitude = 'longitude'}
 

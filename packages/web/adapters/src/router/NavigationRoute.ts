@@ -1,4 +1,4 @@
-import {City} from "@grenoble-hands-on/domain";
+import { City } from '@grenoble-hands-on/domain'
 
 export type NavigationRouteURL = string;
 

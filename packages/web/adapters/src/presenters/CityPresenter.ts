@@ -1,4 +1,4 @@
-import {Presenter} from "./Presenter";
+import { Presenter } from './Presenter'
 import {
     City,
     DailyWeather,
@@ -8,7 +8,7 @@ import {
     RetrieveCityWeatherUseCase,
     RetrieveWeatherPresentation,
     RetrieveWeatherRequest
-} from "@grenoble-hands-on/domain";
+} from '@grenoble-hands-on/domain'
 
 export class CityPresenterVM {
     city: City | undefined

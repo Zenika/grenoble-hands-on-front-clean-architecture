@@ -1,11 +1,12 @@
-import {CityBuilder, GetCitiesPresentation, GetCitiesUseCaseBuilder} from "@grenoble-hands-on/domain";
-import {CitiesPresenter} from "@grenoble-hands-on/web-adapters";
+import { CityBuilder, GetCitiesPresentation } from '@grenoble-hands-on/domain'
+import { CitiesPresenter } from '@grenoble-hands-on/web-adapters'
+import { GetCitiesUseCaseBuilder } from '../builder/GetCitiesUseCaseBuilder'
 
 describe('CitiesPresenter', () => {
 
     test('fetch cities update vm', async () => {
         // Given
-        const cities = [CityBuilder.example().build()];
+        const cities = [CityBuilder.example().build()]
         const getCitiesUseCase = new GetCitiesUseCaseBuilder()
             .withExecute((presenter: GetCitiesPresentation) => {
                 presenter.displayCities(cities)
@@ -19,6 +20,6 @@ describe('CitiesPresenter', () => {
 
         // Then
         expect(presenter.vm.cities).toEqual(cities)
-    });
+    })
 
-});
+})

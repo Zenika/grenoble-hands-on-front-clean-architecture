@@ -1,4 +1,4 @@
-import {DailyWeather} from "../../entities/DailyWeather";
+import { DailyWeather } from '../../entities/DailyWeather'
 
 export interface RetrieveWeatherPresentation {
     displayWeather(weather: DailyWeather[]): void

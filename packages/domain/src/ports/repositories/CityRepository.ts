@@ -1,4 +1,4 @@
-import {City} from "../../entities/City";
+import { City } from '../../entities/City'
 
 export interface CityRepository {
     getCities(): Promise<City[]>

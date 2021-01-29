@@ -1,6 +1,6 @@
-import {GeoPositionBuilder} from "./GeoPositionBuilder";
-import {GeoPosition} from "../GeoPosition";
-import {City} from "../City";
+import { GeoPositionBuilder } from './GeoPositionBuilder'
+import { GeoPosition } from './GeoPosition'
+import { City } from './City'
 
 export class CityBuilder {
     private name!: string;

@@ -1,9 +1,4 @@
-import {
-    CityRepositoryBuilder,
-    GeoPosition,
-    GetCitiesPresentationBuilder,
-    GetCitiesUseCase
-} from "@grenoble-hands-on/domain";
+import { CityRepositoryBuilder, GeoPosition, GetCitiesPresentationBuilder, GetCitiesUseCase } from '@grenoble-hands-on/domain'
 
 describe('Get cities use case', () => {
 

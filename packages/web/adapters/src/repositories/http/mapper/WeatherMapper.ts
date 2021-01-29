@@ -1,5 +1,5 @@
-import {DailyWeather} from "@grenoble-hands-on/domain";
-import {Weather7Timer} from "../dto/Weather7Timer";
+import { DailyWeather } from '@grenoble-hands-on/domain'
+import { Weather7Timer } from '../dto/Weather7Timer'
 
 export class WeatherMapper {
     static toDomain(weather: Weather7Timer): DailyWeather[] {

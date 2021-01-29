@@ -6,7 +6,7 @@ import {
     City,
     CityRepositoryBuilder,
     NewCityFields,
-} from "@grenoble-hands-on/domain";
+} from '@grenoble-hands-on/domain'
 
 describe('Add new city use case', () => {
     test('add city to repository when valid', async () => {

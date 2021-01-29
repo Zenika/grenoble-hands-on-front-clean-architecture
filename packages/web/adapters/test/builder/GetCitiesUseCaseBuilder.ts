@@ -1,5 +1,5 @@
-import {GetCitiesUseCase} from "../GetCitiesUseCase";
-import {GetCitiesPresentation} from "../../ports/presenters/GetCitiesPresentation";
+import { GetCitiesUseCase } from '@grenoble-hands-on/domain'
+import { GetCitiesPresentation } from '@grenoble-hands-on/domain'
 
 export class GetCitiesUseCaseBuilder {
     private execute: (presenter: GetCitiesPresentation) => Promise<void> = () => Promise.resolve();

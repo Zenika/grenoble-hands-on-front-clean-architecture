@@ -1,7 +1,6 @@
-import {CityRepository} from "../../ports/repositories/CityRepository";
-import {AddCityUseCase} from "../AddCityUseCase";
-import {AddCityRequest} from "../../ports/request/AddCityRequest";
-import {AddCityErrors, AddCityPresentation, NewCityFields} from "../../ports/presenters/AddCityPresentation";
+import { AddCityUseCase } from '@grenoble-hands-on/domain'
+import { AddCityRequest } from '@grenoble-hands-on/domain'
+import { AddCityErrors, AddCityPresentation, NewCityFields } from '@grenoble-hands-on/domain'
 
 export class AddCityUseCaseBuilder {
     private execute: (addCityRequest: AddCityRequest, presenter: AddCityPresentation) => Promise<void> = () => Promise.resolve();

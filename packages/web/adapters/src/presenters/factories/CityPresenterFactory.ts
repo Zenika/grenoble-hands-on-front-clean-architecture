@@ -1,5 +1,5 @@
-import {GetCityUseCase, RetrieveCityWeatherUseCase} from "@grenoble-hands-on/domain";
-import {CityPresenter} from "../CityPresenter";
+import { GetCityUseCase, RetrieveCityWeatherUseCase } from '@grenoble-hands-on/domain'
+import { CityPresenter } from '../CityPresenter'
 
 export class CityPresenterFactory {
 

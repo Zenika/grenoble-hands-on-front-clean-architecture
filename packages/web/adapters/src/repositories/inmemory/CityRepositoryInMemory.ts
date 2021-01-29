@@ -1,4 +1,4 @@
-import {City, CityRepository, GeoPosition} from "@grenoble-hands-on/domain";
+import { City, CityRepository, GeoPosition } from '@grenoble-hands-on/domain'
 
 const INITIAL_CITIES: City[] = [
     {name: "GRENOBLE", position: new GeoPosition(45.183916, 5.703630)},

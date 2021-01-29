@@ -1,5 +1,5 @@
-import {CityRepositoryInMemory} from "../../../src";
-import {City, GeoPosition} from "@grenoble-hands-on/domain";
+import { City, GeoPosition } from '@grenoble-hands-on/domain'
+import { CityRepositoryInMemory } from '@grenoble-hands-on/web-adapters'
 
 describe('CityRepositoryInMemory', () => {
 

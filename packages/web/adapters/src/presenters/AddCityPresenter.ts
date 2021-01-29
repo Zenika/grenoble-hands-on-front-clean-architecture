@@ -1,7 +1,7 @@
-import {AddCityPresentation, AddCityRequest, AddCityUseCase, City, NewCityFields} from "@grenoble-hands-on/domain";
-import {Presenter} from "./Presenter";
-import {Navigation} from "../router/Navigation";
-import {NavigationRoute} from "../router/NavigationRoute";
+import { AddCityPresentation, AddCityRequest, AddCityUseCase, City, NewCityFields } from '@grenoble-hands-on/domain'
+import { Presenter } from './Presenter'
+import { Navigation } from '../router/Navigation'
+import { NavigationRoute } from '../router/NavigationRoute'
 
 export class AddCityPresenterVM {
     cityNameError: string | undefined;

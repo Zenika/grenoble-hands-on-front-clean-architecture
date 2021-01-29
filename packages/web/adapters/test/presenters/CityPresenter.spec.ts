@@ -2,12 +2,12 @@ import {
     GeoPosition,
     GetCityPresentation,
     GetCityRequest,
-    GetCityUseCaseBuilder,
-    RetrieveCityWeatherUseCaseBuilder,
     RetrieveWeatherPresentation,
     RetrieveWeatherRequest
-} from "@grenoble-hands-on/domain";
-import {CityPresenter} from "@grenoble-hands-on/web-adapters";
+} from '@grenoble-hands-on/domain'
+import { CityPresenter } from '@grenoble-hands-on/web-adapters'
+import { GetCityUseCaseBuilder } from '../builder/GetCityUseCaseBuilder'
+import { RetrieveCityWeatherUseCaseBuilder } from '../builder/RetrieveCityWeatherUseCaseBuilder'
 
 describe('CityPresenter', () => {
 
@@ -21,7 +21,8 @@ describe('CityPresenter', () => {
                 })
             })
             .build()
-        const presenter = new CityPresenter(cityUseCase, RetrieveCityWeatherUseCaseBuilder.Stub());
+        const retrieveCityWeatherUseCase1 = new RetrieveCityWeatherUseCaseBuilder().build()
+        const presenter = new CityPresenter(cityUseCase, retrieveCityWeatherUseCase1);
 
         // When
         await presenter.fetchCityWithWeather("GRENOBLE")
@@ -55,5 +56,40 @@ describe('CityPresenter', () => {
         // Then
         expect(presenter.vm.weather).toHaveLength(1)
         expect(presenter.vm.weather?.[0].weather).toBe('sunny')
+    });
+
+    test('display loading indicator on pending request', async () => {
+        // Given
+        const cityUseCase = new GetCityUseCaseBuilder().build()
+        const retrieveCityWeatherUseCase = new RetrieveCityWeatherUseCaseBuilder()
+            .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation) => {
+                presenter.displayStartLoading()
+            })
+            .build()
+        const presenter = new CityPresenter(cityUseCase, retrieveCityWeatherUseCase);
+
+        // When
+        await presenter.fetchCityWithWeather("GRENOBLE")
+
+        // Then
+        expect(presenter.vm.loading).toBeTruthy()
+    });
+
+    test('hide loading indicator on finished request', async () => {
+        // Given
+        const cityUseCase = new GetCityUseCaseBuilder().build()
+        const retrieveCityWeatherUseCase = new RetrieveCityWeatherUseCaseBuilder()
+            .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation) => {
+                presenter.displayFinishLoading()
+            })
+            .build()
+        const presenter = new CityPresenter(cityUseCase, retrieveCityWeatherUseCase);
+        presenter.vm.loading = true
+
+        // When
+        await presenter.fetchCityWithWeather("GRENOBLE")
+
+        // Then
+        expect(presenter.vm.loading).toBeFalsy()
     });
 });

@@ -1,6 +1,6 @@
-import {RetrieveWeatherRequest} from "../ports/request/RetrieveWeatherRequest";
-import {WeatherRepository} from "../ports/repositories/WeatherRepository";
-import {RetrieveWeatherPresentation} from "../ports/presenters/RetrieveWeatherPresentation";
+import { RetrieveWeatherRequest } from '../ports/request/RetrieveWeatherRequest'
+import { WeatherRepository } from '../ports/repositories/WeatherRepository'
+import { RetrieveWeatherPresentation } from '../ports/presenters/RetrieveWeatherPresentation'
 
 export class RetrieveCityWeatherUseCase {
     constructor(private readonly weatherRepository: WeatherRepository) {

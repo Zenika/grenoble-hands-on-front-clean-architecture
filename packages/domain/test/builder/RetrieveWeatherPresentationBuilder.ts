@@ -1,4 +1,4 @@
-import {DailyWeather, RetrieveWeatherPresentation} from "@grenoble-hands-on/domain";
+import { DailyWeather, RetrieveWeatherPresentation } from '@grenoble-hands-on/domain'
 
 export class RetrieveWeatherPresentationBuilder {
     private displayWeather: (weather: DailyWeather[]) => void = () => null;

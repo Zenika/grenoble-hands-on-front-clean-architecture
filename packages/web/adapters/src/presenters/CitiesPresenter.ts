@@ -1,5 +1,5 @@
-import {City, GetCitiesPresentation, GetCitiesUseCase} from "@grenoble-hands-on/domain";
-import {Presenter} from "./Presenter";
+import { City, GetCitiesPresentation, GetCitiesUseCase } from '@grenoble-hands-on/domain'
+import { Presenter } from './Presenter'
 
 export class CitiesPresenterVM {
     cities: City[] | undefined
