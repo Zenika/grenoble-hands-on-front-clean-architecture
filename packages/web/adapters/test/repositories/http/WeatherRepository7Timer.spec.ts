@@ -1,4 +1,4 @@
-import { CityBuilder, CityRepositoryBuilder } from '@grenoble-hands-on/domain'
+import { CityBuilder, CityRepository } from '@grenoble-hands-on/domain'
 import { HttpClient, Weather7Timer, WeatherRepository7Timer } from '@grenoble-hands-on/web-adapters'
 
 describe('WeatherRepository HTTP', () => {
@@ -14,7 +14,7 @@ describe('WeatherRepository HTTP', () => {
                 return Promise.resolve(response)
             }
         } as HttpClient
-        const cityRepository = new CityRepositoryBuilder().withGetCity((_) => Promise.resolve(city)).build()
+        const cityRepository: CityRepository = { getCity: (_: string) => Promise.resolve(city) } as CityRepository
         const repository = new WeatherRepository7Timer(httpClient, cityRepository)
 
         // When

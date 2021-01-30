@@ -8,9 +8,7 @@ export class RetrieveCityDailyWeatherUseCase {
     }
 
     async execute(request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) {
-        presenter.displayStartLoading()
         const weekWeather = await this.weatherRepository.getCityDailyWeather(request.city);
         presenter.displayWeather(weekWeather)
-        presenter.displayFinishLoading()
     }
 }

@@ -24,6 +24,8 @@ export class CityPresenter extends Presenter<CityPresenterVM> {
     }
 
     async fetchCityWithWeather(city: string) {
+        this.vm.loading = true
+        this.updateVM()
         await this.getCityUseCase.execute(new GetCityRequest(city), this.createGetCityPresenter(this))
         await this.retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(city), this.createRetrieveWeatherPresenter(this))
     }
@@ -41,13 +43,6 @@ export class CityPresenter extends Presenter<CityPresenterVM> {
         return {
             displayWeather(weather: DailyWeather[]) {
                 rootPresenter.vm.weather = weather
-                rootPresenter.updateVM()
-            },
-            displayStartLoading() {
-                rootPresenter.vm.loading = true
-                rootPresenter.updateVM()
-            },
-            displayFinishLoading() {
                 rootPresenter.vm.loading = false
                 rootPresenter.updateVM()
             }
