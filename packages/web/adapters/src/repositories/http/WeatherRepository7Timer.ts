@@ -13,7 +13,7 @@ export class WeatherRepository7Timer implements WeatherRepository {
     constructor(private http: HttpClient, private cityRepository: CityRepository) {
     }
 
-    getCityWeekWeather(cityId: string): Promise<DailyWeather[]> {
+    getCityDailyWeather(cityId: string): Promise<DailyWeather[]> {
         return this.cityRepository.getCity(cityId)
             .then((city) => this.http.get<Weather7Timer>(`${this.BASE_URL}?lon=${city.position.longitude}&lat=${city.position.latitude}&product=civillight&output=json`))
             .then((res) => WeatherMapper.toDomain(res))

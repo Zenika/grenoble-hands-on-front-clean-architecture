@@ -1,5 +1,7 @@
 import { DailyWeather } from '../../entities/DailyWeather'
+import { HourlyWeather } from '../../entities/HourlyWeather'
 
 export interface WeatherRepository {
-    getCityWeekWeather(city: string): Promise<DailyWeather[]>
+    getCityDailyWeather(city: string): Promise<DailyWeather[]>
+    getCityHourlyWeather(city: string): Promise<HourlyWeather[]>
 }

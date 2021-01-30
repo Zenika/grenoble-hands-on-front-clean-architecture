@@ -2,7 +2,7 @@ import {
     GeoPosition,
     GetCityPresentation,
     GetCityRequest,
-    RetrieveWeatherPresentation,
+    RetrieveDailyWeatherPresentation,
     RetrieveWeatherRequest
 } from '@grenoble-hands-on/domain'
 import { CityPresenter } from '@grenoble-hands-on/web-adapters'
@@ -42,7 +42,7 @@ describe('CityPresenter', () => {
             })
             .build()
         const retrieveCityWeatherUseCase = new RetrieveCityWeatherUseCaseBuilder()
-            .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation) => {
+            .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => {
                 presenter.displayWeather([
                     {day: '12/01/2021', weather: "sunny", temperatureMin: 9, temperatureMax: 19}
                 ])
@@ -62,7 +62,7 @@ describe('CityPresenter', () => {
         // Given
         const cityUseCase = new GetCityUseCaseBuilder().build()
         const retrieveCityWeatherUseCase = new RetrieveCityWeatherUseCaseBuilder()
-            .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation) => {
+            .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => {
                 presenter.displayStartLoading()
             })
             .build()
@@ -79,7 +79,7 @@ describe('CityPresenter', () => {
         // Given
         const cityUseCase = new GetCityUseCaseBuilder().build()
         const retrieveCityWeatherUseCase = new RetrieveCityWeatherUseCaseBuilder()
-            .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation) => {
+            .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => {
                 presenter.displayFinishLoading()
             })
             .build()

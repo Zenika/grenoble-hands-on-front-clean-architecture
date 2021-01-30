@@ -1,9 +1,9 @@
-import { GetCityUseCase, RetrieveCityWeatherUseCase } from '@grenoble-hands-on/domain'
+import { GetCityUseCase, RetrieveCityDailyWeatherUseCase } from '@grenoble-hands-on/domain'
 import { CityPresenter } from '../CityPresenter'
 
 export class CityPresenterFactory {
 
-    constructor(private getCityUseCase: GetCityUseCase, private retrieveCityWeatherUseCase: RetrieveCityWeatherUseCase) {
+    constructor(private getCityUseCase: GetCityUseCase, private retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase) {
     }
 
     build(): CityPresenter {

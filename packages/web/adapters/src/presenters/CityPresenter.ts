@@ -5,8 +5,8 @@ import {
     GetCityPresentation,
     GetCityRequest,
     GetCityUseCase,
-    RetrieveCityWeatherUseCase,
-    RetrieveWeatherPresentation,
+    RetrieveCityDailyWeatherUseCase,
+    RetrieveDailyWeatherPresentation,
     RetrieveWeatherRequest
 } from '@grenoble-hands-on/domain'
 
@@ -19,7 +19,7 @@ export class CityPresenterVM {
 
 export class CityPresenter extends Presenter<CityPresenterVM> {
 
-    constructor(private getCityUseCase: GetCityUseCase, private retrieveCityWeatherUseCase: RetrieveCityWeatherUseCase) {
+    constructor(private getCityUseCase: GetCityUseCase, private retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase) {
         super(new CityPresenterVM());
     }
 
@@ -37,7 +37,7 @@ export class CityPresenter extends Presenter<CityPresenterVM> {
         };
     }
 
-    private createRetrieveWeatherPresenter(rootPresenter: CityPresenter): RetrieveWeatherPresentation {
+    private createRetrieveWeatherPresenter(rootPresenter: CityPresenter): RetrieveDailyWeatherPresentation {
         return {
             displayWeather(weather: DailyWeather[]) {
                 rootPresenter.vm.weather = weather

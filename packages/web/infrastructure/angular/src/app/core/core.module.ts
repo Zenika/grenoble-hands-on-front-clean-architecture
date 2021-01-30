@@ -15,7 +15,7 @@ import {
     CityRepository,
     GetCitiesUseCase,
     GetCityUseCase,
-    RetrieveCityWeatherUseCase,
+    RetrieveCityDailyWeatherUseCase,
     WeatherRepository
 } from '@grenoble-hands-on/domain'
 import { Router } from '@angular/router'
@@ -75,17 +75,17 @@ export const IWeatherRepository = new InjectionToken<WeatherRepository>('Weather
             deps: [ICityRepository]
         },
         {
-            provide: RetrieveCityWeatherUseCase,
+            provide: RetrieveCityDailyWeatherUseCase,
             useFactory: (weatherRepository: WeatherRepository) =>
-                new RetrieveCityWeatherUseCase(weatherRepository),
+                new RetrieveCityDailyWeatherUseCase(weatherRepository),
             deps: [IWeatherRepository]
         },
         {
             provide: CityPresenterFactory,
-            useFactory: (getCityUseCase: GetCityUseCase, retrieveCityWeatherUseCase: RetrieveCityWeatherUseCase) => (
+            useFactory: (getCityUseCase: GetCityUseCase, retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase) => (
                 new CityPresenterFactory(getCityUseCase, retrieveCityWeatherUseCase)
             ),
-            deps: [GetCityUseCase, RetrieveCityWeatherUseCase]
+            deps: [GetCityUseCase, RetrieveCityDailyWeatherUseCase]
         },
         {
             provide: CitiesPresenterFactory,

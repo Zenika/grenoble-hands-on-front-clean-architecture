@@ -1,6 +1,6 @@
 import { DailyWeather } from '../../entities/DailyWeather'
 
-export interface RetrieveWeatherPresentation {
+export interface RetrieveDailyWeatherPresentation {
     displayWeather(weather: DailyWeather[]): void
     displayStartLoading(): void
     displayFinishLoading(): void

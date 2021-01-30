@@ -1,6 +1,6 @@
-import { DailyWeather, RetrieveWeatherPresentation } from '@grenoble-hands-on/domain'
+import { DailyWeather, RetrieveDailyWeatherPresentation } from '@grenoble-hands-on/domain'
 
-export class RetrieveWeatherPresentationBuilder {
+export class RetrieveDailyWeatherPresentationBuilder {
     private displayWeather: (weather: DailyWeather[]) => void = () => null;
     private displayStartLoading: () => void = () => null;
     private displayFinishLoading: () => void = () => null;
@@ -20,7 +20,7 @@ export class RetrieveWeatherPresentationBuilder {
         return this;
     }
 
-    build(): RetrieveWeatherPresentation {
+    build(): RetrieveDailyWeatherPresentation {
         return {
             displayWeather: this.displayWeather,
             displayStartLoading: this.displayStartLoading,

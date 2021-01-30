@@ -1,12 +1,6 @@
-import {
-    AddCityErrors,
-    AddCityPresentationBuilder,
-    AddCityRequest,
-    AddCityUseCase,
-    City,
-    CityRepositoryBuilder,
-    NewCityFields,
-} from '@grenoble-hands-on/domain'
+import { AddCityErrors, AddCityRequest, AddCityUseCase, City, NewCityFields, } from '@grenoble-hands-on/domain'
+import { CityRepositoryBuilder } from '../builder/CityRepositoryBuilder'
+import { AddCityPresentationBuilder } from '../builder/AddCityPresentationBuilder'
 
 describe('Add new city use case', () => {
     test('add city to repository when valid', async () => {

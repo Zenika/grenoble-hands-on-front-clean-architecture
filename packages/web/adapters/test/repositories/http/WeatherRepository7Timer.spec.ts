@@ -18,7 +18,7 @@ describe('WeatherRepository HTTP', () => {
         const repository = new WeatherRepository7Timer(httpClient, cityRepository)
 
         // When
-        const weathers = await repository.getCityWeekWeather('Grenoble')
+        const weathers = await repository.getCityDailyWeather('Grenoble')
 
         // Then
         expect(weathers).toHaveLength(1)

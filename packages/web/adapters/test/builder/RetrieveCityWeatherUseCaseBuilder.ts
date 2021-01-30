@@ -1,14 +1,14 @@
-import { RetrieveCityWeatherUseCase, RetrieveWeatherPresentation, RetrieveWeatherRequest } from '@grenoble-hands-on/domain'
+import { RetrieveCityDailyWeatherUseCase, RetrieveDailyWeatherPresentation, RetrieveWeatherRequest } from '@grenoble-hands-on/domain'
 
 export class RetrieveCityWeatherUseCaseBuilder {
-    private execute: (request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation) => void = () => null;
+    private execute: (request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => void = () => null;
 
-    withExecute(execute: (request: RetrieveWeatherRequest, presenter: RetrieveWeatherPresentation) => void) {
+    withExecute(execute: (request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => void) {
         this.execute = execute;
         return this;
     }
 
-    build(): RetrieveCityWeatherUseCase {
-        return {execute: this.execute} as RetrieveCityWeatherUseCase
+    build(): RetrieveCityDailyWeatherUseCase {
+        return {execute: this.execute} as RetrieveCityDailyWeatherUseCase
     }
 }
