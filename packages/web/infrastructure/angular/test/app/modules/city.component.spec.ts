@@ -26,7 +26,7 @@ describe('CityComponent', () => {
     it('display daily weather with temperature', () => {
         // Given
         const vm = new CityPresenterVM()
-        vm.weather = [
+        vm.dailyWeather = [
             { weather: 'sunny', temperatureMin: 8, temperatureMax: 15, day: '12/01/2021' }
         ]
 

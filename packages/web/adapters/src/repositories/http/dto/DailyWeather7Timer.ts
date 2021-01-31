@@ -1,4 +1,4 @@
-export interface Weather7Timer {
+export interface DailyWeather7Timer {
     dataseries: {
         date: string
         temp2m: { max: number, min: number }

@@ -1,6 +1,6 @@
 import { RetrieveCityDailyWeatherUseCase, RetrieveDailyWeatherPresentation, RetrieveWeatherRequest } from '@grenoble-hands-on/domain'
 
-export class RetrieveCityWeatherUseCaseBuilder {
+export class RetrieveCityDailyWeatherUseCaseBuilder {
     private execute: (request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => void = () => null;
 
     withExecute(execute: (request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => void) {
