@@ -24,7 +24,14 @@ export class CityComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.cityPresenter.fetchCityWithWeather(this.route.snapshot.params.cityId).then()
+        this.fetchDailyWeather()
     }
 
+    fetchDailyWeather() {
+        this.cityPresenter.fetchCityWithWeather(this.route.snapshot.params.cityId, 'daily').then()
+    }
+
+    fetchHourlyWeather() {
+        this.cityPresenter.fetchCityWithWeather(this.route.snapshot.params.cityId, 'hourly').then()
+    }
 }

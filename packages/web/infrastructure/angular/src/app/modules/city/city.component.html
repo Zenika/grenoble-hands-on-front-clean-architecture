@@ -1,28 +1,60 @@
 <h1 class="title">Cities weather</h1>
 <article class="panel is-primary" *ngIf="vm$ | async as vm">
-  <div class="panel-heading"><h2>{{vm.city?.name}}</h2></div>
-  <ng-container>
-    <div class="panel-block" *ngIf="vm.dailyWeather?.length">
-      <table id="daily-weather" class="table" >
-        <tr>
-          <th>Date</th>
-          <th>Weather</th>
-          <th>Max</th>
-          <th>Min</th>
-        </tr>
-        <tr *ngFor="let weather of vm.dailyWeather">
-          <td>{{weather.day}}</td>
-          <td><img [src]="'http://www.7timer.info/img/misc/about_civil_'+weather.weather+'.png'" alt="" width="50"></td>
-          <td>{{weather.temperatureMax}}</td>
-          <td>{{weather.temperatureMin}}</td>
-        </tr>
-      </table>
+    <div class="panel-heading"><h2>{{vm.city?.name}}</h2></div>
+    <ng-container>
+        <div class="panel-block">
+            <div class="control">
+                <label class="radio">
+                    <input type="radio" id="select-daily-view"
+                           name="mode" value="simple"
+                           (change)="fetchDailyWeather()">
+                    Simple
+                </label>
+                <label class="radio">
+                    <input type="radio" id="select-hourly-view"
+                           name="mode" value="detailed"
+                           (change)="fetchHourlyWeather()">
+                    Detailed
+                </label>
+            </div>
+        </div>
+        <div class="panel-block" *ngIf="vm.dailyWeather?.length">
+            <table id="daily-weather" class="table">
+                <tr>
+                    <th>Date</th>
+                    <th>Weather</th>
+                    <th>Max</th>
+                    <th>Min</th>
+                </tr>
+                <tr *ngFor="let weather of vm.dailyWeather">
+                    <td>{{weather.day}}</td>
+                    <td><img [src]="'http://www.7timer.info/img/misc/about_civil_'+weather.weather+'.png'" alt=""
+                             width="50"></td>
+                    <td>{{weather.temperatureMax}}</td>
+                    <td>{{weather.temperatureMin}}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="panel-block" *ngIf="vm.hourlyWeather?.length">
+            <table id="hourly-weather" class="table">
+                <tr>
+                    <th>Time</th>
+                    <th>Weather</th>
+                    <th>Temperature</th>
+                </tr>
+                <tr *ngFor="let weather of vm.hourlyWeather">
+                    <td>{{weather.time}}</td>
+                    <td><img [src]="'http://www.7timer.info/img/misc/about_civil_'+weather.weather+'.png'" alt=""
+                             width="50"></td>
+                    <td>{{weather.temperature}}</td>
+                </tr>
+            </table>
+        </div>
+    </ng-container>
+    <div class="panel-block" *ngIf="vm.loading">Loading...</div>
+    <div class="panel-block">
+        <a routerLink="/" class="button is-rounded">
+            Go back home
+        </a>
     </div>
-  </ng-container>
-  <div class="panel-block" *ngIf="vm.loading">Loading...</div>
-  <div class="panel-block">
-    <a routerLink="/" class="button is-rounded">
-      Go back home
-    </a>
-  </div>
 </article>
