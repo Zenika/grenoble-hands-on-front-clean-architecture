@@ -27,7 +27,7 @@ describe('CityComponent', () => {
         // Given
         const vm = new CityPresenterVM()
         vm.dailyWeather = [
-            { weather: 'sunny', temperatureMin: 8, temperatureMax: 15, day: '12/01/2021' }
+            { weather: 'sunny', temperatureMin: 8, temperatureMax: 15, day: '12/01/2021',  unite: 'C' }
         ]
 
         // When
@@ -46,7 +46,7 @@ describe('CityComponent', () => {
         // Given
         const vm = new CityPresenterVM()
         vm.hourlyWeather = [
-            { weather: 'sunny', temperature: 8, time: '12:00' }
+            { weather: 'sunny', temperature: 8, time: '12:00', unite: 'C' }
         ]
 
         // When

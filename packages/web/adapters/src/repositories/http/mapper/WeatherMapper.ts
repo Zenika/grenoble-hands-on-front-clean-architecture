@@ -9,7 +9,8 @@ export class WeatherMapper {
                 day: this.formatDate(this.parseDate(serie.date.toString())),
                 temperatureMax: serie.temp2m.max,
                 temperatureMin: serie.temp2m.min,
-                weather: serie.weather
+                weather: serie.weather,
+                unite: 'C'
             };
         })
     }
@@ -21,7 +22,8 @@ export class WeatherMapper {
             return {
                 time: this.formatTime(time),
                 temperature: serie.temp2m,
-                weather: serie.weather
+                weather: serie.weather,
+                unite: 'C'
             };
         })
     }

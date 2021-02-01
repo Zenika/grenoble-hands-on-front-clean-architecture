@@ -33,9 +33,9 @@ export class CityPresenter extends Presenter<CityPresenterVM> {
         this.updateVM()
         await this.getCityUseCase.execute(new GetCityRequest(city), this.createGetCityPresenter(this))
         if (mode == 'daily') {
-            await this.retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(city), this.createRetrieveDailyWeatherPresenter(this))
+            await this.retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(city, 'C'), this.createRetrieveDailyWeatherPresenter(this))
         } else {
-            await this.retrieveCityHourlyWeatherUseCase.execute(new RetrieveWeatherRequest(city), this.createRetrieveHourlyWeatherPresenter(this))
+            await this.retrieveCityHourlyWeatherUseCase.execute(new RetrieveWeatherRequest(city, 'C'), this.createRetrieveHourlyWeatherPresenter(this))
         }
     }
 
