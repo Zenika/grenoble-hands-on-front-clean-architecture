@@ -10,8 +10,9 @@ import { Observable } from 'rxjs'
     providers: [
         {
             provide: CityPresenter,
-            useFactory: (presenterFactory: CityPresenterFactory) => presenterFactory.build(),
-            deps: [CityPresenterFactory]
+            useFactory: (presenterFactory: CityPresenterFactory,
+                         route: ActivatedRoute) => presenterFactory.build(route.snapshot.params.cityId),
+            deps: [CityPresenterFactory, ActivatedRoute]
         }
     ]
 })
@@ -20,18 +21,19 @@ export class CityComponent implements OnInit {
         this.cityPresenter.onVmUpdate(vm => subscriber.next(vm))
     )
 
-    constructor(private cityPresenter: CityPresenter, private route: ActivatedRoute) {
+    constructor(private cityPresenter: CityPresenter) {
     }
 
     ngOnInit(): void {
-        this.fetchDailyWeather()
+        this.cityPresenter.fetchCity().then()
+        this.cityPresenter.fetchWeather().then()
     }
 
-    fetchDailyWeather() {
-        this.cityPresenter.fetchCityWithWeather(this.route.snapshot.params.cityId, 'daily').then()
+    updateMode(mode: 'hourly' | 'daily') {
+        this.cityPresenter.updateMode(mode)
     }
 
-    fetchHourlyWeather() {
-        this.cityPresenter.fetchCityWithWeather(this.route.snapshot.params.cityId, 'hourly').then()
+    updateTemperatureUnite(temperatureUnite: 'C' | 'F') {
+        this.cityPresenter.updateTemperatureUnite(temperatureUnite)
     }
 }

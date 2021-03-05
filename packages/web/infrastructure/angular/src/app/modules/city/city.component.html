@@ -6,15 +6,35 @@
             <div class="control">
                 <label class="radio">
                     <input type="radio" id="select-daily-view"
-                           name="mode" value="simple"
-                           (change)="fetchDailyWeather()">
+                           name="mode"
+                           [checked]="vm.mode == 'daily'"
+                           (change)="updateMode('daily')">
                     Simple
                 </label>
                 <label class="radio">
                     <input type="radio" id="select-hourly-view"
-                           name="mode" value="detailed"
-                           (change)="fetchHourlyWeather()">
+                           name="mode" value=""
+                           [checked]="vm.mode == 'hourly'"
+                           (change)="updateMode('hourly')">
                     Detailed
+                </label>
+            </div>
+        </div>
+        <div class="panel-block">
+            <div class="control">
+                <label class="radio">
+                    <input type="radio" id="select-celsius-unit"
+                           name="unit"
+                           [checked]="vm.temperatureUnite == 'C'"
+                           (change)="updateTemperatureUnite('C')">
+                    C°
+                </label>
+                <label class="radio">
+                    <input type="radio" id="select-fahrenheit-unit"
+                           name="unit"
+                           [checked]="vm.temperatureUnite == 'F'"
+                           (change)="updateTemperatureUnite('F')">
+                    F°
                 </label>
             </div>
         </div>
@@ -30,8 +50,8 @@
                     <td>{{weather.day}}</td>
                     <td><img [src]="'http://www.7timer.info/img/misc/about_civil_'+weather.weather+'.png'" alt=""
                              width="50"></td>
-                    <td>{{weather.temperatureMax}}</td>
-                    <td>{{weather.temperatureMin}}</td>
+                    <td>{{weather.temperatureMax+ ' ' + weather.unite + '°'}}</td>
+                    <td>{{weather.temperatureMin+ ' ' + weather.unite + '°'}}</td>
                 </tr>
             </table>
         </div>
@@ -46,7 +66,7 @@
                     <td>{{weather.time}}</td>
                     <td><img [src]="'http://www.7timer.info/img/misc/about_civil_'+weather.weather+'.png'" alt=""
                              width="50"></td>
-                    <td>{{weather.temperature}}</td>
+                    <td>{{weather.temperature + ' ' + weather.unite+ '°'}}</td>
                 </tr>
             </table>
         </div>

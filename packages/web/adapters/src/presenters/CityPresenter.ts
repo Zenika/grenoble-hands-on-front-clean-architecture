@@ -15,28 +15,44 @@ export class CityPresenterVM {
     dailyWeather: DailyWeather[] | undefined
     hourlyWeather: HourlyWeather[] | undefined
     loading = false
+    temperatureUnite: 'C' | 'F' = 'C'
+    mode: 'hourly' | 'daily' = 'daily'
 }
 
 
 export class CityPresenter extends Presenter<CityPresenterVM> {
 
-    constructor(private getCityUseCase: GetCityUseCase,
+    constructor(private cityId: string,
+                private getCityUseCase: GetCityUseCase,
                 private retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase,
                 private retrieveCityHourlyWeatherUseCase: RetrieveCityHourlyWeatherUseCase) {
         super(new CityPresenterVM())
     }
 
-    async fetchCityWithWeather(city: string, mode: 'hourly' | 'daily' = 'daily') {
+    async fetchCity() {
+        await this.getCityUseCase.execute(new GetCityRequest(this.cityId), this.createGetCityPresenter(this))
+    }
+
+    async fetchWeather() {
         this.vm.loading = true
         this.vm.hourlyWeather = undefined
         this.vm.dailyWeather = undefined
         this.updateVM()
-        await this.getCityUseCase.execute(new GetCityRequest(city), this.createGetCityPresenter(this))
-        if (mode == 'daily') {
-            await this.retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(city, 'C'), this.createRetrieveDailyWeatherPresenter(this))
+        if (this.vm.mode == 'daily') {
+            await this.retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(this.cityId, this.vm.temperatureUnite), this.createRetrieveDailyWeatherPresenter(this))
         } else {
-            await this.retrieveCityHourlyWeatherUseCase.execute(new RetrieveWeatherRequest(city, 'C'), this.createRetrieveHourlyWeatherPresenter(this))
+            await this.retrieveCityHourlyWeatherUseCase.execute(new RetrieveWeatherRequest(this.cityId, this.vm.temperatureUnite), this.createRetrieveHourlyWeatherPresenter(this))
         }
+    }
+
+    updateTemperatureUnite(temperatureUnite: 'C' | 'F') {
+        this.vm.temperatureUnite = temperatureUnite;
+        this.fetchWeather()
+    }
+
+    updateMode(mode: 'hourly' | 'daily') {
+        this.vm.mode = mode;
+        this.fetchWeather()
     }
 
     private createGetCityPresenter(rootPresenter: CityPresenter): GetCityPresentation {

@@ -6,7 +6,7 @@ export class CityPresenterFactory {
     constructor(private getCityUseCase: GetCityUseCase, private retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase,  private retrieveCityHourlyWeatherUseCase: RetrieveCityHourlyWeatherUseCase) {
     }
 
-    build(): CityPresenter {
-        return new CityPresenter(this.getCityUseCase, this.retrieveCityWeatherUseCase, this.retrieveCityHourlyWeatherUseCase)
+    build(cityId: string): CityPresenter {
+        return new CityPresenter(cityId, this.getCityUseCase, this.retrieveCityWeatherUseCase, this.retrieveCityHourlyWeatherUseCase)
     }
 }

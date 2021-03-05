@@ -13,7 +13,7 @@ describe('CityPresenterFactory', () => {
         )
 
         // When
-        const presenter = factory.build()
+        const presenter = factory.build('GRENOBLE')
 
         // Then
         expect(presenter).not.toBeNull()

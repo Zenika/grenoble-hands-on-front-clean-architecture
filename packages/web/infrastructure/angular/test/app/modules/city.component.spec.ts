@@ -27,7 +27,7 @@ describe('CityComponent', () => {
         // Given
         const vm = new CityPresenterVM()
         vm.dailyWeather = [
-            { weather: 'sunny', temperatureMin: 8, temperatureMax: 15, day: '12/01/2021',  unite: 'C' }
+            { weather: 'sunny', temperatureMin: 8, temperatureMax: 15, day: '12/01/2021', unite: 'C' }
         ]
 
         // When
@@ -38,8 +38,8 @@ describe('CityComponent', () => {
         const weatherCol = weather[0].queryAll(By.css('td'))
         expect(weather.length).toBe(1)
         expect(weatherCol[0].nativeElement.textContent).toBe('12/01/2021')
-        expect(weatherCol[2].nativeElement.textContent).toBe('15')
-        expect(weatherCol[3].nativeElement.textContent).toBe('8')
+        expect(weatherCol[2].nativeElement.textContent).toBe('15 C°')
+        expect(weatherCol[3].nativeElement.textContent).toBe('8 C°')
     })
 
     it('display hourly weather with temperature', () => {
@@ -57,14 +57,14 @@ describe('CityComponent', () => {
         const weatherCol = weather[0].queryAll(By.css('td'))
         expect(weather.length).toBe(1)
         expect(weatherCol[0].nativeElement.textContent).toBe('12:00')
-        expect(weatherCol[2].nativeElement.textContent).toBe('8')
+        expect(weatherCol[2].nativeElement.textContent).toBe('8 C°')
     })
 
     test('fetch daily weather on init', async () => {
         const hasFetchCityWeather = await new Promise(resolve => {
             // Given
             const presenter = new CityPresenterBuilder()
-                .withFetchCityWithWeather(() => Promise.resolve().then(() => resolve(true)))
+                .withFetchWeather(() => Promise.resolve().then(() => resolve(true)))
                 .build()
 
             // When
@@ -74,17 +74,13 @@ describe('CityComponent', () => {
         expect(hasFetchCityWeather).toBe(true)
     })
 
-    test('fetch hourly weather on hourly view select', async () => {
-        const hasFetchCityWeather = await new Promise(resolve => {
+    test('update weather mode on hourly view select', async () => {
+        const requestWithMode = await new Promise(resolve => {
             // Given
-            const presenter = new CityPresenterBuilder()
-                .withFetchCityWithWeather((city, mode) => {
-                    if (mode === 'hourly') {
-                        return Promise.resolve().then(() => resolve(true))
-                    } else {
-                        return Promise.resolve()
-                    }
-                })
+            const vm = new CityPresenterVM()
+            vm.mode = 'daily'
+            const presenter = new CityPresenterBuilder(vm)
+                .withUpdateMode((mode) => resolve(mode))
                 .build()
 
             // When
@@ -92,10 +88,59 @@ describe('CityComponent', () => {
             fixture.debugElement.query(By.css('#select-hourly-view')).nativeElement.click()
         })
         // Then
-        expect(hasFetchCityWeather).toBe(true)
+        expect(requestWithMode).toBe('hourly')
     })
 
-    test.todo('fetch daily weather on daily view select')
+    test('update weather mode on daily view select', async () => {
+        const requestWithMode = await new Promise(resolve => {
+            // Given
+            const vm = new CityPresenterVM()
+            vm.mode = 'hourly'
+            const presenter = new CityPresenterBuilder(vm)
+                .withUpdateMode((mode) => resolve(mode))
+                .build()
+
+            // When
+            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
+            fixture.debugElement.query(By.css('#select-daily-view')).nativeElement.click()
+        })
+        // Then
+        expect(requestWithMode).toBe('daily')
+    })
+
+    test('update temperature unit on celsius select', async () => {
+        const requestWithTemperature = await new Promise(resolve => {
+            // Given
+            const vm = new CityPresenterVM()
+            vm.temperatureUnite = 'F'
+            const presenter = new CityPresenterBuilder(vm)
+                .withUpdateTemperatureUnit((temperatureUnit) => resolve(temperatureUnit))
+                .build()
+
+            // When
+            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
+            fixture.debugElement.query(By.css('#select-celsius-unit')).nativeElement.click()
+        })
+        // Then
+        expect(requestWithTemperature).toBe('C')
+    })
+
+    test('update temperature unit on fahrenheit select', async () => {
+        const requestWithTemperature = await new Promise(resolve => {
+            // Given
+            const vm = new CityPresenterVM()
+            vm.temperatureUnite = 'C'
+            const presenter = new CityPresenterBuilder()
+                .withUpdateTemperatureUnit((temperatureUnit) => resolve(temperatureUnit))
+                .build()
+
+            // When
+            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
+            fixture.debugElement.query(By.css('#select-fahrenheit-unit')).nativeElement.click()
+        })
+        // Then
+        expect(requestWithTemperature).toBe('F')
+    })
 })
 
 
