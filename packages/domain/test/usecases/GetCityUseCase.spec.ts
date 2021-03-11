@@ -1,6 +1,6 @@
 import { CityBuilder, CityRepository, GetCityRequest, GetCityUseCase } from '@grenoble-hands-on/domain'
 import { CityRepositoryBuilder } from '../builder/CityRepositoryBuilder'
-import { GetCityPresentationBuilder } from '../builder/GetCityPresentationBuilder'
+import { GetCityPresentationBuilder } from '../../src/ports/presenters/GetCityPresentationBuilder'
 
 describe('Get city use case', () => {
 

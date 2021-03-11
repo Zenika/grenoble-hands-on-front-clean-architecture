@@ -2,11 +2,14 @@ import { Presenter } from './Presenter'
 import {
     City,
     DailyWeather,
-    GetCityPresentation,
+    GetCityPresentationBuilder,
     GetCityRequest,
-    GetCityUseCase, HourlyWeather,
-    RetrieveCityDailyWeatherUseCase, RetrieveCityHourlyWeatherUseCase,
-    RetrieveDailyWeatherPresentation, RetrieveHourlyWeatherPresentation,
+    GetCityUseCase,
+    HourlyWeather,
+    RetrieveCityDailyWeatherUseCase,
+    RetrieveCityHourlyWeatherUseCase,
+    RetrieveDailyWeatherPresentationBuilder,
+    RetrieveHourlyWeatherPresentationBuilder,
     RetrieveWeatherRequest
 } from '@grenoble-hands-on/domain'
 
@@ -30,7 +33,13 @@ export class CityPresenter extends Presenter<CityPresenterVM> {
     }
 
     async fetchCity() {
-        await this.getCityUseCase.execute(new GetCityRequest(this.cityId), this.createGetCityPresenter(this))
+        const presenter = new GetCityPresentationBuilder()
+            .withDisplayCity(city => {
+                this.vm.city = city
+                this.updateVM()
+            })
+            .build()
+        await this.getCityUseCase.execute(new GetCityRequest(this.cityId), presenter)
     }
 
     async fetchWeather() {
@@ -39,48 +48,41 @@ export class CityPresenter extends Presenter<CityPresenterVM> {
         this.vm.dailyWeather = undefined
         this.updateVM()
         if (this.vm.mode == 'daily') {
-            await this.retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(this.cityId, this.vm.temperatureUnite), this.createRetrieveDailyWeatherPresenter(this))
+            await this.fetchDailyWeather()
         } else {
-            await this.retrieveCityHourlyWeatherUseCase.execute(new RetrieveWeatherRequest(this.cityId, this.vm.temperatureUnite), this.createRetrieveHourlyWeatherPresenter(this))
+            await this.fetchHourlyWeather()
         }
     }
 
     updateTemperatureUnite(temperatureUnite: 'C' | 'F') {
-        this.vm.temperatureUnite = temperatureUnite;
+        this.vm.temperatureUnite = temperatureUnite
         this.fetchWeather()
     }
 
     updateMode(mode: 'hourly' | 'daily') {
-        this.vm.mode = mode;
+        this.vm.mode = mode
         this.fetchWeather()
     }
 
-    private createGetCityPresenter(rootPresenter: CityPresenter): GetCityPresentation {
-        return {
-            displayCity(city: City) {
-                rootPresenter.vm.city = city
-                rootPresenter.updateVM()
-            }
-        }
+    private async fetchHourlyWeather() {
+        const presenter = new RetrieveHourlyWeatherPresentationBuilder()
+            .withDisplayWeather((weather: HourlyWeather[]) => {
+                this.vm.hourlyWeather = weather
+                this.vm.loading = false
+                this.updateVM()
+            })
+            .build()
+        await this.retrieveCityHourlyWeatherUseCase.execute(new RetrieveWeatherRequest(this.cityId, this.vm.temperatureUnite), presenter)
     }
 
-    private createRetrieveDailyWeatherPresenter(rootPresenter: CityPresenter): RetrieveDailyWeatherPresentation {
-        return {
-            displayWeather(weather: DailyWeather[]) {
-                rootPresenter.vm.dailyWeather = weather
-                rootPresenter.vm.loading = false
-                rootPresenter.updateVM()
-            }
-        }
-    }
-
-    private createRetrieveHourlyWeatherPresenter(rootPresenter: CityPresenter): RetrieveHourlyWeatherPresentation {
-        return {
-            displayWeather(weather: HourlyWeather[]) {
-                rootPresenter.vm.hourlyWeather = weather
-                rootPresenter.vm.loading = false
-                rootPresenter.updateVM()
-            }
-        }
+    private async fetchDailyWeather() {
+        const presenter = new RetrieveDailyWeatherPresentationBuilder()
+            .withDisplayWeather((weather: DailyWeather[]) => {
+                this.vm.dailyWeather = weather
+                this.vm.loading = false
+                this.updateVM()
+            })
+            .build()
+        await this.retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(this.cityId, this.vm.temperatureUnite), presenter)
     }
 }

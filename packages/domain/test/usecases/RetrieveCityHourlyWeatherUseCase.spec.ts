@@ -1,5 +1,5 @@
 import { HourlyWeather, RetrieveCityHourlyWeatherUseCase, RetrieveWeatherRequest } from '@grenoble-hands-on/domain'
-import { RetrieveHourlyWeatherPresentationBuilder } from '../builder/RetrieveHourlyWeatherPresentationBuilder'
+import { RetrieveHourlyWeatherPresentationBuilder } from '../../src/ports/presenters/RetrieveHourlyWeatherPresentationBuilder'
 import { WeatherRepositoryBuilder } from '../builder/WeatherRepositoryBuilder'
 
 describe('Retrieve city hourly weather use case', () => {

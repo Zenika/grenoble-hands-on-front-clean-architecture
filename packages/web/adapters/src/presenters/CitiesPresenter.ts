@@ -1,4 +1,4 @@
-import { City, GetCitiesPresentation, GetCitiesUseCase } from '@grenoble-hands-on/domain'
+import { City, GetCitiesPresentationBuilder, GetCitiesUseCase } from '@grenoble-hands-on/domain'
 import { Presenter } from './Presenter'
 
 export class CitiesPresenterVM {
@@ -12,15 +12,12 @@ export class CitiesPresenter extends Presenter<CitiesPresenterVM> {
     }
 
     async fetchCities() {
-        await this.getCitiesUseCase.execute(this.createGetCitiesPresenter(this))
-    }
-
-    private createGetCitiesPresenter(pagePresenter:  CitiesPresenter): GetCitiesPresentation {
-        return {
-            displayCities(cities: City[]) {
-                pagePresenter.vm.cities = cities
-                pagePresenter.updateVM()
-            }
-        };
+        await this.getCitiesUseCase.execute(new GetCitiesPresentationBuilder()
+            .withDisplayCities((cities: City[]) => {
+                this.vm.cities = cities
+                this.updateVM()
+            })
+            .build()
+        )
     }
 }

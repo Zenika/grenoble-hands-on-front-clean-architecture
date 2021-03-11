@@ -3,6 +3,9 @@ import { DailyWeather, RetrieveDailyWeatherPresentation } from '@grenoble-hands-
 export class RetrieveDailyWeatherPresentationBuilder {
     private displayWeather: (weather: DailyWeather[]) => void = () => null;
 
+    constructor() {
+    }
+
     withDisplayWeather(displayWeather: (weather: DailyWeather[]) => void) {
         this.displayWeather = displayWeather;
         return this;

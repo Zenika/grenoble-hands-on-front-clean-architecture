@@ -1,6 +1,6 @@
 import { GeoPosition, GetCitiesUseCase } from '@grenoble-hands-on/domain'
 import { CityRepositoryBuilder } from '../builder/CityRepositoryBuilder'
-import { GetCitiesPresentationBuilder } from '../builder/GetCitiesPresentationBuilder'
+import { GetCitiesPresentationBuilder } from '../../src/ports/presenters/GetCitiesPresentationBuilder'
 
 describe('Get cities use case', () => {
 
