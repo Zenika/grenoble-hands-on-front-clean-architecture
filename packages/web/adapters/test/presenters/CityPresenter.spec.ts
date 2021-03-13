@@ -2,8 +2,10 @@ import {
     GeoPosition,
     GetCityPresentation,
     GetCityRequest,
-    RetrieveDailyWeatherPresentation, RetrieveHourlyWeatherPresentation,
-    RetrieveWeatherRequest
+    RetrieveDailyWeatherPresentation,
+    RetrieveHourlyWeatherPresentation,
+    RetrieveWeatherRequest,
+    WeatherState
 } from '@grenoble-hands-on/domain'
 import { CityPresenter } from '@grenoble-hands-on/web-adapters'
 import { GetCityUseCaseBuilder } from '../builder/GetCityUseCaseBuilder'
@@ -40,7 +42,7 @@ describe('CityPresenter', () => {
         const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCaseBuilder()
             .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => {
                 presenter.displayWeather([
-                    { day: '12/01/2021', weather: 'sunny', temperatureMin: 9, temperatureMax: 19, unite: 'C' }
+                    { day: '12/01/2021', weather: WeatherState.sunny, temperatureMin: 9, temperatureMax: 19, unite: 'C' }
                 ])
             })
             .build()
@@ -52,7 +54,7 @@ describe('CityPresenter', () => {
 
         // Then
         expect(presenter.vm.dailyWeather).toHaveLength(1)
-        expect(presenter.vm.dailyWeather?.[0].weather).toBe('sunny')
+        expect(presenter.vm.dailyWeather?.[0].weather).toBe(WeatherState.sunny)
         expect(presenter.vm.hourlyWeather).toBeUndefined()
     })
 
@@ -62,7 +64,7 @@ describe('CityPresenter', () => {
         const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCaseBuilder()
             .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveHourlyWeatherPresentation) => {
                 presenter.displayWeather([
-                    { time: '15:00', weather: 'sunny', temperature: 19, unite: 'C' }
+                    { time: '15:00', weather: WeatherState.sunny, temperature: 19, unite: 'C' }
                 ])
             })
             .build()
@@ -75,7 +77,7 @@ describe('CityPresenter', () => {
 
         // Then
         expect(presenter.vm.hourlyWeather).toHaveLength(1)
-        expect(presenter.vm.hourlyWeather?.[0].weather).toBe('sunny')
+        expect(presenter.vm.hourlyWeather?.[0].weather).toBe(WeatherState.sunny)
         expect(presenter.vm.dailyWeather).toBeUndefined()
     })
 

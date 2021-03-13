@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import { CityComponent } from '../../../src/app/modules/city/city.component'
 import { CityPresenter, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { RouterTestingModule } from '@angular/router/testing'
-import { GeoPosition } from '@grenoble-hands-on/domain'
+import { GeoPosition, WeatherState } from '@grenoble-hands-on/domain'
 import { By } from '@angular/platform-browser'
 import { CityPresenterBuilder } from '../../builders/CityPresenterBuilder'
 
@@ -27,7 +27,7 @@ describe('CityComponent', () => {
         // Given
         const vm = new CityPresenterVM()
         vm.dailyWeather = [
-            { weather: 'sunny', temperatureMin: 8, temperatureMax: 15, day: '12/01/2021', unite: 'C' }
+            { weather: WeatherState.sunny, temperatureMin: 8, temperatureMax: 15, day: '12/01/2021', unite: 'C' }
         ]
 
         // When
@@ -46,7 +46,7 @@ describe('CityComponent', () => {
         // Given
         const vm = new CityPresenterVM()
         vm.hourlyWeather = [
-            { weather: 'sunny', temperature: 8, time: '12:00', unite: 'C' }
+            { weather: WeatherState.sunny, temperature: 8, time: '12:00', unite: 'C' }
         ]
 
         // When
@@ -60,8 +60,8 @@ describe('CityComponent', () => {
         expect(weatherCol[2].nativeElement.textContent).toBe('8 C°')
     })
 
-    test('fetch daily weather on init', async () => {
-        const hasFetchCityWeather = await new Promise(resolve => {
+    test('fetch weather on init', async () => {
+        const hasFetchDailyWeather = await new Promise(resolve => {
             // Given
             const presenter = new CityPresenterBuilder()
                 .withFetchWeather(() => Promise.resolve().then(() => resolve(true)))
@@ -71,7 +71,21 @@ describe('CityComponent', () => {
             new CityComponentBuilder().withPresenter(presenter).build()
         })
         // Then
-        expect(hasFetchCityWeather).toBe(true)
+        expect(hasFetchDailyWeather).toBe(true)
+    })
+
+    test('fetch city on init', async () => {
+        const hasFetchCity = await new Promise(resolve => {
+            // Given
+            const presenter = new CityPresenterBuilder()
+                .withFetchCity(() => Promise.resolve().then(() => resolve(true)))
+                .build()
+
+            // When
+            new CityComponentBuilder().withPresenter(presenter).build()
+        })
+        // Then
+        expect(hasFetchCity).toBe(true)
     })
 
     test('update weather mode on hourly view select', async () => {

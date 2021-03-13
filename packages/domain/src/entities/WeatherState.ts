@@ -1,0 +1,18 @@
+export enum WeatherState {
+    partly_cloudy= 'partly_cloudy',
+    cloudy= 'cloudy',
+    rain_s_sunny= 'rain_s_sunny',
+    sunny_s_snow= 'sunny_s_snow',
+    snow_s_sunny= 'snow_s_sunny',
+    sunny_s_rain= 'sunny_s_rain',
+    sunny= 'sunny',
+    snow_light= 'snow_light',
+    fog= 'fog',
+    cloudy_s_sunny= 'cloudy_s_sunny',
+    sunny_s_cloudy= 'sunny_s_cloudy',
+    sleet= 'sleet',
+    rain= 'rain',
+    snow= 'snow',
+    thunderstorms= 'thunderstorms',
+    unknown= 'unknown',
+}

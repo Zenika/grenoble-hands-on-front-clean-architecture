@@ -1,7 +1,6 @@
 import { RetrieveWeatherRequest } from '../ports/request/RetrieveWeatherRequest'
 import { WeatherRepository } from '../ports/repositories/WeatherRepository'
-import { RetrieveDailyWeatherPresentation } from '../ports/presenters/RetrieveDailyWeatherPresentation'
-import { DailyWeather, HourlyWeather, RetrieveHourlyWeatherPresentation } from '@grenoble-hands-on/domain'
+import { HourlyWeather, RetrieveHourlyWeatherPresentation } from '@grenoble-hands-on/domain'
 
 export class RetrieveCityHourlyWeatherUseCase {
     constructor(private readonly weatherRepository: WeatherRepository) {
@@ -13,7 +12,7 @@ export class RetrieveCityHourlyWeatherUseCase {
             if (request.unite == 'F') {
                 return weather.map(w => {
                     w.unite = 'F'
-                    w.temperature = w.temperature * (9 / 5) + 32
+                    w.temperature = Math.round(w.temperature * (9 / 5) + 32)
                     return w
                 })
             } else {

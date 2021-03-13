@@ -1,5 +1,5 @@
-import { HourlyWeather, RetrieveCityHourlyWeatherUseCase, RetrieveWeatherRequest } from '@grenoble-hands-on/domain'
-import { RetrieveHourlyWeatherPresentationBuilder } from '../../src/ports/presenters/RetrieveHourlyWeatherPresentationBuilder'
+import { HourlyWeather, RetrieveCityHourlyWeatherUseCase, RetrieveWeatherRequest, WeatherState } from '@grenoble-hands-on/domain'
+import { RetrieveHourlyWeatherPresentationBuilder } from '@grenoble-hands-on/domain'
 import { WeatherRepositoryBuilder } from '../builder/WeatherRepositoryBuilder'
 
 describe('Retrieve city hourly weather use case', () => {
@@ -7,9 +7,9 @@ describe('Retrieve city hourly weather use case', () => {
     test('display weather in C° for grenoble for next hours', async () => {
         // Given
         const weatherData: HourlyWeather[] = [
-            { time: '09:00', temperature: 25, weather: 'sunny', unite: 'C' },
-            { time: '10:00', temperature: 22, weather: 'cloud', unite: 'C' },
-            { time: '11:00', temperature: 23, weather: 'cloud', unite: 'C' }
+            { time: '09:00', temperature: 25, weather: WeatherState.sunny, unite: 'C' },
+            { time: '10:00', temperature: 22, weather: WeatherState.cloudy, unite: 'C' },
+            { time: '11:00', temperature: 23, weather: WeatherState.cloudy, unite: 'C' }
         ]
         const weatherRepository = new WeatherRepositoryBuilder()
             .withGetCityHourlyWeather(_ => Promise.resolve(weatherData))
@@ -34,7 +34,7 @@ describe('Retrieve city hourly weather use case', () => {
     test('display weather in F° for grenoble for next hours', async () => {
         // Given
         const weatherData: HourlyWeather[] = [
-            { time: '09:00', temperature: 25, weather: 'sunny', unite: 'C' },
+            { time: '09:00', temperature: 25, weather: WeatherState.sunny, unite: 'C' },
         ]
         const weatherRepository = new WeatherRepositoryBuilder()
             .withGetCityHourlyWeather(_ => Promise.resolve(weatherData))
@@ -52,7 +52,7 @@ describe('Retrieve city hourly weather use case', () => {
 
         // Then
         expect(weather).not.toBeNull()
-        expect(weather[0]).toEqual({ time: '09:00', temperature: 77, weather: 'sunny', unite: 'F' })
+        expect(weather[0]).toEqual({ time: '09:00', temperature: 77, weather: WeatherState.sunny, unite: 'F' })
     })
 
 })

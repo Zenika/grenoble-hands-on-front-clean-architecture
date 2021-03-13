@@ -1,3 +1,9 @@
 import { UniteDegree } from './UniteDegree'
+import { WeatherState } from './WeatherState'
 
-export type HourlyWeather = { time: string; temperature: number; weather: string, unite: UniteDegree }
+export interface HourlyWeather {
+    time: string;
+    temperature: number;
+    weather: WeatherState,
+    unite: UniteDegree
+}

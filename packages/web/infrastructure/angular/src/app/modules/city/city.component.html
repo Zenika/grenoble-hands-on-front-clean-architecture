@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="panel-block" *ngIf="vm.dailyWeather?.length">
-            <table id="daily-weather" class="table">
+            <table id="daily-weather" class="table is-bordered">
                 <tr>
                     <th>Date</th>
                     <th>Weather</th>
@@ -48,15 +48,14 @@
                 </tr>
                 <tr *ngFor="let weather of vm.dailyWeather">
                     <td>{{weather.day}}</td>
-                    <td><img [src]="'http://www.7timer.info/img/misc/about_civil_'+weather.weather+'.png'" alt=""
-                             width="50"></td>
+                    <td><img [src]="'https://ssl.gstatic.com/onebox/weather/48/'+weather.weather+'.png'" [alt]="weather.weather"></td>
                     <td>{{weather.temperatureMax+ ' ' + weather.unite + '°'}}</td>
                     <td>{{weather.temperatureMin+ ' ' + weather.unite + '°'}}</td>
                 </tr>
             </table>
         </div>
         <div class="panel-block" *ngIf="vm.hourlyWeather?.length">
-            <table id="hourly-weather" class="table">
+            <table id="hourly-weather" class="table is-bordered">
                 <tr>
                     <th>Time</th>
                     <th>Weather</th>
@@ -64,8 +63,7 @@
                 </tr>
                 <tr *ngFor="let weather of vm.hourlyWeather">
                     <td>{{weather.time}}</td>
-                    <td><img [src]="'http://www.7timer.info/img/misc/about_civil_'+weather.weather+'.png'" alt=""
-                             width="50"></td>
+                    <td><img [src]="'https://ssl.gstatic.com/onebox/weather/48/'+weather.weather+'.png'" [alt]="weather.weather"></td>
                     <td>{{weather.temperature + ' ' + weather.unite+ '°'}}</td>
                 </tr>
             </table>
