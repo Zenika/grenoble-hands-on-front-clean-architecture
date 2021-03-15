@@ -1,11 +1,10 @@
 import { TestBed } from '@angular/core/testing'
 
 import { CitiesComponent } from '../../../src/app/modules/cities/cities.component'
-import { CitiesPresenter, CitiesPresenterFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { CitiesPresenter, CitiesPresenterBuilder, CitiesPresenterFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { RouterTestingModule } from '@angular/router/testing'
 import { CityBuilder } from '@grenoble-hands-on/domain'
 import { By } from '@angular/platform-browser'
-import { CitiesPresenterBuilder } from '../../builders/CitiesPresenterBuilder'
 
 describe('CitiesComponent', () => {
 

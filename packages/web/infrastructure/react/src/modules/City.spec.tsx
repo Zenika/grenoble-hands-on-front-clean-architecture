@@ -1,10 +1,9 @@
-import { TestBed } from '@angular/core/testing'
-
-import { CityComponent } from '../../../src/app/modules/city/city.component'
-import { CityPresenter, CityPresenterBuilder, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
-import { RouterTestingModule } from '@angular/router/testing'
+import { render, screen, within } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import React from 'react'
+import { CityPresenterBuilder, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { City } from './City'
 import { GeoPosition, WeatherState } from '@grenoble-hands-on/domain'
-import { By } from '@angular/platform-browser'
 
 describe('CityComponent', () => {
 
@@ -13,50 +12,58 @@ describe('CityComponent', () => {
         const vm = new CityPresenterVM()
         vm.city = { name: 'Grenoble', position: new GeoPosition(45, 5) }
         const presenter = new CityPresenterBuilder(vm).build()
+        const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
         // When
-        const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
+        render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
 
         // Then
-        const header = fixture.debugElement.query(By.css('h2')).nativeElement.textContent
-        expect(header).toBe('Grenoble')
+        const header = screen.getByText('Grenoble')
+        expect(header).toBeTruthy()
     })
 
-    it('display daily weather with temperature', () => {
+    it('display daily weather with temperature', async () => {
         // Given
         const vm = new CityPresenterVM()
         vm.dailyWeather = [
             { weather: WeatherState.sunny, temperatureMin: 8, temperatureMax: 15, day: '12/01/2021', unite: 'C' }
         ]
+        const presenter = new CityPresenterBuilder(vm).build()
+        const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
         // When
-        const { fixture } = new CityComponentBuilder().withPresenter(new CityPresenterBuilder(vm).build()).build()
+        render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
 
         // Then
-        const weather = fixture.debugElement.queryAll(By.css('#daily-weather tr:not(:first-child)'))
-        const weatherCol = weather[0].queryAll(By.css('td'))
-        expect(weather.length).toBe(1)
-        expect(weatherCol[0].nativeElement.textContent).toBe('12/01/2021')
-        expect(weatherCol[2].nativeElement.textContent).toBe('15 C°')
-        expect(weatherCol[3].nativeElement.textContent).toBe('8 C°')
+        const weather = screen.queryAllByRole('row')
+        const weatherCol = weather[1]
+        const weatherDate = await within(weatherCol!).findByText('12/01/2021')
+        const temperatureMax = await within(weatherCol!).findByText('15 C°')
+        const temperatureMin = await within(weatherCol!).findByText('8 C°')
+        expect(weatherDate).toBeTruthy()
+        expect(temperatureMax).toBeTruthy()
+        expect(temperatureMin).toBeTruthy()
     })
 
-    it('display hourly weather with temperature', () => {
+    it('display hourly weather with temperature', async () => {
         // Given
         const vm = new CityPresenterVM()
         vm.hourlyWeather = [
             { weather: WeatherState.sunny, temperature: 8, time: '12:00', unite: 'C' }
         ]
+        const presenter = new CityPresenterBuilder(vm).build()
+        const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
         // When
-        const { fixture } = new CityComponentBuilder().withPresenter(new CityPresenterBuilder(vm).build()).build()
+        render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
 
         // Then
-        const weather = fixture.debugElement.queryAll(By.css('#hourly-weather tr:not(:first-child)'))
-        const weatherCol = weather[0].queryAll(By.css('td'))
-        expect(weather.length).toBe(1)
-        expect(weatherCol[0].nativeElement.textContent).toBe('12:00')
-        expect(weatherCol[2].nativeElement.textContent).toBe('8 C°')
+        const weather = screen.queryAllByRole('row')
+        const weatherCol = weather[1]
+        const weatherDate = await within(weatherCol!).findByText('12:00')
+        const temperature = await within(weatherCol!).findByText('8 C°')
+        expect(weatherDate).toBeTruthy()
+        expect(temperature).toBeTruthy()
     })
 
     test('fetch weather on init', async () => {
@@ -65,9 +72,10 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder()
                 .withFetchWeather(() => Promise.resolve().then(() => resolve(true)))
                 .build()
+            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            new CityComponentBuilder().withPresenter(presenter).build()
+            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
         })
         // Then
         expect(hasFetchDailyWeather).toBe(true)
@@ -79,9 +87,10 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder()
                 .withFetchCity(() => Promise.resolve().then(() => resolve(true)))
                 .build()
+            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            new CityComponentBuilder().withPresenter(presenter).build()
+            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
         })
         // Then
         expect(hasFetchCity).toBe(true)
@@ -95,10 +104,11 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder(vm)
                 .withUpdateMode((mode) => resolve(mode))
                 .build()
+            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
-            fixture.debugElement.query(By.css('#select-hourly-view')).nativeElement.click()
+            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+            screen.getByRole('radio', { name: /detailed/i }).click()
         })
         // Then
         expect(requestWithMode).toBe('hourly')
@@ -112,10 +122,11 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder(vm)
                 .withUpdateMode((mode) => resolve(mode))
                 .build()
+            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
-            fixture.debugElement.query(By.css('#select-daily-view')).nativeElement.click()
+            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+            screen.getByRole('radio', { name: /simple/i }).click()
         })
         // Then
         expect(requestWithMode).toBe('daily')
@@ -129,10 +140,11 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder(vm)
                 .withUpdateTemperatureUnit((temperatureUnit) => resolve(temperatureUnit))
                 .build()
+            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
-            fixture.debugElement.query(By.css('#select-celsius-unit')).nativeElement.click()
+            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+            screen.getByRole('radio', { name: /C°/ }).click()
         })
         // Then
         expect(requestWithTemperature).toBe('C')
@@ -146,43 +158,13 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder()
                 .withUpdateTemperatureUnit((temperatureUnit) => resolve(temperatureUnit))
                 .build()
+            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
-            fixture.debugElement.query(By.css('#select-fahrenheit-unit')).nativeElement.click()
+            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+            screen.getByRole('radio', { name: /F°/ }).click()
         })
         // Then
         expect(requestWithTemperature).toBe('F')
     })
 })
-
-
-export class CityComponentBuilder {
-    private presenter!: CityPresenter
-
-    withPresenter(presenter: CityPresenter) {
-        this.presenter = presenter
-        return this
-    }
-
-    build() {
-        TestBed.configureTestingModule({
-            declarations: [CityComponent],
-            providers: [
-                {
-                    provide: CityPresenterFactory,
-                    useValue: {
-                        build: () => this.presenter
-                    }
-                }
-            ],
-            imports: [
-                RouterTestingModule
-            ]
-        }).compileComponents().then()
-        const fixture = TestBed.createComponent(CityComponent)
-        const component = fixture.componentInstance
-        fixture.detectChanges()
-        return { component, fixture }
-    }
-}

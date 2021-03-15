@@ -1,4 +1,5 @@
-import { AddCityPresenter, AddCityPresenterVM, Subscriber } from '@grenoble-hands-on/web-adapters'
+import { Subscriber } from '../presenters/Presenter'
+import { AddCityPresenter, AddCityPresenterVM } from '../presenters/AddCityPresenter'
 
 export class AddCityPresenterBuilder {
     private onVmUpdate: (subscriber: Subscriber<AddCityPresenterVM>) => void = subscriber => subscriber(this.vm)
@@ -32,6 +33,7 @@ export class AddCityPresenterBuilder {
 
     build(): AddCityPresenter {
         return {
+            vm: this.vm,
             onVmUpdate: this.onVmUpdate,
             validateCityName: this.validateCityName,
             validateLatitude: this.validateLatitude,

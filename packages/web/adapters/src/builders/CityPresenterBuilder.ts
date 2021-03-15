@@ -1,4 +1,5 @@
-import { CityPresenter, CityPresenterVM, Subscriber } from '@grenoble-hands-on/web-adapters'
+import { CityPresenter, CityPresenterVM } from '../presenters/CityPresenter'
+import { Subscriber } from '../presenters/Presenter'
 
 export class CityPresenterBuilder {
     private fetchWeather: () => Promise<void> = () => Promise.resolve()
@@ -32,6 +33,7 @@ export class CityPresenterBuilder {
 
     build(): CityPresenter {
         return {
+            vm: this.vm,
             onVmUpdate: this.onVmUpdate,
             fetchWeather: this.fetchWeather,
             fetchCity: this.fetchCity,

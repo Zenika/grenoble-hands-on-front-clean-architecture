@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { AddCityPresenter, AddCityPresenterBuilder, AddCityPresenterFactory, AddCityPresenterVM } from '@grenoble-hands-on/web-adapters'
-
-import { AddCityComponent } from '../../../src/app/modules/add-city/add-city.component'
-import { By } from '@angular/platform-browser'
+import { fireEvent, render, RenderResult } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
+import React from 'react'
+import { AddCity } from './AddCity'
 
 describe('AddCityComponent', () => {
 
@@ -149,64 +149,56 @@ class AddCityComponentBuilder {
     }
 
     build() {
-        TestBed.configureTestingModule({
-            declarations: [AddCityComponent],
-            providers: [
-                {
-                    provide: AddCityPresenterFactory,
-                    useValue: {
-                        build: () => this.presenter
-                    }
-                }
-            ],
-            imports: []
-        }).compileComponents().then()
-        const fixture = TestBed.createComponent(AddCityComponent)
-        const component = fixture.componentInstance
-        fixture.detectChanges()
-        return new AddCityComponentWrapper(component, fixture)
+        const presenterFactory = { build: () => this.presenter } as AddCityPresenterFactory
+        const screen = render(<AddCity addCityPresenterFactory={presenterFactory}/>, { wrapper: MemoryRouter })
+        return new AddCityComponentWrapper(screen)
     }
 }
 
 class AddCityComponentWrapper {
-    constructor(private readonly component: AddCityComponent, private readonly fixture: ComponentFixture<AddCityComponent>) {
+    constructor(private readonly component: RenderResult) {
     }
 
     getLatitudeError() {
-        return this.fixture.debugElement.query(By.css('.help')).nativeElement.textContent
+        return this.component.getByLabelText('latitude error').textContent
     }
 
     getCityNameError() {
-        return this.fixture.debugElement.query(By.css('.help')).nativeElement.textContent
+        return this.component.getByLabelText('city name error').textContent
     }
 
     getLongitudeError() {
-        return this.fixture.debugElement.query(By.css('.help')).nativeElement.textContent
+        return this.component.getByLabelText('longitude error').textContent
     }
 
     isFormDisabled() {
-        return this.fixture.debugElement.query(By.css('button')).nativeElement.disabled
+        return this.component.getByRole('button', { name: /create/i }).hasAttribute('disabled')
     }
 
     updateCityName(value: string) {
-        this.updateInput('#city-name-input', value)
+        this.updateInput('Name', value)
     }
 
     updateLatitude(value: string) {
-        this.updateInput('#latitude-input', value)
+        this.updateInput('Latitude', value)
     }
 
     updateLongitude(value: string) {
-        this.updateInput('#longitude-input', value)
+        this.updateInput('Longitude', value)
     }
 
     private updateInput(selector: string, value: string) {
-        const input = this.fixture.debugElement.query(By.css(selector)).nativeElement
-        input.value = value
-        input.dispatchEvent(new Event('change'))
+        fireEvent.change(
+            this.component.getByLabelText(selector),
+            {
+                target: {
+                    value: value
+                },
+            }
+        )
     }
 
     submitForm() {
-        return this.fixture.debugElement.query(By.css('form')).nativeElement.dispatchEvent(new Event('submit'))
+        return fireEvent.submit(this.component.getByRole('form'))
     }
 }
