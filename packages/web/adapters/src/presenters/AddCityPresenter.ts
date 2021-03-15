@@ -70,6 +70,7 @@ export class AddCityPresenter extends Presenter<AddCityPresenterVM> {
                 this.vm.latitudeError = this.vm.latitudeTouched ? errors.get(NewCityFields.latitude) : ''
                 this.vm.longitudeError = this.vm.longitudeTouched ? errors.get(NewCityFields.longitude) : ''
                 this.vm.canCreateCity = errors.size == 0
+                this.updateVM()
             })
             .withNotifyCityAdded((city: City) => {
                 this.navigator.navigate(NavigationRoute.CITY(city)).then()

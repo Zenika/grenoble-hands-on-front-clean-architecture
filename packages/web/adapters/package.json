@@ -4,8 +4,8 @@
   "author": "Martin Choraine <martin.choraine@gmail.com>",
   "homepage": "",
   "license": "ISC",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/web/adapters/src/index.js",
+  "types": "./dist/web/adapters/src/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest",

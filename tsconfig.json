@@ -16,6 +16,7 @@
     "skipLibCheck": true,
     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,
+    "declaration": true,
     "paths": {
       "@grenoble-hands-on/domain": [
         "domain/src"
