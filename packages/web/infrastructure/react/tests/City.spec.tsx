@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import React from 'react'
 import { CityPresenterBuilder, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
-import { City } from './City'
+import { City } from '../src/modules/City'
 import { GeoPosition, WeatherState } from '@grenoble-hands-on/domain'
 
 describe('CityComponent', () => {

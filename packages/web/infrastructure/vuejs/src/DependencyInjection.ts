@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react'
-import { Route, Switch, useHistory } from 'react-router-dom'
+import { App, InjectionKey } from 'vue'
 import {
     AddCityPresenterFactory,
     CitiesPresenterFactory,
@@ -9,6 +8,7 @@ import {
     NavigationRoute,
     WeatherRepository7Timer
 } from '@grenoble-hands-on/web-adapters'
+import router from '@/router'
 import {
     AddCityUseCase,
     GetCitiesUseCase,
@@ -16,14 +16,12 @@ import {
     RetrieveCityDailyWeatherUseCase,
     RetrieveCityHourlyWeatherUseCase
 } from '@grenoble-hands-on/domain'
-import { Navbar } from './components/Navbar'
-import { Footer } from './components/Footer'
-import { Cities } from './modules/Cities'
-import { City } from './modules/City'
-import { AddCity } from './modules/AddCity'
 
-function App() {
-    const history = useHistory()
+export const CITY_PRESENTER_FACTORY: InjectionKey<CityPresenterFactory> = Symbol()
+export const CITIES_PRESENTER_FACTORY: InjectionKey<CitiesPresenterFactory> = Symbol()
+export const ADD_CITY_PRESENTER_FACTORY: InjectionKey<AddCityPresenterFactory> = Symbol()
+
+export const dependencies = (app: App) => {
     const httpClient: HttpClient = {
         get<T>(url: string): Promise<T> {
             return fetch(url).then(value => value.json())
@@ -31,8 +29,7 @@ function App() {
     }
     const navigation = {
         navigate(route: NavigationRoute): Promise<void> {
-            history.push(route)
-            return Promise.resolve()
+            return router.push(route).then()
         }
     }
 
@@ -48,28 +45,7 @@ function App() {
     const citiesPresenterFactory = new CitiesPresenterFactory(getCitiesUseCase)
     const addCityPresenterFactory = new AddCityPresenterFactory(new AddCityUseCase(cityRepository), navigation)
 
-    return (
-        <Fragment>
-            <Navbar/>
-            <section className="section">
-                <div className="container">
-                    <Switch>
-                        <Route exact path="/">
-                            <Cities citiesPresenterFactory={citiesPresenterFactory}/>
-                        </Route>
-                        <Route exact path="/create">
-                            <AddCity addCityPresenterFactory={addCityPresenterFactory}/>
-                        </Route>
-                        <Route path="/city/:id" render={(props) => (
-                            <City cityPresenterFactory={cityPresenterFactory} id={props.match.params.id}/>
-                        )}>
-                        </Route>
-                    </Switch>
-                </div>
-            </section>
-            <Footer/>
-        </Fragment>
-    )
+    app.provide(CITY_PRESENTER_FACTORY, cityPresenterFactory)
+    app.provide(CITIES_PRESENTER_FACTORY, citiesPresenterFactory)
+    app.provide(ADD_CITY_PRESENTER_FACTORY, addCityPresenterFactory)
 }
-
-export default App

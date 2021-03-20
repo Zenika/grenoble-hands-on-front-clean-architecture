@@ -11,7 +11,7 @@ export const Navbar: FunctionComponent = () => {
             </Link>
             <div className="navbar-menu">
                 <h2 className="navbar-item has-text-white">
-                    The best weather app in Angular
+                    The best weather app in React
                 </h2>
                 <Link className="navbar-item has-text-white" to={'/create'}>
                     Add city

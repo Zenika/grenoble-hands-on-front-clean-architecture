@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { CitiesPresenterBuilder, CitiesPresenterFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { CityBuilder } from '@grenoble-hands-on/domain'
-import { Cities } from './Cities'
+import { Cities } from '../src/modules/Cities'
 
 describe('CitiesComponent', () => {
 

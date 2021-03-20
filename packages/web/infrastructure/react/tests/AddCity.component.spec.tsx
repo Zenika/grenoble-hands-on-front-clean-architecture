@@ -2,7 +2,7 @@ import { AddCityPresenter, AddCityPresenterBuilder, AddCityPresenterFactory, Add
 import { fireEvent, render, RenderResult } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import React from 'react'
-import { AddCity } from './AddCity'
+import { AddCity } from '../src/modules/AddCity'
 
 describe('AddCityComponent', () => {
 
