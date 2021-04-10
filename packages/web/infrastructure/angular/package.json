@@ -1,6 +1,6 @@
 {
   "name": "@grenoble-hands-on/angular",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,7 +9,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "~11.1.1",
     "@angular/common": "~11.1.1",
@@ -19,15 +18,15 @@
     "@angular/platform-browser": "~11.1.1",
     "@angular/platform-browser-dynamic": "~11.1.1",
     "@angular/router": "~11.1.1",
-    "@grenoble-hands-on/web-adapters": "0.0.0",
-    "@grenoble-hands-on/domain": "0.0.0",
+    "@grenoble-hands-on/web-adapters": "0.0.2",
+    "@grenoble-hands-on/domain": "0.0.2",
     "bulma": "^0.9.1",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-builders/jest": "^10.0.1",
+    "@angular-builders/jest": "^10.0.2",
     "@angular-devkit/build-angular": "~0.1101.1",
     "@angular/cli": "~11.1.1",
     "@angular/compiler-cli": "~11.1.1",

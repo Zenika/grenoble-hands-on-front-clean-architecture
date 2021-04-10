@@ -1,11 +1,12 @@
 {
   "name": "@grenoble-hands-on/domain",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "author": "Martin Choraine <martin.choraine@gmail.com>",
-  "homepage": "",
+  "homepage": "https://github.com/Zenika/grenoble-hands-on-front-clean-architecture",
   "license": "ISC",
-  "main": "./dist/src/index.js",
-  "types": "./dist/src/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": ["dist/**/*"],
   "scripts": {
     "build": "tsc",
     "test": "jest",

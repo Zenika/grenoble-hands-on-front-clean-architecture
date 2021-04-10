@@ -1,7 +1,6 @@
 {
-  "name": "hands-on-clean-architecture-vuejs",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@grenoble-hands-on/vuejs",
+  "version": "0.0.2",
   "scripts": {
     "start": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -13,8 +12,8 @@
     "core-js": "^3.6.5",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "@grenoble-hands-on/web-adapters": "0.0.0",
-    "@grenoble-hands-on/domain": "0.0.0"
+    "@grenoble-hands-on/web-adapters": "0.0.2",
+    "@grenoble-hands-on/domain": "0.0.2"
   },
   "devDependencies": {
     "@testing-library/vue": "^6.4.0",
