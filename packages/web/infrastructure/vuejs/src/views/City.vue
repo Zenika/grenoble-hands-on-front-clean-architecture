@@ -1,7 +1,7 @@
 <template>
   <h1 class="title">Cities weather</h1>
   <article class="panel is-primary">
-    <div class="panel-heading"><h2>{{ vm.city?.name }}</h2></div>
+    <div class="panel-heading"><h2 aria-label="city name">{{ vm.city?.name }}</h2></div>
     <div class="panel-block">
       <div class="control">
         <label class="radio">
