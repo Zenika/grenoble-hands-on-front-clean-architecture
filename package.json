@@ -10,6 +10,7 @@
     "postinstall": "lerna bootstrap",
     "test": "jest",
     "angular": "npm start --prefix packages/web/infrastructure/angular",
-    "react": "npm start --prefix packages/web/infrastructure/react"
+    "react": "npm start --prefix packages/web/infrastructure/react",
+    "vuejs": "npm start --prefix packages/web/infrastructure/vuejs"
   }
 }

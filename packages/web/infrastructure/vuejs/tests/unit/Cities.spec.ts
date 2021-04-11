@@ -3,6 +3,7 @@ import { CityBuilder } from '@grenoble-hands-on/domain'
 import { CITIES_PRESENTER_FACTORY } from '@/DependencyInjection'
 import { render, RenderResult } from '@testing-library/vue'
 import Cities from '@/views/Cities.vue'
+import { RouterLinkStub } from '@vue/test-utils'
 
 describe('CitiesComponent', () => {
 
@@ -56,6 +57,9 @@ class CitiesComponentBuilder {
       global: {
         provide: {
           [CITIES_PRESENTER_FACTORY as symbol]: presenterFactory
+        },
+        stubs: {
+          RouterLink: RouterLinkStub
         }
       }
     })

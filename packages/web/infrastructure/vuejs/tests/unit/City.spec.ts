@@ -189,7 +189,7 @@ class CityComponentBuilder {
     async build() {
         const router = createRouter({
             history: createMemoryHistory(),
-            routes: [{ path: '/city/:cityId', component: City }]
+            routes: [{ path: '/city/:cityId', component: City }, { path: '/', component: City }]
         })
         await router.push('/city/GRENOBLE')
         await router.isReady()
@@ -221,7 +221,7 @@ class CityComponentWrapper {
         const date = weatherCol[0].textContent
         const temperatureMax = weatherCol[2].textContent
         const temperatureMin = weatherCol[3].textContent
-        return {date, temperatureMax, temperatureMin}
+        return { date, temperatureMax, temperatureMin }
     }
 
     async getHourlyWeather() {

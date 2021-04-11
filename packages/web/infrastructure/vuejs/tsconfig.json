@@ -11,14 +11,19 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": ".",
     "types": [
       "webpack-env",
       "jest"
     ],
     "paths": {
+      "@grenoble-hands-on/domain": [
+        "domain/src"
+      ],
+      "@grenoble-hands-on/web-adapters": [
+        "web/adapters/src"
+      ],
       "@/*": [
-        "src/*"
+        "web/infrastructure/vuejs/src/*"
       ]
     },
     "lib": [
