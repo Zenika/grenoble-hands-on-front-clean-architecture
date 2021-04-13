@@ -28,7 +28,7 @@ export class City extends Component<CityProps, CityPresenterVM> {
         return (<section>
                 <h1 className="title">Cities weather</h1>
                 <article className="panel is-primary">
-                    <div className="panel-heading"><h2>{vm.city?.name}</h2></div>
+                    <div className="panel-heading"><h2 aria-label="city name">{vm.city?.name}</h2></div>
                     <div className="panel-block">
                         <div className="control">
                             <label className="radio">

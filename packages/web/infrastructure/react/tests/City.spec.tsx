@@ -1,25 +1,24 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, RenderResult } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import React from 'react'
-import { CityPresenterBuilder, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { CityPresenter, CityPresenterBuilder, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { City } from '../src/modules/City'
 import { GeoPosition, WeatherState } from '@grenoble-hands-on/domain'
 
 describe('CityComponent', () => {
 
-    it('display header with city name', () => {
+    it('display header with city name', async () => {
         // Given
         const vm = new CityPresenterVM()
         vm.city = { name: 'Grenoble', position: new GeoPosition(45, 5) }
-        const presenter = new CityPresenterBuilder(vm).build()
-        const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
         // When
-        render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+        const ui = await new CityComponentBuilder()
+            .withPresenter(new CityPresenterBuilder(vm).build())
+            .build()
 
         // Then
-        const header = screen.getByText('Grenoble')
-        expect(header).toBeTruthy()
+        const header = ui.getHeader()
+        expect(header).toBe('Grenoble')
     })
 
     it('display daily weather with temperature', async () => {
@@ -28,42 +27,37 @@ describe('CityComponent', () => {
         vm.dailyWeather = [
             { weather: WeatherState.sunny, temperatureMin: 8, temperatureMax: 15, day: '12/01/2021', unite: 'C' }
         ]
-        const presenter = new CityPresenterBuilder(vm).build()
-        const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
         // When
-        render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+        const ui = await new CityComponentBuilder()
+            .withPresenter(new CityPresenterBuilder(vm).build())
+            .build()
 
         // Then
-        const weather = screen.queryAllByRole('row')
-        const weatherCol = weather[1]
-        const weatherDate = await within(weatherCol!).findByText('12/01/2021')
-        const temperatureMax = await within(weatherCol!).findByText('15 C°')
-        const temperatureMin = await within(weatherCol!).findByText('8 C°')
-        expect(weatherDate).toBeTruthy()
-        expect(temperatureMax).toBeTruthy()
-        expect(temperatureMin).toBeTruthy()
+        const weather = await ui.getDailyWeather()
+        expect(weather).toBeTruthy()
+        expect(weather.date).toBe('12/01/2021')
+        expect(weather.temperatureMax).toBe('15 C°')
+        expect(weather.temperatureMin).toBe('8 C°')
     })
 
     it('display hourly weather with temperature', async () => {
         // Given
         const vm = new CityPresenterVM()
         vm.hourlyWeather = [
-            { weather: WeatherState.sunny, temperature: 8, time: '12:00', unite: 'C' }
+            { weather: WeatherState.sunny, temperature: 8, time: '12:00', unite: 'F' }
         ]
-        const presenter = new CityPresenterBuilder(vm).build()
-        const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
         // When
-        render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+        const ui = await new CityComponentBuilder()
+            .withPresenter(new CityPresenterBuilder(vm).build())
+            .build()
 
         // Then
-        const weather = screen.queryAllByRole('row')
-        const weatherCol = weather[1]
-        const weatherDate = await within(weatherCol!).findByText('12:00')
-        const temperature = await within(weatherCol!).findByText('8 C°')
-        expect(weatherDate).toBeTruthy()
-        expect(temperature).toBeTruthy()
+        const weather = await ui.getHourlyWeather()
+        expect(weather).toBeTruthy()
+        expect(weather.hour).toBe('12:00')
+        expect(weather.temperature).toBe('8 F°')
     })
 
     test('fetch weather on init', async () => {
@@ -72,10 +66,11 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder()
                 .withFetchWeather(() => Promise.resolve().then(() => resolve(true)))
                 .build()
-            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
         })
         // Then
         expect(hasFetchDailyWeather).toBe(true)
@@ -87,10 +82,11 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder()
                 .withFetchCity(() => Promise.resolve().then(() => resolve(true)))
                 .build()
-            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
         })
         // Then
         expect(hasFetchCity).toBe(true)
@@ -104,11 +100,14 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder(vm)
                 .withUpdateMode((mode) => resolve(mode))
                 .build()
-            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
-            screen.getByRole('radio', { name: /detailed/i }).click()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    ui.selectHourlyMode()
+                })
         })
         // Then
         expect(requestWithMode).toBe('hourly')
@@ -122,11 +121,14 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder(vm)
                 .withUpdateMode((mode) => resolve(mode))
                 .build()
-            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
-            screen.getByRole('radio', { name: /simple/i }).click()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    ui.selectDailyMode()
+                })
         })
         // Then
         expect(requestWithMode).toBe('daily')
@@ -140,11 +142,14 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder(vm)
                 .withUpdateTemperatureUnit((temperatureUnit) => resolve(temperatureUnit))
                 .build()
-            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
-            screen.getByRole('radio', { name: /C°/ }).click()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    ui.selectCelsius()
+                })
         })
         // Then
         expect(requestWithTemperature).toBe('C')
@@ -158,13 +163,73 @@ describe('CityComponent', () => {
             const presenter = new CityPresenterBuilder()
                 .withUpdateTemperatureUnit((temperatureUnit) => resolve(temperatureUnit))
                 .build()
-            const presenterFactory = { build: (_: string) => presenter } as CityPresenterFactory
 
             // When
-            render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
-            screen.getByRole('radio', { name: /F°/ }).click()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    ui.selectFahrenheit()
+                })
         })
         // Then
         expect(requestWithTemperature).toBe('F')
     })
 })
+
+class CityComponentBuilder {
+    private presenter!: CityPresenter
+
+    withPresenter(presenter: CityPresenter) {
+        this.presenter = presenter
+        return this
+    }
+
+    async build() {
+        const presenterFactory = { build: (_: string) => this.presenter } as CityPresenterFactory
+        const screen = render(<City cityPresenterFactory={presenterFactory} id={'Grenoble'}/>, { wrapper: MemoryRouter })
+        return new CityComponentWrapper(screen)
+    }
+}
+
+class CityComponentWrapper {
+    constructor(private readonly component: RenderResult) {
+    }
+
+    getHeader() {
+        return this.component.getByLabelText('city name').textContent
+    }
+
+    async getDailyWeather() {
+        const weather = this.component.queryAllByRole('row')
+        const weatherCol = Array.from(weather[1].querySelectorAll('td').values())
+        const date = weatherCol[0].textContent
+        const temperatureMax = weatherCol[2].textContent
+        const temperatureMin = weatherCol[3].textContent
+        return { date, temperatureMax, temperatureMin }
+    }
+
+    async getHourlyWeather() {
+        const weather = this.component.queryAllByRole('row')
+        const weatherCol = Array.from(weather[1].querySelectorAll('td').values())
+        const hour = weatherCol[0].textContent
+        const temperature = weatherCol[2].textContent
+        return { hour, temperature }
+    }
+
+    selectHourlyMode() {
+        this.component.getByRole('radio', { name: /detailed/i }).click()
+    }
+
+    selectDailyMode() {
+        this.component.getByRole('radio', { name: /simple/i }).click()
+    }
+
+    selectCelsius() {
+        this.component.getByRole('radio', { name: /C°/ }).click()
+    }
+
+    selectFahrenheit() {
+        this.component.getByRole('radio', { name: /F°/ }).click()
+    }
+}
