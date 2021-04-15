@@ -1,27 +1,27 @@
 <h1 class="title">Create city</h1>
 
 <div class="card" *ngIf="vm$ | async as vm">
-  <form class="card-content" (submit)="createCity($event)">
+  <form class="card-content" (submit)="createCity($event)" role="form">
     <div class="field city-name">
       <label for="city-name-input" class="label">Name</label>
       <div class="control">
         <input id="city-name-input" class="input" type="text" (change)="validateCityName($event)" placeholder="City name">
       </div>
-      <p class="help is-danger" *ngIf="vm.cityNameError">{{vm.cityNameError}}</p>
+      <p class="help is-danger" *ngIf="vm.cityNameError" aria-label="city name error">{{vm.cityNameError}}</p>
     </div>
     <div class="field latitude">
       <label for="latitude-input"  class="label">Latitude</label>
       <div class="control">
         <input id="latitude-input" class="input" type="text" (change)="validateLatitude($event)" placeholder="Latitude">
       </div>
-      <p class="help is-danger" *ngIf="vm.latitudeError">{{vm.latitudeError}}</p>
+      <p class="help is-danger" *ngIf="vm.latitudeError" aria-label="latitude error">{{vm.latitudeError}}</p>
     </div>
     <div class="field longitude">
       <label for="longitude-input" class="label">Longitude</label>
       <div class="control">
         <input id="longitude-input" class="input" type="text" (change)="validateLongitude($event)" placeholder="Longitude">
       </div>
-      <p class="help is-danger" *ngIf="vm.longitudeError">{{vm.longitudeError}}</p>
+      <p class="help is-danger" *ngIf="vm.longitudeError" aria-label="longitude error">{{vm.longitudeError}}</p>
     </div>
     <div class="control">
       <button type="submit" class="button is-primary" [disabled]="!vm.canCreateCity">Create</button>

@@ -1,28 +1,27 @@
-import { TestBed } from '@angular/core/testing'
-
 import { CityComponent } from '../../../src/app/modules/city/city.component'
 import { CityPresenter, CityPresenterBuilder, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { RouterTestingModule } from '@angular/router/testing'
 import { GeoPosition, WeatherState } from '@grenoble-hands-on/domain'
-import { By } from '@angular/platform-browser'
+import { render, RenderResult } from '@testing-library/angular'
 
 describe('CityComponent', () => {
 
-    it('display header with city name', () => {
+    it('display header with city name', async () => {
         // Given
         const vm = new CityPresenterVM()
         vm.city = { name: 'Grenoble', position: new GeoPosition(45, 5) }
-        const presenter = new CityPresenterBuilder(vm).build()
 
         // When
-        const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
+        const ui = await new CityComponentBuilder()
+            .withPresenter(new CityPresenterBuilder(vm).build())
+            .build()
 
         // Then
-        const header = fixture.debugElement.query(By.css('h2')).nativeElement.textContent
+        const header = ui.getHeader()
         expect(header).toBe('Grenoble')
     })
 
-    it('display daily weather with temperature', () => {
+    it('display daily weather with temperature', async () => {
         // Given
         const vm = new CityPresenterVM()
         vm.dailyWeather = [
@@ -30,33 +29,35 @@ describe('CityComponent', () => {
         ]
 
         // When
-        const { fixture } = new CityComponentBuilder().withPresenter(new CityPresenterBuilder(vm).build()).build()
+        const ui = await new CityComponentBuilder()
+            .withPresenter(new CityPresenterBuilder(vm).build())
+            .build()
 
         // Then
-        const weather = fixture.debugElement.queryAll(By.css('#daily-weather tr:not(:first-child)'))
-        const weatherCol = weather[0].queryAll(By.css('td'))
-        expect(weather.length).toBe(1)
-        expect(weatherCol[0].nativeElement.textContent).toBe('12/01/2021')
-        expect(weatherCol[2].nativeElement.textContent).toBe('15 C°')
-        expect(weatherCol[3].nativeElement.textContent).toBe('8 C°')
+        const weather = await ui.getDailyWeather()
+        expect(weather).toBeTruthy()
+        expect(weather.date).toBe('12/01/2021')
+        expect(weather.temperatureMax).toBe('15 C°')
+        expect(weather.temperatureMin).toBe('8 C°')
     })
 
-    it('display hourly weather with temperature', () => {
+    it('display hourly weather with temperature', async () => {
         // Given
         const vm = new CityPresenterVM()
         vm.hourlyWeather = [
-            { weather: WeatherState.sunny, temperature: 8, time: '12:00', unite: 'C' }
+            { weather: WeatherState.sunny, temperature: 8, time: '12:00', unite: 'F' }
         ]
 
         // When
-        const { fixture } = new CityComponentBuilder().withPresenter(new CityPresenterBuilder(vm).build()).build()
+        const ui = await new CityComponentBuilder()
+            .withPresenter(new CityPresenterBuilder(vm).build())
+            .build()
 
         // Then
-        const weather = fixture.debugElement.queryAll(By.css('#hourly-weather tr:not(:first-child)'))
-        const weatherCol = weather[0].queryAll(By.css('td'))
-        expect(weather.length).toBe(1)
-        expect(weatherCol[0].nativeElement.textContent).toBe('12:00')
-        expect(weatherCol[2].nativeElement.textContent).toBe('8 C°')
+        const weather = await ui.getHourlyWeather()
+        expect(weather).toBeTruthy()
+        expect(weather.hour).toBe('12:00')
+        expect(weather.temperature).toBe('8 F°')
     })
 
     test('fetch weather on init', async () => {
@@ -67,7 +68,9 @@ describe('CityComponent', () => {
                 .build()
 
             // When
-            new CityComponentBuilder().withPresenter(presenter).build()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
         })
         // Then
         expect(hasFetchDailyWeather).toBe(true)
@@ -81,7 +84,9 @@ describe('CityComponent', () => {
                 .build()
 
             // When
-            new CityComponentBuilder().withPresenter(presenter).build()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
         })
         // Then
         expect(hasFetchCity).toBe(true)
@@ -97,8 +102,12 @@ describe('CityComponent', () => {
                 .build()
 
             // When
-            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
-            fixture.debugElement.query(By.css('#select-hourly-view')).nativeElement.click()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    ui.selectHourlyMode()
+                })
         })
         // Then
         expect(requestWithMode).toBe('hourly')
@@ -114,8 +123,12 @@ describe('CityComponent', () => {
                 .build()
 
             // When
-            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
-            fixture.debugElement.query(By.css('#select-daily-view')).nativeElement.click()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    ui.selectDailyMode()
+                })
         })
         // Then
         expect(requestWithMode).toBe('daily')
@@ -131,8 +144,12 @@ describe('CityComponent', () => {
                 .build()
 
             // When
-            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
-            fixture.debugElement.query(By.css('#select-celsius-unit')).nativeElement.click()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    ui.selectCelsius()
+                })
         })
         // Then
         expect(requestWithTemperature).toBe('C')
@@ -148,13 +165,18 @@ describe('CityComponent', () => {
                 .build()
 
             // When
-            const { fixture } = new CityComponentBuilder().withPresenter(presenter).build()
-            fixture.debugElement.query(By.css('#select-fahrenheit-unit')).nativeElement.click()
+            new CityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    ui.selectFahrenheit()
+                })
         })
         // Then
         expect(requestWithTemperature).toBe('F')
     })
 })
+
 
 
 export class CityComponentBuilder {
@@ -165,9 +187,8 @@ export class CityComponentBuilder {
         return this
     }
 
-    build() {
-        TestBed.configureTestingModule({
-            declarations: [CityComponent],
+    async build() {
+        const screen = await render(CityComponent, {
             providers: [
                 {
                     provide: CityPresenterFactory,
@@ -179,10 +200,49 @@ export class CityComponentBuilder {
             imports: [
                 RouterTestingModule
             ]
-        }).compileComponents().then()
-        const fixture = TestBed.createComponent(CityComponent)
-        const component = fixture.componentInstance
-        fixture.detectChanges()
-        return { component, fixture }
+        })
+        return new CityComponentWrapper(screen)
+    }
+}
+
+class CityComponentWrapper {
+    constructor(private readonly component: RenderResult<CityComponent>) {
+    }
+
+    getHeader() {
+        return this.component.getByLabelText('city name').textContent
+    }
+
+    async getDailyWeather() {
+        const weather = this.component.queryAllByRole('row')
+        const weatherCol = Array.from(weather[1].querySelectorAll('td'))
+        const date = weatherCol[0].textContent
+        const temperatureMax = weatherCol[2].textContent
+        const temperatureMin = weatherCol[3].textContent
+        return { date, temperatureMax, temperatureMin }
+    }
+
+    async getHourlyWeather() {
+        const weather = this.component.queryAllByRole('row')
+        const weatherCol = Array.from(weather[1].querySelectorAll('td'))
+        const hour = weatherCol[0].textContent
+        const temperature = weatherCol[2].textContent
+        return { hour, temperature }
+    }
+
+    selectHourlyMode() {
+        this.component.getByRole('radio', { name: /detailed/i }).click()
+    }
+
+    selectDailyMode() {
+        this.component.getByRole('radio', { name: /simple/i }).click()
+    }
+
+    selectCelsius() {
+        this.component.getByRole('radio', { name: /C°/ }).click()
+    }
+
+    selectFahrenheit() {
+        this.component.getByRole('radio', { name: /F°/ }).click()
     }
 }

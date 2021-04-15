@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "echo > node_modules/@angular-builders/jest/dist/jest-config/global-mocks.js"
   },
   "dependencies": {
     "@angular/animations": "~11.1.1",
@@ -31,6 +32,7 @@
     "@angular/cli": "~11.1.1",
     "@angular/compiler-cli": "~11.1.1",
     "@angular/language-service": "~11.1.1",
+    "@testing-library/angular": "^10.5.0",
     "@types/jest": "^26.0.19",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",

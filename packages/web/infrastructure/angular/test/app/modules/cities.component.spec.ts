@@ -1,14 +1,12 @@
-import { TestBed } from '@angular/core/testing'
-
 import { CitiesComponent } from '../../../src/app/modules/cities/cities.component'
 import { CitiesPresenter, CitiesPresenterBuilder, CitiesPresenterFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { RouterTestingModule } from '@angular/router/testing'
 import { CityBuilder } from '@grenoble-hands-on/domain'
-import { By } from '@angular/platform-browser'
+import { render, RenderResult } from '@testing-library/angular'
 
 describe('CitiesComponent', () => {
 
-    it('display cities', () => {
+    it('display cities', async () => {
         // Given
         const vm = new CitiesPresenterVM()
         vm.cities = [
@@ -18,10 +16,10 @@ describe('CitiesComponent', () => {
         const presenter = new CitiesPresenterBuilder(vm).build()
 
         // When
-        const { fixture } = new CitiesComponentBuilder().withPresenter(presenter).build()
+        const ui = await new CitiesComponentBuilder().withPresenter(presenter).build()
 
         // Then
-        const citiesName = fixture.debugElement.queryAll(By.css('.panel-block h2')).map(dom => dom.nativeElement.textContent)
+        const citiesName = ui.getCitiesDisplay()
         expect(citiesName).toEqual(['Grenoble', 'Lyon'])
     })
 
@@ -53,9 +51,8 @@ class CitiesComponentBuilder {
         return this
     }
 
-    build() {
-        TestBed.configureTestingModule({
-            declarations: [CitiesComponent],
+    async build() {
+        const screen = await render(CitiesComponent, {
             providers: [
                 {
                     provide: CitiesPresenterFactory,
@@ -68,10 +65,15 @@ class CitiesComponentBuilder {
                 RouterTestingModule
             ]
         })
-               .compileComponents()
-        const fixture = TestBed.createComponent(CitiesComponent)
-        const component = fixture.componentInstance
-        fixture.detectChanges()
-        return { component, fixture }
+        return new CitiesComponentWrapper(screen)
+    }
+}
+
+class CitiesComponentWrapper {
+    constructor(private readonly component: RenderResult<CitiesComponent>) {
+    }
+
+    getCitiesDisplay() {
+        return this.component.getAllByRole('link').map((el: HTMLElement) => el.textContent)
     }
 }

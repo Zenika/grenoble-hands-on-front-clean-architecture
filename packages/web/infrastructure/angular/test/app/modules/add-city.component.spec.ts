@@ -1,19 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { AddCityPresenter, AddCityPresenterBuilder, AddCityPresenterFactory, AddCityPresenterVM } from '@grenoble-hands-on/web-adapters'
 
 import { AddCityComponent } from '../../../src/app/modules/add-city/add-city.component'
+import { createEvent, fireEvent, render, RenderResult } from '@testing-library/angular'
+import { RouterTestingModule } from '@angular/router/testing'
 import { By } from '@angular/platform-browser'
 
 describe('AddCityComponent', () => {
 
-    test('display error on city name', () => {
+    test('display error on city name', async () => {
         // Given
         const vm = new AddCityPresenterVM()
         vm.cityNameError = 'City required'
         const presenter = new AddCityPresenterBuilder(vm).build()
 
         // When
-        const ui = new AddCityComponentBuilder().withPresenter(presenter).build()
+        const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
 
         // Then
         const error = ui.getCityNameError()
@@ -21,49 +22,49 @@ describe('AddCityComponent', () => {
 
     })
 
-    test('display error on latitude', () => {
+    test('display error on latitude', async () => {
         // Given
         const vm = new AddCityPresenterVM()
         vm.latitudeError = 'Latitude required'
         const presenter = new AddCityPresenterBuilder(vm).build()
 
         // When
-        const ui = new AddCityComponentBuilder().withPresenter(presenter).build()
+        const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
 
         // Then
         const error = ui.getLatitudeError()
         expect(error).toBe('Latitude required')
     })
 
-    test('display error on longitude', () => {
+    test('display error on longitude', async () => {
         // Given
         const vm = new AddCityPresenterVM()
         vm.longitudeError = 'Longitude required'
         const presenter = new AddCityPresenterBuilder(vm).build()
 
         // When
-        const ui = new AddCityComponentBuilder().withPresenter(presenter).build()
+        const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
 
         // Then
         const error = ui.getLongitudeError()
         expect(error).toBe('Longitude required')
     })
 
-    test('cannot submit form on error', () => {
+    test('cannot submit form on error', async () => {
         // Given
         const vm = new AddCityPresenterVM()
         vm.canCreateCity = false
         const presenter = new AddCityPresenterBuilder(vm).build()
 
         // When
-        const ui = new AddCityComponentBuilder().withPresenter(presenter).build()
+        const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
 
         // Then
         expect(ui.isFormDisabled()).toBeTruthy()
     })
 
     test('validate city name on input change', async () => {
-        const updatedCityName = await new Promise(resolve => {
+        const updatedCityName = await new Promise(async resolve => {
             // Given
             const presenter = new AddCityPresenterBuilder()
                 .withValidateCityName(cityName => {
@@ -71,7 +72,7 @@ describe('AddCityComponent', () => {
                     return Promise.resolve()
                 })
                 .build()
-            const ui = new AddCityComponentBuilder().withPresenter(presenter).build()
+            const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
 
             // When
             ui.updateCityName('Grenoble')
@@ -90,11 +91,15 @@ describe('AddCityComponent', () => {
                     return Promise.resolve()
                 })
                 .build()
-            const ui = new AddCityComponentBuilder().withPresenter(presenter).build()
-
-            // When
-            ui.updateLatitude('12.5')
+            new AddCityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    // When
+                    ui.updateLatitude('12.5')
+                })
         })
+
 
         // Then
         expect(updatedLatitude).toBe('12.5')
@@ -109,10 +114,15 @@ describe('AddCityComponent', () => {
                     return Promise.resolve()
                 })
                 .build()
-            const ui = new AddCityComponentBuilder().withPresenter(presenter).build()
 
             // When
-            ui.updateLongitude('12.5')
+            new AddCityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    // When
+                    ui.updateLongitude('12.5')
+                })
         })
 
         // Then
@@ -128,10 +138,14 @@ describe('AddCityComponent', () => {
                     return Promise.resolve()
                 })
                 .build()
-            const ui = new AddCityComponentBuilder().withPresenter(presenter).build()
 
-            // When
-            ui.submitForm()
+            new AddCityComponentBuilder()
+                .withPresenter(presenter)
+                .build()
+                .then(ui => {
+                    // When
+                    ui.submitForm()
+                })
         })
 
         // Then
@@ -148,9 +162,8 @@ class AddCityComponentBuilder {
         return this
     }
 
-    build() {
-        TestBed.configureTestingModule({
-            declarations: [AddCityComponent],
+    async build() {
+        const screen = await render(AddCityComponent, {
             providers: [
                 {
                     provide: AddCityPresenterFactory,
@@ -159,54 +172,53 @@ class AddCityComponentBuilder {
                     }
                 }
             ],
-            imports: []
-        }).compileComponents().then()
-        const fixture = TestBed.createComponent(AddCityComponent)
-        const component = fixture.componentInstance
-        fixture.detectChanges()
-        return new AddCityComponentWrapper(component, fixture)
+            imports: [
+                RouterTestingModule
+            ]
+        })
+        return new AddCityComponentWrapper(screen)
     }
 }
 
 class AddCityComponentWrapper {
-    constructor(private readonly component: AddCityComponent, private readonly fixture: ComponentFixture<AddCityComponent>) {
+    constructor(private readonly component: RenderResult<AddCityComponent>) {
     }
 
     getLatitudeError() {
-        return this.fixture.debugElement.query(By.css('.help')).nativeElement.textContent
+        return this.component.getByLabelText('latitude error').textContent
     }
 
     getCityNameError() {
-        return this.fixture.debugElement.query(By.css('.help')).nativeElement.textContent
+        return this.component.getByLabelText('city name error').textContent
     }
 
     getLongitudeError() {
-        return this.fixture.debugElement.query(By.css('.help')).nativeElement.textContent
+        return this.component.getByLabelText('longitude error').textContent
     }
 
     isFormDisabled() {
-        return this.fixture.debugElement.query(By.css('button')).nativeElement.disabled
+        return this.component.getByRole('button', { name: /create/i }).hasAttribute('disabled')
     }
 
     updateCityName(value: string) {
-        this.updateInput('#city-name-input', value)
+        this.updateInput('Name', value)
     }
 
     updateLatitude(value: string) {
-        this.updateInput('#latitude-input', value)
+        this.updateInput('Latitude', value)
     }
 
     updateLongitude(value: string) {
-        this.updateInput('#longitude-input', value)
+        this.updateInput('Longitude', value)
     }
 
     private updateInput(selector: string, value: string) {
-        const input = this.fixture.debugElement.query(By.css(selector)).nativeElement
+        const input = this.component.getByLabelText(selector) as HTMLInputElement
         input.value = value
         input.dispatchEvent(new Event('change'))
     }
 
     submitForm() {
-        return this.fixture.debugElement.query(By.css('form')).nativeElement.dispatchEvent(new Event('submit'))
+        return fireEvent.submit(this.component.getByRole('form'))
     }
 }

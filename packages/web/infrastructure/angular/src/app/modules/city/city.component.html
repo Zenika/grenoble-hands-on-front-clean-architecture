@@ -1,6 +1,6 @@
 <h1 class="title">Cities weather</h1>
 <article class="panel is-primary" *ngIf="vm$ | async as vm">
-    <div class="panel-heading"><h2>{{vm.city?.name}}</h2></div>
+    <div class="panel-heading"><h2 aria-label="city name">{{vm.city?.name}}</h2></div>
     <ng-container>
         <div class="panel-block">
             <div class="control">
@@ -46,7 +46,7 @@
                     <th>Max</th>
                     <th>Min</th>
                 </tr>
-                <tr *ngFor="let weather of vm.dailyWeather">
+                <tr *ngFor="let weather of vm.dailyWeather" >
                     <td>{{weather.day}}</td>
                     <td><img [src]="'https://ssl.gstatic.com/onebox/weather/48/'+weather.weather+'.png'" [alt]="weather.weather"></td>
                     <td>{{weather.temperatureMax+ ' ' + weather.unite + '°'}}</td>
