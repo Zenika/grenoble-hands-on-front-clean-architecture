@@ -38,6 +38,8 @@ npm run react
 
 ## Structure
 
+![clean-archi](./doc/clean-archi.png)
+
 * **packages/domain** : Core of business application (city, weather, port)
 * **packages/web/adapters** : Class used to make infrastructure communicate with domaine 
 * **packages/web/infrastructure** : Weather app with frameworks usage 
