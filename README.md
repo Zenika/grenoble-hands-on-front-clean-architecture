@@ -1,5 +1,7 @@
 # Hands-on Frontend Series : Clean Architecture
 
+- [Slides FR](./doc/clean_architecture_slides.pdf)
+
 After having discovered the main frontend application development frameworks through the previous hands-ons, we will now see how to architect our application. 
 
 The goal of a good architecture is to gain in testability, scalability and maintainability. We will also see that a good architecture will allow us to depend less on frameworks and tools to develop applications that are more resilient to changing technologies.
@@ -11,6 +13,7 @@ While this technique has gained in popularity in recent years, it has not become
 We therefore invite you to come and discover the fundamentals of Clean Architecture and see how to implement it in a web application. 
 
 Through this repository, we redevelop the weather forecast application from the concepts of "Clean Architecture".
+
 
 ## Prerequisite
 
