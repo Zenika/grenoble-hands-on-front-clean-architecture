@@ -1,7 +1,8 @@
 import { Subscriber } from '../presenters/Presenter'
 import { AddCityPresenter, AddCityPresenterVM } from '../presenters/AddCityPresenter'
+import { AddCityController } from '../controllers/AddCityController'
 
-export class AddCityPresenterBuilder {
+export class AddCityControllerBuilder {
     private onVmUpdate: (subscriber: Subscriber<AddCityPresenterVM>) => void = subscriber => subscriber(this.vm)
     private validateCityName: (cityName: string) => void = () => null
     private validateLatitude: (latitude: string) => void = () => null
@@ -31,14 +32,16 @@ export class AddCityPresenterBuilder {
         return this
     }
 
-    build(): AddCityPresenter {
+    build(): AddCityController {
         return {
-            vm: this.vm,
-            onVmUpdate: this.onVmUpdate,
+            presenter: {
+                vm: this.vm,
+                subscribeVM: this.onVmUpdate,
+            },
             validateCityName: this.validateCityName,
             validateLatitude: this.validateLatitude,
             validateLongitude: this.validateLongitude,
             create: this.create,
-        } as AddCityPresenter
+        } as AddCityController
     }
 }

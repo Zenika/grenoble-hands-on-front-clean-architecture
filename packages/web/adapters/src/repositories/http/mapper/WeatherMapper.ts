@@ -6,6 +6,7 @@ export class WeatherMapper {
     static toDailyDomain(weather: DailyWeather7Timer): DailyWeather[] {
         return weather.dataseries.map(serie => {
             return {
+                type: 'daily',
                 day: this.formatDate(this.parseDate(serie.date.toString())),
                 temperatureMax: serie.temp2m.max,
                 temperatureMin: serie.temp2m.min,
@@ -20,6 +21,7 @@ export class WeatherMapper {
         return weather.dataseries.map(serie => {
             const time = new Date(date.getFullYear(), date.getMonth(), date.getDay(), date.getHours() + serie.timepoint)
             return {
+                type: 'hourly',
                 time: this.formatTime(time),
                 temperature: serie.temp2m,
                 weather: this.getWeatherState(serie.weather),

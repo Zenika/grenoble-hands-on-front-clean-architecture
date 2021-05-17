@@ -1,24 +1,24 @@
 import { Link } from 'react-router-dom'
 import { Component } from 'react'
-import { CityPresenter, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { CityController, CityControllerFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
 
-type CityProps = { cityPresenterFactory: CityPresenterFactory, id: string }
+type CityProps = { cityControllerFactory: CityControllerFactory, id: string }
 
 export class City extends Component<CityProps, CityPresenterVM> {
 
-    private cityPresenter: CityPresenter
+    private controller: CityController
 
     constructor(public props: CityProps) {
         super(props)
-        this.cityPresenter = this.props.cityPresenterFactory.build(this.props.id)
-        this.state = this.cityPresenter.vm
+        this.controller = this.props.cityControllerFactory.build(this.props.id)
+        this.state = this.controller.presenter.vm
     }
 
     componentDidMount() {
-        this.cityPresenter.fetchCity().then()
-        this.cityPresenter.fetchWeather().then()
+        this.controller.fetchCity()
+        this.controller.fetchWeather()
 
-        this.cityPresenter.onVmUpdate((state: CityPresenterVM) => {
+        this.controller.presenter.subscribeVM((state: CityPresenterVM) => {
             this.setState({ ...state })
         })
     }
@@ -34,14 +34,14 @@ export class City extends Component<CityProps, CityPresenterVM> {
                             <label className="radio">
                                 <input type="radio" id="select-daily-view"
                                        checked={vm.mode === 'daily'}
-                                       onChange={() => this.cityPresenter.updateMode('daily')}
+                                       onChange={() => this.controller.updateMode('daily')}
                                        name="mode"/>
                                 Simple
                             </label>
                             <label className="radio">
                                 <input type="radio" id="select-hourly-view"
                                        checked={vm.mode === 'hourly'}
-                                       onChange={() => this.cityPresenter.updateMode('hourly')}
+                                       onChange={() => this.controller.updateMode('hourly')}
                                        name="mode"/>
                                 Detailed
                             </label>
@@ -53,7 +53,7 @@ export class City extends Component<CityProps, CityPresenterVM> {
                                 <input type="radio" id="select-celsius-unit"
                                        checked={vm.temperatureUnite === 'C'}
                                        value='C'
-                                       onChange={() => this.cityPresenter.updateTemperatureUnite('C')}
+                                       onChange={() => this.controller.updateTemperatureUnite('C')}
                                        name="unit"/>
                                 C°
                             </label>
@@ -61,7 +61,7 @@ export class City extends Component<CityProps, CityPresenterVM> {
                                 <input type="radio" id="select-fahrenheit-unit"
                                        checked={vm.temperatureUnite === 'F'}
                                        value='F '
-                                       onChange={() => this.cityPresenter.updateTemperatureUnite('F')}
+                                       onChange={() => this.controller.updateTemperatureUnite('F')}
                                        name="unit"/>
                                 F°
                             </label>

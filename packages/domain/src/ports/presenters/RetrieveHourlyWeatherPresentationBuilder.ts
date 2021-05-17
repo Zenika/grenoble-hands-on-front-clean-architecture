@@ -13,7 +13,7 @@ export class RetrieveHourlyWeatherPresentationBuilder {
 
     build(): RetrieveHourlyWeatherPresentation {
         return {
-            displayWeather: this.displayWeather,
+            displayHourlyWeather: this.displayWeather,
         }
     }
 }

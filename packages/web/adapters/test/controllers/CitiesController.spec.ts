@@ -1,8 +1,8 @@
 import { CityBuilder, GetCitiesPresentation } from '@grenoble-hands-on/domain'
-import { CitiesPresenter } from '@grenoble-hands-on/web-adapters'
+import { CitiesController, CitiesPresenter } from '@grenoble-hands-on/web-adapters'
 import { GetCitiesUseCaseBuilder } from '../builder/GetCitiesUseCaseBuilder'
 
-describe('CitiesPresenter', () => {
+describe('CitiesController', () => {
 
     test('fetch cities update vm', async () => {
         // Given
@@ -13,13 +13,13 @@ describe('CitiesPresenter', () => {
                 return Promise.resolve()
             })
             .build()
-        const presenter = new CitiesPresenter(getCitiesUseCase)
+        const presenter = new CitiesController(getCitiesUseCase, new CitiesPresenter())
 
         // When
         await presenter.fetchCities()
 
         // Then
-        expect(presenter.vm.cities).toEqual(cities)
+        expect(presenter.presenter.vm.cities).toEqual(cities)
     })
 
 })

@@ -2,15 +2,10 @@ import { Presenter } from './Presenter'
 import {
     City,
     DailyWeather,
-    GetCityPresentationBuilder,
-    GetCityRequest,
-    GetCityUseCase,
+    GetCityPresentation,
     HourlyWeather,
-    RetrieveCityDailyWeatherUseCase,
-    RetrieveCityHourlyWeatherUseCase,
-    RetrieveDailyWeatherPresentationBuilder,
-    RetrieveHourlyWeatherPresentationBuilder,
-    RetrieveWeatherRequest
+    RetrieveDailyWeatherPresentation,
+    RetrieveHourlyWeatherPresentation
 } from '@grenoble-hands-on/domain'
 
 export class CityPresenterVM {
@@ -23,66 +18,26 @@ export class CityPresenterVM {
 }
 
 
-export class CityPresenter extends Presenter<CityPresenterVM> {
+export class CityPresenter extends Presenter<CityPresenterVM> implements GetCityPresentation, RetrieveDailyWeatherPresentation, RetrieveHourlyWeatherPresentation {
 
-    constructor(private cityId: string,
-                private getCityUseCase: GetCityUseCase,
-                private retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase,
-                private retrieveCityHourlyWeatherUseCase: RetrieveCityHourlyWeatherUseCase) {
+    constructor() {
         super(new CityPresenterVM())
     }
 
-    async fetchCity() {
-        const presenter = new GetCityPresentationBuilder()
-            .withDisplayCity(city => {
-                this.vm.city = city
-                this.updateVM()
-            })
-            .build()
-        await this.getCityUseCase.execute(new GetCityRequest(this.cityId), presenter)
+    displayCity(city: City): void {
+        this.vm.city = city
+        this.notifyVM()
     }
 
-    async fetchWeather() {
-        this.vm.loading = true
-        this.vm.hourlyWeather = undefined
-        this.vm.dailyWeather = undefined
-        this.updateVM()
-        if (this.vm.mode == 'daily') {
-            await this.fetchDailyWeather()
-        } else {
-            await this.fetchHourlyWeather()
-        }
+    displayHourlyWeather(weather: HourlyWeather[]): void {
+        this.vm.hourlyWeather = weather
+        this.vm.loading = false
+        this.notifyVM()
     }
 
-    updateTemperatureUnite(temperatureUnite: 'C' | 'F') {
-        this.vm.temperatureUnite = temperatureUnite
-        this.fetchWeather()
-    }
-
-    updateMode(mode: 'hourly' | 'daily') {
-        this.vm.mode = mode
-        this.fetchWeather()
-    }
-
-    private async fetchHourlyWeather() {
-        const presenter = new RetrieveHourlyWeatherPresentationBuilder()
-            .withDisplayWeather((weather: HourlyWeather[]) => {
-                this.vm.hourlyWeather = weather
-                this.vm.loading = false
-                this.updateVM()
-            })
-            .build()
-        await this.retrieveCityHourlyWeatherUseCase.execute(new RetrieveWeatherRequest(this.cityId, this.vm.temperatureUnite), presenter)
-    }
-
-    private async fetchDailyWeather() {
-        const presenter = new RetrieveDailyWeatherPresentationBuilder()
-            .withDisplayWeather((weather: DailyWeather[]) => {
-                this.vm.dailyWeather = weather
-                this.vm.loading = false
-                this.updateVM()
-            })
-            .build()
-        await this.retrieveCityWeatherUseCase.execute(new RetrieveWeatherRequest(this.cityId, this.vm.temperatureUnite), presenter)
+    displayDailyWeather(weather: DailyWeather[]): void {
+        this.vm.dailyWeather = weather
+        this.vm.loading = false
+        this.notifyVM()
     }
 }

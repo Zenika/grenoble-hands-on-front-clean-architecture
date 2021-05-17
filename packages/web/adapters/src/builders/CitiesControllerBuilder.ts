@@ -1,8 +1,9 @@
 import { Subscriber } from '../presenters/Presenter'
-import { CitiesPresenter, CitiesPresenterVM } from '../presenters/CitiesPresenter'
+import { CitiesPresenterVM } from '../presenters/CitiesPresenter'
+import { CitiesController } from '../controllers/CitiesController'
 
-export class CitiesPresenterBuilder {
-    private fetchCities: () => Promise<void> = () => Promise.resolve()
+export class CitiesControllerBuilder {
+    private fetchCities: () => void = () => {}
     private onVmUpdate: (subscriber: Subscriber<CitiesPresenterVM>) => void = subscriber => subscriber(this.vm)
 
     constructor(private vm: CitiesPresenterVM = new CitiesPresenterVM()) {
@@ -13,11 +14,13 @@ export class CitiesPresenterBuilder {
         return this
     }
 
-    build(): CitiesPresenter {
+    build(): CitiesController {
         return {
-            vm: this.vm,
-            onVmUpdate: this.onVmUpdate,
+            presenter: {
+                vm: this.vm,
+                subscribeVM: this.onVmUpdate
+            },
             fetchCities: this.fetchCities
-        } as CitiesPresenter
+        } as CitiesController
     }
 }

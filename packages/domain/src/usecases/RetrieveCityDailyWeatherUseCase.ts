@@ -21,6 +21,6 @@ export class RetrieveCityDailyWeatherUseCase {
                 return weather
             }
         })
-        presenter.displayWeather(weekWeather)
+        presenter.displayDailyWeather(weekWeather)
     }
 }

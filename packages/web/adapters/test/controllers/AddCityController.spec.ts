@@ -1,8 +1,8 @@
 import { AddCityPresentation, AddCityRequest, CityBuilder, NewCityFields } from '@grenoble-hands-on/domain'
-import { AddCityPresenter, FakeNavigation } from '@grenoble-hands-on/web-adapters'
+import { AddCityController, AddCityPresenter, FakeNavigation } from '@grenoble-hands-on/web-adapters'
 import { AddCityUseCaseBuilder } from '../builder/AddCityUseCaseBuilder'
 
-describe('AddCityPresenter', () => {
+describe('AddCityController', () => {
     test('display city error on validate name', () => {
         // Given
         const useCase = new AddCityUseCaseBuilder()
@@ -14,15 +14,15 @@ describe('AddCityPresenter', () => {
             })
             .build()
 
-        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
+        const controller = new AddCityController(useCase, new AddCityPresenter(new FakeNavigation()))
 
         // When
-        presenter.validateCityName('')
+        controller.validateCityName('')
 
         // Then
-        expect(presenter.vm.cityNameError).toBe('City name required')
-        expect(presenter.vm.cityNameTouched).toBeTruthy()
-        expect(presenter.vm.canCreateCity).toBeFalsy()
+        expect(controller.presenter.vm.cityNameError).toBe('City name required')
+        expect(controller.presenter.vm.cityNameTouched).toBeTruthy()
+        expect(controller.presenter.vm.canCreateCity).toBeFalsy()
     })
 
     test('display city error on validate latitude', () => {
@@ -35,15 +35,15 @@ describe('AddCityPresenter', () => {
                 return errors
             })
             .build()
-        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
+        const controller = new AddCityController(useCase, new AddCityPresenter(new FakeNavigation()))
 
         // When
-        presenter.validateLatitude('')
+        controller.validateLatitude('')
 
         // Then
-        expect(presenter.vm.latitudeError).toBe('Latitude required')
-        expect(presenter.vm.latitudeTouched).toBeTruthy()
-        expect(presenter.vm.canCreateCity).toBeFalsy()
+        expect(controller.presenter.vm.latitudeError).toBe('Latitude required')
+        expect(controller.presenter.vm.latitudeTouched).toBeTruthy()
+        expect(controller.presenter.vm.canCreateCity).toBeFalsy()
     })
 
     test('display city error on validate longitude', () => {
@@ -56,15 +56,15 @@ describe('AddCityPresenter', () => {
                 return errors
             })
             .build()
-        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
+        const controller = new AddCityController(useCase, new AddCityPresenter(new FakeNavigation()))
 
         // When
-        presenter.validateLongitude('')
+        controller.validateLongitude('')
 
         // Then
-        expect(presenter.vm.longitudeError).toBe('Longitude required')
-        expect(presenter.vm.longitudeTouched).toBeTruthy()
-        expect(presenter.vm.canCreateCity).toBeFalsy()
+        expect(controller.presenter.vm.longitudeError).toBe('Longitude required')
+        expect(controller.presenter.vm.longitudeTouched).toBeTruthy()
+        expect(controller.presenter.vm.canCreateCity).toBeFalsy()
     })
 
     test('display city error on create', () => {
@@ -79,29 +79,32 @@ describe('AddCityPresenter', () => {
                 return Promise.resolve()
             })
             .build()
-        const presenter = new AddCityPresenter(useCase, new FakeNavigation())
+        const controller = new AddCityController(useCase, new AddCityPresenter(new FakeNavigation()))
 
         // When
-        presenter.create()
+        controller.create()
 
         // Then
-        expect(presenter.vm.canCreateCity).toBeFalsy()
+        expect(controller.presenter.vm.canCreateCity).toBeFalsy()
     })
 
-    test('redirect to city on create success', () => {
+    test('redirect to city on create success', async () => {
         // Given
         const city = CityBuilder.example().build()
-        const useCase = new AddCityUseCaseBuilder()
-            .withExecute((addCityRequest: AddCityRequest, presenter: AddCityPresentation) => {
-                presenter.notifyCityAdded(city)
-                return Promise.resolve()
-            })
-            .build()
         const navigation = new FakeNavigation()
-        const presenter = new AddCityPresenter(useCase, navigation)
 
-        // When
-        presenter.create()
+        await new Promise<void>(resolve => {
+            const useCase = new AddCityUseCaseBuilder()
+                .withExecute((addCityRequest: AddCityRequest, presenter: AddCityPresentation) => {
+                    presenter.notifyCityAdded(city)
+                    return Promise.resolve().then(() => resolve())
+                })
+                .build()
+            const controller = new AddCityController(useCase, new AddCityPresenter(navigation))
+
+            // When
+            controller.create()
+        })
 
         // Then
         expect(navigation.currentRoute).toBe(`/city/${city.name}`)

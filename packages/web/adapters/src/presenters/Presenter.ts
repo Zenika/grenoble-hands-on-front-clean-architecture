@@ -7,11 +7,11 @@ export abstract class Presenter<T> {
     protected constructor(public vm: T) {
     }
 
-    updateVM() {
+    notifyVM() {
         this.subscriber?.call(this.subscriber, this.vm)
     }
 
-    onVmUpdate(subscriber: Subscriber<T>) {
+    subscribeVM(subscriber: Subscriber<T>) {
         this.subscriber = subscriber
         this.subscriber(this.vm)
     }

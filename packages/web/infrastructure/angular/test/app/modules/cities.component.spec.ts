@@ -1,5 +1,5 @@
 import { CitiesComponent } from '../../../src/app/modules/cities/cities.component'
-import { CitiesPresenter, CitiesPresenterBuilder, CitiesPresenterFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { CitiesController, CitiesControllerBuilder, CitiesControllerFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { RouterTestingModule } from '@angular/router/testing'
 import { CityBuilder } from '@grenoble-hands-on/domain'
 import { render, RenderResult } from '@testing-library/angular'
@@ -13,10 +13,10 @@ describe('CitiesComponent', () => {
             CityBuilder.example().withName('Grenoble').build(),
             CityBuilder.example().withName('Lyon').build()
         ]
-        const presenter = new CitiesPresenterBuilder(vm).build()
+        const controller = new CitiesControllerBuilder(vm).build()
 
         // When
-        const ui = await new CitiesComponentBuilder().withPresenter(presenter).build()
+        const ui = await new CitiesComponentBuilder().withController(controller).build()
 
         // Then
         const citiesName = ui.getCitiesDisplay()
@@ -26,7 +26,7 @@ describe('CitiesComponent', () => {
     it('fetch cities on init', async () => {
         const hasFetch = await new Promise<boolean>(resolve => {
             // Given
-            const presenter = new CitiesPresenterBuilder()
+            const controller = new CitiesControllerBuilder()
                 .withFetchCities(() => {
                     resolve(true)
                     return Promise.resolve()
@@ -34,7 +34,7 @@ describe('CitiesComponent', () => {
                 .build()
 
             // When
-            new CitiesComponentBuilder().withPresenter(presenter).build()
+            new CitiesComponentBuilder().withController(controller).build()
         })
 
         // Then
@@ -44,10 +44,10 @@ describe('CitiesComponent', () => {
 
 
 class CitiesComponentBuilder {
-    private citiesPresenter!: CitiesPresenter
+    private controller!: CitiesController
 
-    withPresenter(citiesPresenter: CitiesPresenter) {
-        this.citiesPresenter = citiesPresenter
+    withController(citiesController: CitiesController) {
+        this.controller = citiesController
         return this
     }
 
@@ -55,9 +55,9 @@ class CitiesComponentBuilder {
         const screen = await render(CitiesComponent, {
             providers: [
                 {
-                    provide: CitiesPresenterFactory,
+                    provide: CitiesControllerFactory,
                     useValue: {
-                        build: () => this.citiesPresenter
+                        build: () => this.controller
                     }
                 }
             ],

@@ -1,6 +1,6 @@
-import { CityPresenter, CityPresenterBuilder, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { CityController, CityControllerBuilder, CityControllerFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { GeoPosition, WeatherState } from '@grenoble-hands-on/domain'
-import { CITY_PRESENTER_FACTORY } from '@/DependencyInjection'
+import { CITY_CONTROLLER_FACTORY } from '@/DependencyInjection'
 import { render, RenderResult } from '@testing-library/vue'
 import City from '@/views/City.vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
@@ -14,7 +14,7 @@ describe('CityComponent', () => {
 
         // When
         const ui = await new CityComponentBuilder()
-            .withPresenter(new CityPresenterBuilder(vm).build())
+            .withController(new CityControllerBuilder(vm).build())
             .build()
 
         // Then
@@ -26,12 +26,12 @@ describe('CityComponent', () => {
         // Given
         const vm = new CityPresenterVM()
         vm.dailyWeather = [
-            { weather: WeatherState.sunny, temperatureMin: 8, temperatureMax: 15, day: '12/01/2021', unite: 'C' }
+            { type: 'daily', weather: WeatherState.sunny, temperatureMin: 8, temperatureMax: 15, day: '12/01/2021', unite: 'C' }
         ]
 
         // When
         const ui = await new CityComponentBuilder()
-            .withPresenter(new CityPresenterBuilder(vm).build())
+            .withController(new CityControllerBuilder(vm).build())
             .build()
 
         // Then
@@ -46,12 +46,12 @@ describe('CityComponent', () => {
         // Given
         const vm = new CityPresenterVM()
         vm.hourlyWeather = [
-            { weather: WeatherState.sunny, temperature: 8, time: '12:00', unite: 'F' }
+            { type: 'hourly', weather: WeatherState.sunny, temperature: 8, time: '12:00', unite: 'F' }
         ]
 
         // When
         const ui = await new CityComponentBuilder()
-            .withPresenter(new CityPresenterBuilder(vm).build())
+            .withController(new CityControllerBuilder(vm).build())
             .build()
 
         // Then
@@ -64,13 +64,13 @@ describe('CityComponent', () => {
     test('fetch weather on init', async () => {
         const hasFetchDailyWeather = await new Promise(resolve => {
             // Given
-            const presenter = new CityPresenterBuilder()
+            const controller = new CityControllerBuilder()
                 .withFetchWeather(() => Promise.resolve().then(() => resolve(true)))
                 .build()
 
             // When
             new CityComponentBuilder()
-                .withPresenter(presenter)
+                .withController(controller)
                 .build()
         })
         // Then
@@ -80,13 +80,13 @@ describe('CityComponent', () => {
     test('fetch city on init', async () => {
         const hasFetchCity = await new Promise(resolve => {
             // Given
-            const presenter = new CityPresenterBuilder()
+            const controller = new CityControllerBuilder()
                 .withFetchCity(() => Promise.resolve().then(() => resolve(true)))
                 .build()
 
             // When
             new CityComponentBuilder()
-                .withPresenter(presenter)
+                .withController(controller)
                 .build()
         })
         // Then
@@ -98,13 +98,13 @@ describe('CityComponent', () => {
             // Given
             const vm = new CityPresenterVM()
             vm.mode = 'daily'
-            const presenter = new CityPresenterBuilder(vm)
+            const controller = new CityControllerBuilder(vm)
                 .withUpdateMode((mode) => resolve(mode))
                 .build()
 
             // When
             new CityComponentBuilder()
-                .withPresenter(presenter)
+                .withController(controller)
                 .build()
                 .then(ui => {
                     ui.selectHourlyMode()
@@ -119,13 +119,13 @@ describe('CityComponent', () => {
             // Given
             const vm = new CityPresenterVM()
             vm.mode = 'hourly'
-            const presenter = new CityPresenterBuilder(vm)
+            const controller = new CityControllerBuilder(vm)
                 .withUpdateMode((mode) => resolve(mode))
                 .build()
 
             // When
             new CityComponentBuilder()
-                .withPresenter(presenter)
+                .withController(controller)
                 .build()
                 .then(ui => {
                     ui.selectDailyMode()
@@ -140,13 +140,13 @@ describe('CityComponent', () => {
             // Given
             const vm = new CityPresenterVM()
             vm.temperatureUnite = 'F'
-            const presenter = new CityPresenterBuilder(vm)
+            const controller = new CityControllerBuilder(vm)
                 .withUpdateTemperatureUnit((temperatureUnit) => resolve(temperatureUnit))
                 .build()
 
             // When
             new CityComponentBuilder()
-                .withPresenter(presenter)
+                .withController(controller)
                 .build()
                 .then(ui => {
                     ui.selectCelsius()
@@ -161,13 +161,13 @@ describe('CityComponent', () => {
             // Given
             const vm = new CityPresenterVM()
             vm.temperatureUnite = 'C'
-            const presenter = new CityPresenterBuilder()
+            const controller = new CityControllerBuilder()
                 .withUpdateTemperatureUnit((temperatureUnit) => resolve(temperatureUnit))
                 .build()
 
             // When
             new CityComponentBuilder()
-                .withPresenter(presenter)
+                .withController(controller)
                 .build()
                 .then(ui => {
                     ui.selectFahrenheit()
@@ -179,10 +179,10 @@ describe('CityComponent', () => {
 })
 
 class CityComponentBuilder {
-    private presenter!: CityPresenter
+    private controller!: CityController
 
-    withPresenter(presenter: CityPresenter) {
-        this.presenter = presenter
+    withController(controller: CityController) {
+        this.controller = controller
         return this
     }
 
@@ -194,12 +194,12 @@ class CityComponentBuilder {
         await router.push('/city/GRENOBLE')
         await router.isReady()
 
-        const presenterFactory = { build: (_: string) => this.presenter } as CityPresenterFactory
+        const presenterFactory = { build: (_: string) => this.controller } as CityControllerFactory
         const screen = render(City, {
             global: {
                 plugins: [router],
                 provide: {
-                    [CITY_PRESENTER_FACTORY as symbol]: presenterFactory
+                    [CITY_CONTROLLER_FACTORY as symbol]: presenterFactory
                 }
             }
         })

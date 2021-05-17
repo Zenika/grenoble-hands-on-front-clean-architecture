@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import { CitiesPresenter, CitiesPresenterBuilder, CitiesPresenterFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { CitiesController, CitiesControllerBuilder, CitiesControllerFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { CityBuilder } from '@grenoble-hands-on/domain'
 import { Cities } from '../src/modules/Cities'
 import { MemoryRouter } from 'react-router-dom'
@@ -14,10 +14,10 @@ describe('CitiesComponent', () => {
             CityBuilder.example().withName('Grenoble').build(),
             CityBuilder.example().withName('Lyon').build()
         ]
-        const presenter = new CitiesPresenterBuilder(vm).build()
+        const controller = new CitiesControllerBuilder(vm).build()
 
         // When
-        const ui = new CitiesComponentBuilder().withPresenter(presenter).build()
+        const ui = new CitiesComponentBuilder().withController(controller).build()
 
         // Then
         const citiesName = ui.getCitiesDisplay()
@@ -27,7 +27,7 @@ describe('CitiesComponent', () => {
     it('fetch cities on init', async () => {
         const hasFetch = await new Promise<boolean>(resolve => {
             // Given
-            const presenter = new CitiesPresenterBuilder()
+            const controller = new CitiesControllerBuilder()
                 .withFetchCities(() => {
                     resolve(true)
                     return Promise.resolve()
@@ -35,7 +35,7 @@ describe('CitiesComponent', () => {
                 .build()
 
             // When
-            new CitiesComponentBuilder().withPresenter(presenter).build()
+            new CitiesComponentBuilder().withController(controller).build()
         })
 
         // Then
@@ -45,16 +45,16 @@ describe('CitiesComponent', () => {
 
 
 class CitiesComponentBuilder {
-    private presenter!: CitiesPresenter
+    private controller!: CitiesController
 
-    withPresenter(presenter: CitiesPresenter) {
-        this.presenter = presenter
+    withController(controller: CitiesController) {
+        this.controller = controller
         return this
     }
 
     build() {
-        const presenterFactory = { build: () => this.presenter } as CitiesPresenterFactory
-        const screen = render(<Cities citiesPresenterFactory={presenterFactory}/>, { wrapper: MemoryRouter })
+        const controllerFactory = { build: () => this.controller } as CitiesControllerFactory
+        const screen = render(<Cities citiesControllerFactory={controllerFactory}/>, { wrapper: MemoryRouter })
         return new CitiesComponentWrapper(screen)
     }
 }

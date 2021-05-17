@@ -82,32 +82,32 @@
 <script lang="ts">
 import { defineComponent, inject, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { CityPresenter } from '@grenoble-hands-on/web-adapters'
-import { CITY_PRESENTER_FACTORY } from '@/DependencyInjection'
+import { CityController } from '@grenoble-hands-on/web-adapters'
+import { CITY_CONTROLLER_FACTORY } from '@/DependencyInjection'
 
 export default defineComponent({
   name: 'City',
   components: {},
   setup() {
     const cityId = useRoute().params.cityId.toString()
-    const cityPresenter = inject(CITY_PRESENTER_FACTORY)?.build(cityId) as CityPresenter
-    const vm = ref(cityPresenter.vm)
+    const controller = inject(CITY_CONTROLLER_FACTORY)?.build(cityId) as CityController
+    const vm = ref(controller.presenter.vm)
 
     onMounted(() => {
-      cityPresenter.onVmUpdate(updatedVm => {
+      controller.presenter.subscribeVM(updatedVm => {
         vm.value = { ...updatedVm }
       })
-      cityPresenter.fetchWeather()
-      cityPresenter.fetchCity()
+      controller.fetchWeather()
+      controller.fetchCity()
     })
 
     return {
       vm,
       updateMode(mode: 'daily' | 'hourly') {
-        cityPresenter.updateMode(mode)
+        controller.updateMode(mode)
       },
       updateTemperatureUnite(temperature: 'C' | 'F') {
-        cityPresenter.updateTemperatureUnite(temperature)
+        controller.updateTemperatureUnite(temperature)
       }
     }
   }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { CityPresenter, CityPresenterFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { CityController, CityControllerFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { ActivatedRoute } from '@angular/router'
 import { Observable } from 'rxjs'
 
@@ -9,31 +9,31 @@ import { Observable } from 'rxjs'
     styleUrls: ['./city.component.scss'],
     providers: [
         {
-            provide: CityPresenter,
-            useFactory: (presenterFactory: CityPresenterFactory,
+            provide: CityController,
+            useFactory: (presenterFactory: CityControllerFactory,
                          route: ActivatedRoute) => presenterFactory.build(route.snapshot.params.cityId),
-            deps: [CityPresenterFactory, ActivatedRoute]
+            deps: [CityControllerFactory, ActivatedRoute]
         }
     ]
 })
 export class CityComponent implements OnInit {
     vm$: Observable<CityPresenterVM> = new Observable<CityPresenterVM>(subscriber =>
-        this.cityPresenter.onVmUpdate(vm => subscriber.next(vm))
+        this.controller.presenter.subscribeVM(vm => subscriber.next(vm))
     )
 
-    constructor(private cityPresenter: CityPresenter) {
+    constructor(private controller: CityController) {
     }
 
     ngOnInit(): void {
-        this.cityPresenter.fetchCity().then()
-        this.cityPresenter.fetchWeather().then()
+        this.controller.fetchCity()
+        this.controller.fetchWeather()
     }
 
     updateMode(mode: 'hourly' | 'daily') {
-        this.cityPresenter.updateMode(mode)
+        this.controller.updateMode(mode)
     }
 
     updateTemperatureUnite(temperatureUnite: 'C' | 'F') {
-        this.cityPresenter.updateTemperatureUnite(temperatureUnite)
+        this.controller.updateTemperatureUnite(temperatureUnite)
     }
 }

@@ -1,9 +1,8 @@
-import { AddCityPresenter, AddCityPresenterBuilder, AddCityPresenterFactory, AddCityPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { AddCityController, AddCityControllerBuilder, AddCityControllerFactory, AddCityPresenterVM } from '@grenoble-hands-on/web-adapters'
 
 import { AddCityComponent } from '../../../src/app/modules/add-city/add-city.component'
-import { createEvent, fireEvent, render, RenderResult } from '@testing-library/angular'
+import { fireEvent, render, RenderResult } from '@testing-library/angular'
 import { RouterTestingModule } from '@angular/router/testing'
-import { By } from '@angular/platform-browser'
 
 describe('AddCityComponent', () => {
 
@@ -11,10 +10,10 @@ describe('AddCityComponent', () => {
         // Given
         const vm = new AddCityPresenterVM()
         vm.cityNameError = 'City required'
-        const presenter = new AddCityPresenterBuilder(vm).build()
+        const controller = new AddCityControllerBuilder(vm).build()
 
         // When
-        const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
+        const ui = await new AddCityComponentBuilder().withController(controller).build()
 
         // Then
         const error = ui.getCityNameError()
@@ -26,10 +25,10 @@ describe('AddCityComponent', () => {
         // Given
         const vm = new AddCityPresenterVM()
         vm.latitudeError = 'Latitude required'
-        const presenter = new AddCityPresenterBuilder(vm).build()
+        const controller = new AddCityControllerBuilder(vm).build()
 
         // When
-        const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
+        const ui = await new AddCityComponentBuilder().withController(controller).build()
 
         // Then
         const error = ui.getLatitudeError()
@@ -40,10 +39,10 @@ describe('AddCityComponent', () => {
         // Given
         const vm = new AddCityPresenterVM()
         vm.longitudeError = 'Longitude required'
-        const presenter = new AddCityPresenterBuilder(vm).build()
+        const controller = new AddCityControllerBuilder(vm).build()
 
         // When
-        const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
+        const ui = await new AddCityComponentBuilder().withController(controller).build()
 
         // Then
         const error = ui.getLongitudeError()
@@ -54,10 +53,10 @@ describe('AddCityComponent', () => {
         // Given
         const vm = new AddCityPresenterVM()
         vm.canCreateCity = false
-        const presenter = new AddCityPresenterBuilder(vm).build()
+        const controller = new AddCityControllerBuilder(vm).build()
 
         // When
-        const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
+        const ui = await new AddCityComponentBuilder().withController(controller).build()
 
         // Then
         expect(ui.isFormDisabled()).toBeTruthy()
@@ -66,13 +65,13 @@ describe('AddCityComponent', () => {
     test('validate city name on input change', async () => {
         const updatedCityName = await new Promise(async resolve => {
             // Given
-            const presenter = new AddCityPresenterBuilder()
+            const controller = new AddCityControllerBuilder()
                 .withValidateCityName(cityName => {
                     resolve(cityName)
                     return Promise.resolve()
                 })
                 .build()
-            const ui = await new AddCityComponentBuilder().withPresenter(presenter).build()
+            const ui = await new AddCityComponentBuilder().withController(controller).build()
 
             // When
             ui.updateCityName('Grenoble')
@@ -85,14 +84,14 @@ describe('AddCityComponent', () => {
     test('validate latitude on input change', async () => {
         const updatedLatitude = await new Promise(resolve => {
             // Given
-            const presenter = new AddCityPresenterBuilder()
+            const controller = new AddCityControllerBuilder()
                 .withValidateLatitude(latitude => {
                     resolve(latitude)
                     return Promise.resolve()
                 })
                 .build()
             new AddCityComponentBuilder()
-                .withPresenter(presenter)
+                .withController(controller)
                 .build()
                 .then(ui => {
                     // When
@@ -108,7 +107,7 @@ describe('AddCityComponent', () => {
     test('validate longitude on input change', async () => {
         const updatedLongitude = await new Promise(resolve => {
             // Given
-            const presenter = new AddCityPresenterBuilder()
+            const controller = new AddCityControllerBuilder()
                 .withValidateLongitude(longitude => {
                     resolve(longitude)
                     return Promise.resolve()
@@ -117,7 +116,7 @@ describe('AddCityComponent', () => {
 
             // When
             new AddCityComponentBuilder()
-                .withPresenter(presenter)
+                .withController(controller)
                 .build()
                 .then(ui => {
                     // When
@@ -132,7 +131,7 @@ describe('AddCityComponent', () => {
     test('create city on form submit', async () => {
         const isCityCreated = await new Promise(resolve => {
             // Given
-            const presenter = new AddCityPresenterBuilder()
+            const controller = new AddCityControllerBuilder()
                 .withCreate(() => {
                     resolve(true)
                     return Promise.resolve()
@@ -140,7 +139,7 @@ describe('AddCityComponent', () => {
                 .build()
 
             new AddCityComponentBuilder()
-                .withPresenter(presenter)
+                .withController(controller)
                 .build()
                 .then(ui => {
                     // When
@@ -155,10 +154,10 @@ describe('AddCityComponent', () => {
 
 
 class AddCityComponentBuilder {
-    private presenter!: AddCityPresenter
+    private controller!: AddCityController
 
-    withPresenter(presenter: AddCityPresenter) {
-        this.presenter = presenter
+    withController(controller: AddCityController) {
+        this.controller = controller
         return this
     }
 
@@ -166,9 +165,9 @@ class AddCityComponentBuilder {
         const screen = await render(AddCityComponent, {
             providers: [
                 {
-                    provide: AddCityPresenterFactory,
+                    provide: AddCityControllerFactory,
                     useValue: {
-                        build: () => this.presenter
+                        build: () => this.controller
                     }
                 }
             ],

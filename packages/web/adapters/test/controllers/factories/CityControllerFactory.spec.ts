@@ -1,4 +1,4 @@
-import { CityPresenterFactory } from '@grenoble-hands-on/web-adapters'
+import { CityControllerFactory } from '@grenoble-hands-on/web-adapters'
 import { GetCityUseCaseBuilder } from '../../builder/GetCityUseCaseBuilder'
 import { RetrieveCityDailyWeatherUseCaseBuilder } from '../../builder/RetrieveCityDailyWeatherUseCaseBuilder'
 import { RetrieveCityHourlyWeatherUseCaseBuilder } from '../../builder/RetrieveCityHourlyWeatherUseCaseBuilder'
@@ -6,7 +6,7 @@ import { RetrieveCityHourlyWeatherUseCaseBuilder } from '../../builder/RetrieveC
 describe('CityPresenterFactory', () => {
     test('create a CityPresenterFactory', () => {
         // Given
-        const factory = new CityPresenterFactory(
+        const factory = new CityControllerFactory(
             new GetCityUseCaseBuilder().build(),
             new RetrieveCityDailyWeatherUseCaseBuilder().build(),
             new RetrieveCityHourlyWeatherUseCaseBuilder().build()

@@ -1,8 +1,8 @@
 import { App, InjectionKey } from 'vue'
 import {
-    AddCityPresenterFactory,
-    CitiesPresenterFactory,
-    CityPresenterFactory,
+    AddCityControllerFactory,
+    CitiesControllerFactory,
+    CityControllerFactory,
     CityRepositoryInMemory,
     HttpClient,
     NavigationRoute,
@@ -17,9 +17,9 @@ import {
     RetrieveCityHourlyWeatherUseCase
 } from '@grenoble-hands-on/domain'
 
-export const CITY_PRESENTER_FACTORY: InjectionKey<CityPresenterFactory> = Symbol()
-export const CITIES_PRESENTER_FACTORY: InjectionKey<CitiesPresenterFactory> = Symbol()
-export const ADD_CITY_PRESENTER_FACTORY: InjectionKey<AddCityPresenterFactory> = Symbol()
+export const CITY_CONTROLLER_FACTORY: InjectionKey<CityControllerFactory> = Symbol()
+export const CITIES_CONTROLLER_FACTORY: InjectionKey<CitiesControllerFactory> = Symbol()
+export const ADD_CITY_CONTROLLER_FACTORY: InjectionKey<AddCityControllerFactory> = Symbol()
 
 export const dependencies = (app: App) => {
     const httpClient: HttpClient = {
@@ -41,11 +41,11 @@ export const dependencies = (app: App) => {
     const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCase(weatherRepository)
     const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCase(weatherRepository)
 
-    const cityPresenterFactory = new CityPresenterFactory(getCityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase)
-    const citiesPresenterFactory = new CitiesPresenterFactory(getCitiesUseCase)
-    const addCityPresenterFactory = new AddCityPresenterFactory(new AddCityUseCase(cityRepository), navigation)
+    const cityControllerFactory = new CityControllerFactory(getCityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase)
+    const citiesControllerFactory = new CitiesControllerFactory(getCitiesUseCase)
+    const addCityControllerFactory = new AddCityControllerFactory(new AddCityUseCase(cityRepository), navigation)
 
-    app.provide(CITY_PRESENTER_FACTORY, cityPresenterFactory)
-    app.provide(CITIES_PRESENTER_FACTORY, citiesPresenterFactory)
-    app.provide(ADD_CITY_PRESENTER_FACTORY, addCityPresenterFactory)
+    app.provide(CITY_CONTROLLER_FACTORY, cityControllerFactory)
+    app.provide(CITIES_CONTROLLER_FACTORY, citiesControllerFactory)
+    app.provide(ADD_CITY_CONTROLLER_FACTORY, addCityControllerFactory)
 }

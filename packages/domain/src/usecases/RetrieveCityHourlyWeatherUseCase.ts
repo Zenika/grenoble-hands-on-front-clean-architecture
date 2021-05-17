@@ -19,6 +19,6 @@ export class RetrieveCityHourlyWeatherUseCase {
                 return weather
             }
         });
-        presenter.displayWeather(weekWeather)
+        presenter.displayHourlyWeather(weekWeather)
     }
 }

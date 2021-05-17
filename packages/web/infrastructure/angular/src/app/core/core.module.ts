@@ -1,9 +1,9 @@
 import { InjectionToken, NgModule } from '@angular/core'
 import { HttpClient as AngularHttpClient } from '@angular/common/http'
 import {
-    AddCityPresenterFactory,
-    CitiesPresenterFactory,
-    CityPresenterFactory,
+    AddCityControllerFactory,
+    CitiesControllerFactory,
+    CityControllerFactory,
     CityRepositoryInMemory,
     HttpClient,
     Navigation,
@@ -87,26 +87,26 @@ export const IWeatherRepository = new InjectionToken<WeatherRepository>('Weather
             deps: [IWeatherRepository]
         },
         {
-            provide: CityPresenterFactory,
+            provide: CityControllerFactory,
             useFactory: (
                 getCityUseCase: GetCityUseCase,
                 retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase,
                 retrieveCityHourlyWeatherUseCase: RetrieveCityHourlyWeatherUseCase
             ) => (
-                new CityPresenterFactory(getCityUseCase, retrieveCityWeatherUseCase, retrieveCityHourlyWeatherUseCase)
+                new CityControllerFactory(getCityUseCase, retrieveCityWeatherUseCase, retrieveCityHourlyWeatherUseCase)
             ),
             deps: [GetCityUseCase, RetrieveCityDailyWeatherUseCase, RetrieveCityHourlyWeatherUseCase]
         },
         {
-            provide: CitiesPresenterFactory,
+            provide: CitiesControllerFactory,
             useFactory: (getCitiesUseCase: GetCitiesUseCase) =>
-                new CitiesPresenterFactory(getCitiesUseCase),
+                new CitiesControllerFactory(getCitiesUseCase),
             deps: [GetCitiesUseCase]
         },
         {
-            provide: AddCityPresenterFactory,
+            provide: AddCityControllerFactory,
             useFactory: (addNewCityUseCase: AddCityUseCase, navigation: Navigation) =>
-                new AddCityPresenterFactory(addNewCityUseCase, navigation),
+                new AddCityControllerFactory(addNewCityUseCase, navigation),
             deps: [AddCityUseCase, INavigation]
         },
     ]

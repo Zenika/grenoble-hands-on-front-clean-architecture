@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react'
 import { Route, Switch, useHistory } from 'react-router-dom'
 import {
-    AddCityPresenterFactory,
-    CitiesPresenterFactory,
-    CityPresenterFactory,
+    AddCityControllerFactory,
+    CitiesControllerFactory,
+    CityControllerFactory,
     CityRepositoryInMemory,
     HttpClient,
     NavigationRoute,
@@ -44,9 +44,9 @@ function App() {
     const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCase(weatherRepository)
     const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCase(weatherRepository)
 
-    const cityPresenterFactory = new CityPresenterFactory(getCityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase)
-    const citiesPresenterFactory = new CitiesPresenterFactory(getCitiesUseCase)
-    const addCityPresenterFactory = new AddCityPresenterFactory(new AddCityUseCase(cityRepository), navigation)
+    const cityControllerFactory = new CityControllerFactory(getCityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase)
+    const citiesControllerFactory = new CitiesControllerFactory(getCitiesUseCase)
+    const addCityControllerFactory = new AddCityControllerFactory(new AddCityUseCase(cityRepository), navigation)
 
     return (
         <Fragment>
@@ -55,13 +55,13 @@ function App() {
                 <div className="container">
                     <Switch>
                         <Route exact path="/">
-                            <Cities citiesPresenterFactory={citiesPresenterFactory}/>
+                            <Cities citiesControllerFactory={citiesControllerFactory}/>
                         </Route>
                         <Route exact path="/create">
-                            <AddCity addCityPresenterFactory={addCityPresenterFactory}/>
+                            <AddCity addCityControllerFactory={addCityControllerFactory}/>
                         </Route>
                         <Route path="/city/:id" render={(props) => (
-                            <City cityPresenterFactory={cityPresenterFactory} id={props.match.params.id}/>
+                            <City cityControllerFactory={cityControllerFactory} id={props.match.params.id}/>
                         )}>
                         </Route>
                     </Switch>

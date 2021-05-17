@@ -15,21 +15,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, onMounted } from 'vue'
-import { CITIES_PRESENTER_FACTORY } from '@/DependencyInjection'
+import { defineComponent, inject, onMounted, ref } from 'vue'
+import { CITIES_CONTROLLER_FACTORY } from '@/DependencyInjection'
 
 export default defineComponent({
   name: 'Cities',
   components: {},
   setup() {
-    const citiesPresenter = inject(CITIES_PRESENTER_FACTORY)!.build()
-    const vm = ref(citiesPresenter.vm)
+    const controller = inject(CITIES_CONTROLLER_FACTORY)!.build()
+    const vm = ref(controller.presenter.vm)
 
     onMounted(() => {
-      citiesPresenter.onVmUpdate(updatedVm => {
+      controller.presenter.subscribeVM(updatedVm => {
         vm.value = { ...updatedVm }
       })
-      citiesPresenter.fetchCities()
+      controller.fetchCities()
     })
 
     return {

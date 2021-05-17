@@ -1,16 +1,16 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { City } from '@grenoble-hands-on/domain'
 import { Link } from 'react-router-dom'
-import { CitiesPresenterFactory } from '@grenoble-hands-on/web-adapters'
+import { CitiesControllerFactory } from '@grenoble-hands-on/web-adapters'
 
-export function Cities(props: { citiesPresenterFactory: CitiesPresenterFactory }) {
-    const citiesPresenter = props.citiesPresenterFactory.build()
+export function Cities(props: { citiesControllerFactory: CitiesControllerFactory }) {
+    const controller = props.citiesControllerFactory.build()
 
-    const [vm, setVm] = useState(citiesPresenter.vm)
+    const [vm, setVm] = useState(controller.presenter.vm)
 
     useEffect(() => {
-        citiesPresenter.fetchCities().then()
-        citiesPresenter.onVmUpdate((state) => {
+        controller.fetchCities()
+        controller.presenter.subscribeVM((state) => {
             setVm({ ...state })
         })
     }, [])

@@ -36,18 +36,18 @@
 
 <script lang="ts">
 import { defineComponent, inject, onMounted, ref } from 'vue'
-import { AddCityPresenter } from '@grenoble-hands-on/web-adapters'
-import { ADD_CITY_PRESENTER_FACTORY } from '@/DependencyInjection'
+import { AddCityController } from '@grenoble-hands-on/web-adapters'
+import { ADD_CITY_CONTROLLER_FACTORY } from '@/DependencyInjection'
 
 export default defineComponent({
   name: 'AddCity',
   components: {},
   setup() {
-    const addCityPresenter = inject(ADD_CITY_PRESENTER_FACTORY)?.build() as AddCityPresenter
-    const vm = ref(addCityPresenter.vm)
+    const controller = inject(ADD_CITY_CONTROLLER_FACTORY)?.build() as AddCityController
+    const vm = ref(controller.presenter.vm)
 
     onMounted(() => {
-      addCityPresenter.onVmUpdate(updatedVm => {
+      controller.presenter.subscribeVM(updatedVm => {
         vm.value = { ...updatedVm }
       })
     })
@@ -55,16 +55,16 @@ export default defineComponent({
     return {
       vm,
       validateCityName(input: string) {
-        addCityPresenter.validateCityName(input)
+        controller.validateCityName(input)
       },
       validateLatitude(input: string) {
-        addCityPresenter.validateLatitude(input)
+        controller.validateLatitude(input)
       },
       validateLongitude(input: string) {
-        addCityPresenter.validateLongitude(input)
+        controller.validateLongitude(input)
       },
       createCity() {
-        addCityPresenter.create()
+        controller.create()
       },
     }
   }

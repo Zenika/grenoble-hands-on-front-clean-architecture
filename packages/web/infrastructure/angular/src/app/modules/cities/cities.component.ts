@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { CitiesPresenter, CitiesPresenterFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
+import { CitiesController, CitiesControllerFactory, CitiesPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { Observable } from 'rxjs'
 
 @Component({
@@ -8,22 +8,22 @@ import { Observable } from 'rxjs'
     styleUrls: ['./cities.component.scss'],
     providers: [
         {
-            provide: CitiesPresenter,
-            useFactory: (presenterFactory: CitiesPresenterFactory) => presenterFactory.build(),
-            deps: [CitiesPresenterFactory]
+            provide: CitiesController,
+            useFactory: (presenterFactory: CitiesControllerFactory) => presenterFactory.build(),
+            deps: [CitiesControllerFactory]
         }
     ]
 })
 export class CitiesComponent implements OnInit {
     vm$: Observable<CitiesPresenterVM> = new Observable<CitiesPresenterVM>(subscriber =>
-        this.citiesPresenter.onVmUpdate(vm => subscriber.next(vm))
+        this.controller.presenter.subscribeVM(vm => subscriber.next(vm))
     )
 
-    constructor(private citiesPresenter: CitiesPresenter) {
+    constructor(private controller: CitiesController) {
     }
 
     ngOnInit(): void {
-        this.citiesPresenter.fetchCities().then()
+        this.controller.fetchCities()
     }
 
 }
