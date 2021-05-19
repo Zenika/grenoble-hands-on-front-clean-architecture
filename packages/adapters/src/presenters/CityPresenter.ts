@@ -2,7 +2,6 @@ import { Presenter } from './Presenter'
 import {
     City,
     DailyWeather,
-    GetCityPresentation,
     HourlyWeather,
     RetrieveDailyWeatherPresentation,
     RetrieveHourlyWeatherPresentation
@@ -18,7 +17,7 @@ export class CityPresenterVM {
 }
 
 
-export class CityPresenter extends Presenter<CityPresenterVM> implements GetCityPresentation, RetrieveDailyWeatherPresentation, RetrieveHourlyWeatherPresentation {
+export class CityPresenter extends Presenter<CityPresenterVM> implements RetrieveDailyWeatherPresentation, RetrieveHourlyWeatherPresentation {
 
     constructor() {
         super(new CityPresenterVM())

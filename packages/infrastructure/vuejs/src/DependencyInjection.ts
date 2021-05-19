@@ -12,7 +12,6 @@ import router from '@/router'
 import {
     AddCityUseCase,
     GetCitiesUseCase,
-    GetCityUseCase,
     RetrieveCityDailyWeatherUseCase,
     RetrieveCityHourlyWeatherUseCase
 } from '@grenoble-hands-on/domain'
@@ -36,12 +35,11 @@ export const dependencies = (app: App) => {
     const cityRepository = new CityRepositoryInMemory()
     const weatherRepository = new WeatherRepository7Timer(httpClient, cityRepository)
 
-    const getCityUseCase = new GetCityUseCase(cityRepository)
     const getCitiesUseCase = new GetCitiesUseCase(cityRepository)
     const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCase(weatherRepository)
     const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCase(weatherRepository)
 
-    const cityControllerFactory = new CityControllerFactory(getCityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase)
+    const cityControllerFactory = new CityControllerFactory(retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase)
     const citiesControllerFactory = new CitiesControllerFactory(getCitiesUseCase)
     const addCityControllerFactory = new AddCityControllerFactory(new AddCityUseCase(cityRepository), navigation)
 

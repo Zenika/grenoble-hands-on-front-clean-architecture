@@ -98,7 +98,6 @@ export default defineComponent({
         vm.value = { ...updatedVm }
       })
       controller.fetchWeather()
-      controller.fetchCity()
     })
 
     return {

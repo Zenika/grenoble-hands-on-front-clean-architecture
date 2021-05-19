@@ -1,6 +1,5 @@
 import {
     GetCityRequest,
-    GetCityUseCase,
     RetrieveCityDailyWeatherUseCase,
     RetrieveCityHourlyWeatherUseCase,
     RetrieveWeatherRequest
@@ -11,17 +10,12 @@ import { Controller } from './Controller'
 export class CityController extends Controller<CityPresenterVM> {
 
     constructor(private cityId: string,
-                private getCityUseCase: GetCityUseCase,
                 private retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase,
                 private retrieveCityHourlyWeatherUseCase: RetrieveCityHourlyWeatherUseCase,
                 private presenter: CityPresenter) {
         super(presenter)
     }
 
-
-    fetchCity() {
-        this.getCityUseCase.execute(new GetCityRequest(this.cityId), this.presenter)
-    }
 
     fetchWeather() {
         if (this.presenter.vm.mode == 'daily') {

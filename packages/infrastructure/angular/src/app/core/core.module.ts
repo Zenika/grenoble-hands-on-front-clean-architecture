@@ -14,7 +14,6 @@ import {
     AddCityUseCase,
     CityRepository,
     GetCitiesUseCase,
-    GetCityUseCase,
     RetrieveCityDailyWeatherUseCase, RetrieveCityHourlyWeatherUseCase,
     WeatherRepository
 } from '@grenoble-hands-on/domain'
@@ -63,12 +62,6 @@ export const IWeatherRepository = new InjectionToken<WeatherRepository>('Weather
             deps: [ICityRepository]
         },
         {
-            provide: GetCityUseCase,
-            useFactory: (cityRepository: CityRepository) =>
-                new GetCityUseCase(cityRepository),
-            deps: [ICityRepository]
-        },
-        {
             provide: AddCityUseCase,
             useFactory: (cityRepository: CityRepository) =>
                 new AddCityUseCase(cityRepository),
@@ -89,13 +82,12 @@ export const IWeatherRepository = new InjectionToken<WeatherRepository>('Weather
         {
             provide: CityControllerFactory,
             useFactory: (
-                getCityUseCase: GetCityUseCase,
                 retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase,
                 retrieveCityHourlyWeatherUseCase: RetrieveCityHourlyWeatherUseCase
             ) => (
-                new CityControllerFactory(getCityUseCase, retrieveCityWeatherUseCase, retrieveCityHourlyWeatherUseCase)
+                new CityControllerFactory(retrieveCityWeatherUseCase, retrieveCityHourlyWeatherUseCase)
             ),
-            deps: [GetCityUseCase, RetrieveCityDailyWeatherUseCase, RetrieveCityHourlyWeatherUseCase]
+            deps: [RetrieveCityDailyWeatherUseCase, RetrieveCityHourlyWeatherUseCase]
         },
         {
             provide: CitiesControllerFactory,

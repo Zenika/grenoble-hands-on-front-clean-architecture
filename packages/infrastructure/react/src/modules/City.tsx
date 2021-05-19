@@ -15,7 +15,6 @@ export class City extends Component<CityProps, CityPresenterVM> {
     }
 
     componentDidMount() {
-        this.controller.fetchCity()
         this.controller.fetchWeather()
 
         this.controller.subscribeVM((state: CityPresenterVM) => {
