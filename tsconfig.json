@@ -22,7 +22,7 @@
         "domain/src"
       ],
       "@grenoble-hands-on/web-adapters": [
-        "web/adapters/src"
+        "adapters/src"
       ]
     }
   }
