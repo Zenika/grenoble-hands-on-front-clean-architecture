@@ -1,6 +1,6 @@
 import { DailyWeather, RetrieveCityDailyWeatherUseCase, RetrieveWeatherRequest, WeatherState, } from '@grenoble-hands-on/domain'
 import { WeatherRepositoryBuilder } from '../builder/WeatherRepositoryBuilder'
-import { RetrieveDailyWeatherPresentationBuilder } from '@grenoble-hands-on/domain'
+import { RetrieveDailyWeatherPresentationBuilder } from '../builder/RetrieveDailyWeatherPresentationBuilder'
 
 describe('Retrieve city weather use case', () => {
 
