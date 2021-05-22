@@ -1,9 +1,12 @@
 <section *ngIf="vm$ | async as vm">
-  <h1 class="title">Offices</h1>
+    <h1 class="title">Offices</h1>
 
-  <div class="panel">
-    <a class="panel-block p-4" [routerLink]="['/city', city.name]" *ngFor="let city of vm.cities">
-      <h2 class="subtitle">{{ city.name }}</h2>
-    </a>
-  </div>
+    <div class="panel">
+        <a class="panel-block p-4 is-justify-content-space-between is-align-content-center" [routerLink]="['/city', city.name]" *ngFor="let city of vm.cities">
+            <h2 class="subtitle m-0">{{ city.name }}</h2>
+            <button class="button" [class.is-success]="vm.favoriteCityId === city.name" (click)="bookmarkCity($event, city.name)">
+                <span class="icon is-small">⭐️</span>
+            </button>
+        </a>
+    </div>
 </section>

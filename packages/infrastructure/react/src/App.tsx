@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { Route, Switch, useHistory } from 'react-router-dom'
 import {
-    AddCityControllerFactory,
+    AddCityControllerFactory, BookmarkCityRepositoryLocalStorage,
     CitiesControllerFactory,
     CityControllerFactory,
     CityRepositoryInMemory,
@@ -10,7 +10,7 @@ import {
     WeatherRepository7Timer
 } from '@grenoble-hands-on/web-adapters'
 import {
-    AddCityUseCase,
+    AddCityUseCase, BookmarkCityUseCase, GetBookmarkCityUseCase,
     GetCitiesUseCase,
     RetrieveCityDailyWeatherUseCase,
     RetrieveCityHourlyWeatherUseCase
@@ -37,13 +37,16 @@ function App() {
 
     const cityRepository = new CityRepositoryInMemory()
     const weatherRepository = new WeatherRepository7Timer(httpClient, cityRepository)
+    const bookmarkCityRepository = new BookmarkCityRepositoryLocalStorage(window.localStorage)
 
     const getCitiesUseCase = new GetCitiesUseCase(cityRepository)
     const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCase(weatherRepository)
     const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCase(weatherRepository)
+    const bookmarkCityUseCase = new BookmarkCityUseCase(bookmarkCityRepository)
+    const getBookmarkCityUseCase = new GetBookmarkCityUseCase(bookmarkCityRepository)
 
     const cityControllerFactory = new CityControllerFactory(retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase)
-    const citiesControllerFactory = new CitiesControllerFactory(getCitiesUseCase)
+    const citiesControllerFactory = new CitiesControllerFactory(getCitiesUseCase, bookmarkCityUseCase, getBookmarkCityUseCase)
     const addCityControllerFactory = new AddCityControllerFactory(new AddCityUseCase(cityRepository), navigation)
 
     return (
