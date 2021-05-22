@@ -4,8 +4,8 @@ export class WeatherRepositoryBuilder {
     private getCityDailyWeather: (city: string) => Promise<DailyWeather[]> = () => Promise.resolve([])
     private getCityHourlyWeather: (city: string) => Promise<HourlyWeather[]> = () => Promise.resolve([])
 
-    withGetCityWeekWeather(getCityWeekWeather: (city: string) => Promise<DailyWeather[]>) {
-        this.getCityDailyWeather = getCityWeekWeather
+    withGetCityDailyWeather(getCityDailyWeather: (city: string) => Promise<DailyWeather[]>) {
+        this.getCityDailyWeather = getCityDailyWeather
         return this
     }
 

@@ -13,7 +13,7 @@ export class BookmarkCityUseCase {
                 if (cityHasBeenBookmarked) {
                     presentation.notifyCityBookmarked(request.city)
                 } else {
-                    presentation.notifyCityRemovedFromBookmark(request.city)
+                    presentation.notifyCityRemovedFromBookmark()
                 }
             })
     }

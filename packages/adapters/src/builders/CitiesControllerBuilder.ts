@@ -1,16 +1,20 @@
-import { Subscriber } from '../presenters/Presenter'
-import { CitiesPresenterVM } from '../presenters/CitiesPresenter'
-import { CitiesController } from '../controllers/CitiesController'
+import { CitiesController, CitiesPresenterVM, Subscriber } from '@grenoble-hands-on/web-adapters'
 
 export class CitiesControllerBuilder {
     private fetchCities: () => void = () => {}
+    private bookmarkCity: (city: string) => void = () => {}
     private onVmUpdate: (subscriber: Subscriber<CitiesPresenterVM>) => void = subscriber => subscriber(this.vm)
 
     constructor(private vm: CitiesPresenterVM = new CitiesPresenterVM()) {
     }
 
-    withFetchCities(fetchCities: () => Promise<void>) {
+    withFetchCities(fetchCities: () => void) {
         this.fetchCities = fetchCities
+        return this
+    }
+
+    withBookmarkCity(bookmarkCity: (city: string) => void) {
+        this.bookmarkCity = bookmarkCity
         return this
     }
 
@@ -18,7 +22,8 @@ export class CitiesControllerBuilder {
         return {
             vm: this.vm,
             subscribeVM: this.onVmUpdate,
-            fetchCities: this.fetchCities
+            fetchCities: this.fetchCities,
+            bookmarkCity: this.bookmarkCity
         } as CitiesController
     }
 }

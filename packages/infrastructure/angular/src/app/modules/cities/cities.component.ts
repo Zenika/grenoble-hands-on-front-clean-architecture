@@ -26,4 +26,10 @@ export class CitiesComponent implements OnInit {
         this.controller.fetchCities()
     }
 
+    bookmarkCity($event: MouseEvent, city: string) {
+        $event.stopImmediatePropagation()
+        $event.preventDefault()
+        this.controller.bookmarkCity(city)
+    }
+
 }
