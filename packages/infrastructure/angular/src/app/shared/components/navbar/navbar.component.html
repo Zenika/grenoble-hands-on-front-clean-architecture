@@ -1,4 +1,4 @@
-<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation" *ngIf="vm$ | async as vm">
     <div class="container">
         <a class="navbar-brand" [routerLink]="'/'">
             <h1 class="title navbar-item">
@@ -13,6 +13,11 @@
                 Add city
             </a>
             <div class="navbar-end">
+                <div *ngIf="vm.bookmarkCityWeather"
+                     class="navbar-item has-text-white">
+                    <app-weather-widget [weather]="vm.bookmarkCityWeather"></app-weather-widget>
+                </div>
+                <div *ngIf="vm.bookmarkCityWeatherMessage" class="navbar-item has-text-white" aria-label="weather not display">{{vm.bookmarkCityWeatherMessage}}</div>
             </div>
         </div>
     </div>
