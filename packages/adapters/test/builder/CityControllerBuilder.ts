@@ -1,9 +1,10 @@
-import { CityPresenterVM } from '../presenters/CityPresenter'
-import { Subscriber } from '../presenters/Presenter'
-import { CityController } from '../controllers/CityController'
+import { Subscriber } from '../../src/presenters/Presenter'
+import { CityPresenterVM } from '../../src/presenters/CityPresenter'
+import { CityController } from '../../src/controllers/CityController'
 
 export class CityControllerBuilder {
-    private fetchWeather: () => void = () => {}
+    private fetchWeather: () => void = () => {
+    }
     private updateMode: (mode: 'hourly' | 'daily') => void = () => null
     private updateTemperatureUnit: (temperatureUnit: 'C' | 'F') => void = () => null
     private onVmUpdate: (subscriber: Subscriber<CityPresenterVM>) => void = subscriber => subscriber(this.vm)

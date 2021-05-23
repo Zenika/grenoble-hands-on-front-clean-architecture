@@ -1,4 +1,6 @@
-import { CitiesController, CitiesPresenterVM, Subscriber } from '@grenoble-hands-on/web-adapters'
+import { Subscriber } from '../../src/presenters/Presenter'
+import { CitiesPresenterVM } from '../../src/presenters/CitiesPresenter'
+import { CitiesController } from '../../src/controllers/CitiesController'
 
 export class CitiesControllerBuilder {
     private fetchCities: () => void = () => {}

@@ -16,7 +16,6 @@ export class CityPresenterVM {
     mode: 'hourly' | 'daily' = 'daily'
 }
 
-
 export class CityPresenter extends Presenter<CityPresenterVM> implements RetrieveDailyWeatherPresentation, RetrieveHourlyWeatherPresentation {
 
     constructor() {
