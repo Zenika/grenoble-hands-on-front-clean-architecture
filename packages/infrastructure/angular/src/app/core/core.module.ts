@@ -5,7 +5,7 @@ import {
     CitiesControllerFactory,
     CityControllerFactory,
     CityRepositoryInMemory,
-    HttpClient,
+    HttpClient, NavbarControllerFactory,
     Navigation,
     NavigationRoute,
     WeatherRepository7Timer
@@ -13,7 +13,7 @@ import {
 import {
     AddCityUseCase, BookmarkCityUseCase, BookmarkRepository,
     CityRepository, GetBookmarkCityUseCase,
-    GetCitiesUseCase,
+    GetCitiesUseCase, RetrieveBookmarkCityWeatherUseCase,
     RetrieveCityDailyWeatherUseCase, RetrieveCityHourlyWeatherUseCase,
     WeatherRepository
 } from '@grenoble-hands-on/domain'
@@ -97,6 +97,12 @@ export const IBookmarkRepository = new InjectionToken<BookmarkRepository>('Bookm
             deps: [IWeatherRepository]
         },
         {
+            provide: RetrieveBookmarkCityWeatherUseCase,
+            useFactory: (bookmarkRepository: BookmarkRepository, weatherRepository: WeatherRepository) =>
+                new RetrieveBookmarkCityWeatherUseCase(bookmarkRepository, weatherRepository),
+            deps: [IBookmarkRepository, IWeatherRepository]
+        },
+        {
             provide: CityControllerFactory,
             useFactory: (
                 retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase,
@@ -119,6 +125,12 @@ export const IBookmarkRepository = new InjectionToken<BookmarkRepository>('Bookm
             useFactory: (addNewCityUseCase: AddCityUseCase, navigation: Navigation) =>
                 new AddCityControllerFactory(addNewCityUseCase, navigation),
             deps: [AddCityUseCase, INavigation]
+        },
+        {
+            provide: NavbarControllerFactory,
+            useFactory: (retrieveBookmarkCityWeatherUseCase: RetrieveBookmarkCityWeatherUseCase) =>
+                new NavbarControllerFactory(retrieveBookmarkCityWeatherUseCase),
+            deps: [RetrieveBookmarkCityWeatherUseCase]
         },
     ]
 })
