@@ -14,9 +14,11 @@ export class NavbarPresenter extends Presenter<NavbarPresenterVM> implements Ret
 
     notifyBookmarkedCityWeather(dailyWeather: DailyWeather): void {
         this.vm.bookmarkCityWeather = dailyWeather;
+        this.notifyVM()
     }
 
     notifyNoBookmarkedCity(): void {
         this.vm.bookmarkCityWeatherMessage = 'No city bookmarked'
+        this.notifyVM()
     }
 }

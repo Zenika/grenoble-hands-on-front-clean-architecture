@@ -5,13 +5,13 @@ import {
     CitiesControllerFactory,
     CityControllerFactory,
     CityRepositoryInMemory,
-    HttpClient,
+    HttpClient, NavbarControllerFactory,
     NavigationRoute,
     WeatherRepository7Timer
 } from '@grenoble-hands-on/web-adapters'
 import {
     AddCityUseCase, BookmarkCityUseCase, GetBookmarkCityUseCase,
-    GetCitiesUseCase,
+    GetCitiesUseCase, RetrieveBookmarkCityWeatherUseCase,
     RetrieveCityDailyWeatherUseCase,
     RetrieveCityHourlyWeatherUseCase
 } from '@grenoble-hands-on/domain'
@@ -44,14 +44,16 @@ function App() {
     const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCase(weatherRepository)
     const bookmarkCityUseCase = new BookmarkCityUseCase(bookmarkCityRepository)
     const getBookmarkCityUseCase = new GetBookmarkCityUseCase(bookmarkCityRepository)
+    const retrieveBookmarkCityWeatherUseCase = new RetrieveBookmarkCityWeatherUseCase(bookmarkCityRepository, weatherRepository)
 
     const cityControllerFactory = new CityControllerFactory(retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase)
     const citiesControllerFactory = new CitiesControllerFactory(getCitiesUseCase, bookmarkCityUseCase, getBookmarkCityUseCase)
     const addCityControllerFactory = new AddCityControllerFactory(new AddCityUseCase(cityRepository), navigation)
+    const navbarControllerFactory = new NavbarControllerFactory(retrieveBookmarkCityWeatherUseCase)
 
     return (
         <Fragment>
-            <Navbar/>
+            <Navbar navbarControllerFactory={navbarControllerFactory}/>
             <section className="section">
                 <div className="container">
                     <Switch>
