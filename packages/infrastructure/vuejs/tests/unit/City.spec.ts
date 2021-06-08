@@ -77,22 +77,6 @@ describe('CityComponent', () => {
         expect(hasFetchDailyWeather).toBe(true)
     })
 
-    test('fetch city on init', async () => {
-        const hasFetchCity = await new Promise(resolve => {
-            // Given
-            const controller = new CityControllerBuilder()
-                .withFetchCity(() => Promise.resolve().then(() => resolve(true)))
-                .build()
-
-            // When
-            new CityComponentBuilder()
-                .withController(controller)
-                .build()
-        })
-        // Then
-        expect(hasFetchCity).toBe(true)
-    })
-
     test('update weather mode on hourly view select', async () => {
         const requestWithMode = await new Promise(resolve => {
             // Given

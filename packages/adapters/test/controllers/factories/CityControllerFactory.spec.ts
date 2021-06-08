@@ -7,7 +7,6 @@ describe('CityPresenterFactory', () => {
     test('create a CityPresenterFactory', () => {
         // Given
         const factory = new CityControllerFactory(
-            new GetCityUseCaseBuilder().build(),
             new RetrieveCityDailyWeatherUseCaseBuilder().build(),
             new RetrieveCityHourlyWeatherUseCaseBuilder().build()
         )

@@ -3,12 +3,15 @@
     <h1 class="title">Offices</h1>
 
     <div class="panel">
-      <router-link class="panel-block p-4"
+      <router-link class="panel-block p-4 is-justify-content-space-between is-align-content-center"
                    v-for="city in vm.cities"
                    :to="'/city/' + city.name"
                    :key="city.name"
                    role="link">
         <h2 class="subtitle">{{ city.name }}</h2>
+        <button class="button" :class="{'is-success': vm.favoriteCityId === city.name}" @click.prevent.stop="bookmarkCity(city.name)">
+          <span class="icon is-small">⭐️</span>
+        </button>
       </router-link>
     </div>
   </section>
@@ -33,7 +36,8 @@ export default defineComponent({
     })
 
     return {
-      vm
+      vm,
+      bookmarkCity: (cityId: string) => controller.bookmarkCity(cityId)
     }
   }
 })

@@ -25,7 +25,6 @@ export class CityComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.controller.fetchCity()
         this.controller.fetchWeather()
     }
 

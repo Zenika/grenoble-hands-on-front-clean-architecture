@@ -72,6 +72,6 @@ class CitiesComponentWrapper {
   }
 
   getCitiesDisplay() {
-    return this.component.getAllByRole('link').map(el => el.textContent)
+    return this.component.getAllByRole('link').map(el => el.textContent?.replace('⭐️', ''))
   }
 }

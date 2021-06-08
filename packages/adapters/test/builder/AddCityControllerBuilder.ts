@@ -1,6 +1,6 @@
-import { Subscriber } from '../presenters/Presenter'
-import { AddCityPresenterVM } from '../presenters/AddCityPresenter'
-import { AddCityController } from '../controllers/AddCityController'
+import { Subscriber } from '../../src/presenters/Presenter'
+import { AddCityPresenterVM } from '../../src/presenters/AddCityPresenter'
+import { AddCityController } from '../../src/controllers/AddCityController'
 
 export class AddCityControllerBuilder {
     private subscribeVM: (subscriber: Subscriber<AddCityPresenterVM>) => void = subscriber => subscriber(this.vm)

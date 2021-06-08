@@ -1,10 +1,10 @@
-import { CityPresenterVM } from '../presenters/CityPresenter'
-import { Subscriber } from '../presenters/Presenter'
-import { CityController } from '../controllers/CityController'
+import { Subscriber } from '../../src/presenters/Presenter'
+import { CityPresenterVM } from '../../src/presenters/CityPresenter'
+import { CityController } from '../../src/controllers/CityController'
 
 export class CityControllerBuilder {
-    private fetchWeather: () => void = () => {}
-    private fetchCity: () => void = () => {}
+    private fetchWeather: () => void = () => {
+    }
     private updateMode: (mode: 'hourly' | 'daily') => void = () => null
     private updateTemperatureUnit: (temperatureUnit: 'C' | 'F') => void = () => null
     private onVmUpdate: (subscriber: Subscriber<CityPresenterVM>) => void = subscriber => subscriber(this.vm)
@@ -14,11 +14,6 @@ export class CityControllerBuilder {
 
     withFetchWeather(fetchWeather: () => Promise<void>) {
         this.fetchWeather = fetchWeather
-        return this
-    }
-
-    withFetchCity(fetchCity: () => Promise<void>) {
-        this.fetchCity = fetchCity
         return this
     }
 
@@ -37,7 +32,6 @@ export class CityControllerBuilder {
             vm: this.vm,
             subscribeVM: this.onVmUpdate,
             fetchWeather: this.fetchWeather,
-            fetchCity: this.fetchCity,
             updateMode: this.updateMode,
             updateTemperatureUnite: this.updateTemperatureUnit,
         } as CityController

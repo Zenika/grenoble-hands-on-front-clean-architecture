@@ -1,20 +1,19 @@
 import { InjectionToken, NgModule } from '@angular/core'
 import { HttpClient as AngularHttpClient } from '@angular/common/http'
 import {
-    AddCityControllerFactory,
+    AddCityControllerFactory, BookmarkCityRepositoryLocalStorage,
     CitiesControllerFactory,
     CityControllerFactory,
     CityRepositoryInMemory,
-    HttpClient,
+    HttpClient, NavbarControllerFactory,
     Navigation,
     NavigationRoute,
     WeatherRepository7Timer
 } from '@grenoble-hands-on/web-adapters'
 import {
-    AddCityUseCase,
-    CityRepository,
-    GetCitiesUseCase,
-    GetCityUseCase,
+    AddCityUseCase, BookmarkCityUseCase, BookmarkRepository,
+    CityRepository, GetBookmarkCityUseCase,
+    GetCitiesUseCase, RetrieveBookmarkCityWeatherUseCase,
     RetrieveCityDailyWeatherUseCase, RetrieveCityHourlyWeatherUseCase,
     WeatherRepository
 } from '@grenoble-hands-on/domain'
@@ -24,6 +23,7 @@ export const IHttpClient = new InjectionToken<HttpClient>('HttpClient')
 export const INavigation = new InjectionToken<Navigation>('Navigation')
 export const ICityRepository = new InjectionToken<CityRepository>('CityRepository')
 export const IWeatherRepository = new InjectionToken<WeatherRepository>('WeatherRepository')
+export const IBookmarkRepository = new InjectionToken<BookmarkRepository>('BookmarkRepository')
 
 @NgModule({
     imports: [],
@@ -52,6 +52,10 @@ export const IWeatherRepository = new InjectionToken<WeatherRepository>('Weather
             useValue: new CityRepositoryInMemory()
         },
         {
+            provide: IBookmarkRepository,
+            useValue: new BookmarkCityRepositoryLocalStorage(localStorage)
+        },
+        {
             provide: IWeatherRepository,
             useFactory: (httpClient: HttpClient, cityRepository: CityRepository) => new WeatherRepository7Timer(httpClient, cityRepository),
             deps: [IHttpClient, ICityRepository]
@@ -63,10 +67,16 @@ export const IWeatherRepository = new InjectionToken<WeatherRepository>('Weather
             deps: [ICityRepository]
         },
         {
-            provide: GetCityUseCase,
-            useFactory: (cityRepository: CityRepository) =>
-                new GetCityUseCase(cityRepository),
-            deps: [ICityRepository]
+            provide: BookmarkCityUseCase,
+            useFactory: (bookmarkCityRepository: BookmarkRepository) =>
+                new BookmarkCityUseCase(bookmarkCityRepository),
+            deps: [IBookmarkRepository]
+        },
+        {
+            provide: GetBookmarkCityUseCase,
+            useFactory: (bookmarkCityRepository: BookmarkRepository) =>
+                new GetBookmarkCityUseCase(bookmarkCityRepository),
+            deps: [IBookmarkRepository]
         },
         {
             provide: AddCityUseCase,
@@ -87,27 +97,40 @@ export const IWeatherRepository = new InjectionToken<WeatherRepository>('Weather
             deps: [IWeatherRepository]
         },
         {
+            provide: RetrieveBookmarkCityWeatherUseCase,
+            useFactory: (bookmarkRepository: BookmarkRepository, weatherRepository: WeatherRepository) =>
+                new RetrieveBookmarkCityWeatherUseCase(bookmarkRepository, weatherRepository),
+            deps: [IBookmarkRepository, IWeatherRepository]
+        },
+        {
             provide: CityControllerFactory,
             useFactory: (
-                getCityUseCase: GetCityUseCase,
                 retrieveCityWeatherUseCase: RetrieveCityDailyWeatherUseCase,
                 retrieveCityHourlyWeatherUseCase: RetrieveCityHourlyWeatherUseCase
             ) => (
-                new CityControllerFactory(getCityUseCase, retrieveCityWeatherUseCase, retrieveCityHourlyWeatherUseCase)
+                new CityControllerFactory(retrieveCityWeatherUseCase, retrieveCityHourlyWeatherUseCase)
             ),
-            deps: [GetCityUseCase, RetrieveCityDailyWeatherUseCase, RetrieveCityHourlyWeatherUseCase]
+            deps: [RetrieveCityDailyWeatherUseCase, RetrieveCityHourlyWeatherUseCase]
         },
         {
             provide: CitiesControllerFactory,
-            useFactory: (getCitiesUseCase: GetCitiesUseCase) =>
-                new CitiesControllerFactory(getCitiesUseCase),
-            deps: [GetCitiesUseCase]
+            useFactory: (getCitiesUseCase: GetCitiesUseCase,
+                         bookmarkCityUseCase: BookmarkCityUseCase,
+                         getBookmarkCityUseCase: GetBookmarkCityUseCase) =>
+                new CitiesControllerFactory(getCitiesUseCase, bookmarkCityUseCase, getBookmarkCityUseCase),
+            deps: [GetCitiesUseCase, BookmarkCityUseCase, GetBookmarkCityUseCase]
         },
         {
             provide: AddCityControllerFactory,
             useFactory: (addNewCityUseCase: AddCityUseCase, navigation: Navigation) =>
                 new AddCityControllerFactory(addNewCityUseCase, navigation),
             deps: [AddCityUseCase, INavigation]
+        },
+        {
+            provide: NavbarControllerFactory,
+            useFactory: (retrieveBookmarkCityWeatherUseCase: RetrieveBookmarkCityWeatherUseCase) =>
+                new NavbarControllerFactory(retrieveBookmarkCityWeatherUseCase),
+            deps: [RetrieveBookmarkCityWeatherUseCase]
         },
     ]
 })

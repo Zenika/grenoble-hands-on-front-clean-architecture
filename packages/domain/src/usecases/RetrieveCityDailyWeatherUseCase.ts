@@ -9,6 +9,7 @@ export class RetrieveCityDailyWeatherUseCase {
     }
 
     async execute(request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) {
+        presenter.displayLoadingWeather()
         const weekWeather: DailyWeather[] = await this.weatherRepository.getCityDailyWeather(request.city).then((weather: DailyWeather[]) => {
             if (request.unite == 'F') {
                 return weather.map(w => {

@@ -9,7 +9,8 @@ import { HttpClientModule } from '@angular/common/http'
 import { FooterComponent } from './shared/components/footer/footer.component'
 import { NavbarComponent } from './shared/components/navbar/navbar.component'
 import { AddCityComponent } from './modules/add-city/add-city.component'
-import { CoreModule } from './core/core.module'
+import { CoreModule } from './core/core.module';
+import { WeatherWidgetComponent } from './shared/components/weather-widget/weather-widget.component'
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { CoreModule } from './core/core.module'
     CityComponent,
     NavbarComponent,
     FooterComponent,
-    AddCityComponent
+    AddCityComponent,
+    WeatherWidgetComponent
   ],
   imports: [
     BrowserModule,

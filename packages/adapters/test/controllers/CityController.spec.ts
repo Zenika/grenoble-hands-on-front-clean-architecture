@@ -1,43 +1,17 @@
 import {
-    GeoPosition,
-    GetCityPresentation,
-    GetCityRequest,
     RetrieveDailyWeatherPresentation,
     RetrieveHourlyWeatherPresentation,
     RetrieveWeatherRequest,
     WeatherState
 } from '@grenoble-hands-on/domain'
 import { CityController, CityPresenter } from '@grenoble-hands-on/web-adapters'
-import { GetCityUseCaseBuilder } from '../builder/GetCityUseCaseBuilder'
 import { RetrieveCityDailyWeatherUseCaseBuilder } from '../builder/RetrieveCityDailyWeatherUseCaseBuilder'
 import { RetrieveCityHourlyWeatherUseCaseBuilder } from '../builder/RetrieveCityHourlyWeatherUseCaseBuilder'
 
 describe('CityController', () => {
 
-    test('on display city weather update city vm', async () => {
-        // Given
-        const cityUseCase = new GetCityUseCaseBuilder()
-            .withExecute((request: GetCityRequest, presenter: GetCityPresentation) => {
-                presenter.displayCity({
-                    name: 'GRENOBLE',
-                    position: new GeoPosition(45, 5)
-                })
-            })
-            .build()
-        const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCaseBuilder().build()
-        const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCaseBuilder().build()
-        const controller = new CityController('GRENOBLE', cityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
-
-        // When
-        await controller.fetchCity()
-
-        // Then
-        expect(controller.vm.city?.name).toBe('GRENOBLE')
-    })
-
     test('on display city daily weather update hourly weather vm', async () => {
         // Given
-        const cityUseCase = new GetCityUseCaseBuilder().build()
         const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCaseBuilder().build()
         const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCaseBuilder()
             .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => {
@@ -46,7 +20,7 @@ describe('CityController', () => {
                 ])
             })
             .build()
-        const controller = new CityController('GRENOBLE', cityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
+        const controller = new CityController('GRENOBLE', retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
         controller.vm.mode = 'daily'
 
         // When
@@ -60,7 +34,6 @@ describe('CityController', () => {
 
     test('display city hourly weather update daily weather vm', async () => {
         // Given
-        const cityUseCase = new GetCityUseCaseBuilder().build()
         const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCaseBuilder()
             .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveHourlyWeatherPresentation) => {
                 presenter.displayHourlyWeather([
@@ -69,7 +42,7 @@ describe('CityController', () => {
             })
             .build()
         const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCaseBuilder().build()
-        const controller = new CityController('GRENOBLE', cityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
+        const controller = new CityController('GRENOBLE', retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
         controller.vm.mode = 'hourly'
 
         // When
@@ -84,12 +57,11 @@ describe('CityController', () => {
     test('fetch daily weather with selected temperature unite F°', async () => {
         // Given
         const fetchRequest = await new Promise<RetrieveWeatherRequest>(resolve => {
-            const cityUseCase = new GetCityUseCaseBuilder().build()
             const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCaseBuilder()
                 .withExecute(request => resolve(request))
                 .build()
             const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCaseBuilder().build()
-            const controller = new CityController('GRENOBLE', cityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
+            const controller = new CityController('GRENOBLE', retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
             controller.vm.temperatureUnite = 'F'
 
             // When
@@ -102,13 +74,12 @@ describe('CityController', () => {
 
     test('display loading indicator when fetch daily weather', async () => {
         // Given
-        const cityUseCase = new GetCityUseCaseBuilder().build()
         const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCaseBuilder()
             .withExecute((request, presenter) => presenter.displayLoadingWeather())
             .build()
         const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCaseBuilder().build()
 
-        const controller = new CityController('GRENOBLE', cityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
+        const controller = new CityController('GRENOBLE', retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
         controller.vm.mode = 'daily'
 
         // When
@@ -120,13 +91,12 @@ describe('CityController', () => {
 
     test('display loading indicator when fetch hourly weather', async () => {
         // Given
-        const cityUseCase = new GetCityUseCaseBuilder().build()
         const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCaseBuilder().build()
         const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCaseBuilder()
             .withExecute((request, presenter) => presenter.displayLoadingWeather())
             .build()
 
-        const controller = new CityController('GRENOBLE', cityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
+        const controller = new CityController('GRENOBLE', retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
         controller.vm.mode = 'hourly'
 
         // When
@@ -138,12 +108,11 @@ describe('CityController', () => {
 
     test('hide loading indicator on finished fetch weather', async () => {
         // Given
-        const cityUseCase = new GetCityUseCaseBuilder().build()
         const retrieveCityDailyWeatherUseCase = new RetrieveCityDailyWeatherUseCaseBuilder()
             .withExecute((request: RetrieveWeatherRequest, presenter: RetrieveDailyWeatherPresentation) => presenter.displayDailyWeather([]))
             .build()
         const retrieveCityHourlyWeatherUseCase = new RetrieveCityHourlyWeatherUseCaseBuilder().build()
-        const controller = new CityController('GRENOBLE', cityUseCase, retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
+        const controller = new CityController('GRENOBLE', retrieveCityDailyWeatherUseCase, retrieveCityHourlyWeatherUseCase, new CityPresenter())
         controller.vm.loading = true
 
         // When
