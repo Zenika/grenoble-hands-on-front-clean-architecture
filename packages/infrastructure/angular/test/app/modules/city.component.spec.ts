@@ -198,7 +198,7 @@ class CityComponentWrapper {
     }
 
     async getDailyWeather() {
-        const weather = this.component.queryAllByRole('row')
+        const weather = this.component.queryAllByRole('row', {hidden: true})
         const weatherCol = Array.from(weather[1].querySelectorAll('td'))
         const date = weatherCol[0].textContent
         const temperatureMax = weatherCol[2].textContent
@@ -207,7 +207,7 @@ class CityComponentWrapper {
     }
 
     async getHourlyWeather() {
-        const weather = this.component.queryAllByRole('row')
+        const weather = this.component.queryAllByRole('row', {hidden: true})
         const weatherCol = Array.from(weather[1].querySelectorAll('td'))
         const hour = weatherCol[0].textContent
         const temperature = weatherCol[2].textContent
@@ -215,18 +215,18 @@ class CityComponentWrapper {
     }
 
     selectHourlyMode() {
-        this.component.getByRole('radio', { name: /detailed/i }).click()
+        this.component.getByText(/detailed/i).click()
     }
 
     selectDailyMode() {
-        this.component.getByRole('radio', { name: /simple/i }).click()
+        this.component.getByText(/simple/i).click()
     }
 
     selectCelsius() {
-        this.component.getByRole('radio', { name: /C°/ }).click()
+        this.component.getByText( /C°/).click()
     }
 
     selectFahrenheit() {
-        this.component.getByRole('radio', { name: /F°/ }).click()
+        this.component.getByText( /F°/).click()
     }
 }
