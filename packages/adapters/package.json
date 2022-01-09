@@ -1,6 +1,6 @@
 {
   "name": "@grenoble-hands-on/web-adapters",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Martin Choraine <martin.choraine@gmail.com>",
   "homepage": "https://github.com/Zenika/grenoble-hands-on-front-clean-architecture",
   "license": "ISC",
@@ -15,7 +15,7 @@
     "prepublish": "tsc"
   },
   "dependencies": {
-    "@grenoble-hands-on/domain": "0.0.2"
+    "@grenoble-hands-on/domain": "0.0.3"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",

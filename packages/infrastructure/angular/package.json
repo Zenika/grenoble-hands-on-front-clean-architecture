@@ -1,6 +1,6 @@
 {
   "name": "@grenoble-hands-on/angular",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -19,8 +19,8 @@
     "@angular/platform-browser": "~13.1.1",
     "@angular/platform-browser-dynamic": "~13.1.1",
     "@angular/router": "~13.1.1",
-    "@grenoble-hands-on/web-adapters": "0.0.2",
-    "@grenoble-hands-on/domain": "0.0.2",
+    "@grenoble-hands-on/web-adapters": "0.0.3",
+    "@grenoble-hands-on/domain": "0.0.3",
     "bulma": "^0.9.1",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",

@@ -1,6 +1,6 @@
 {
   "name": "@grenoble-hands-on/react",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^11.2.5",
@@ -17,8 +17,8 @@
     "react-scripts": "5.0.0",
     "typescript": "^4.5.4",
     "web-vitals": "^1.1.0",
-    "@grenoble-hands-on/web-adapters": "0.0.2",
-    "@grenoble-hands-on/domain": "0.0.2"
+    "@grenoble-hands-on/web-adapters": "0.0.3",
+    "@grenoble-hands-on/domain": "0.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
