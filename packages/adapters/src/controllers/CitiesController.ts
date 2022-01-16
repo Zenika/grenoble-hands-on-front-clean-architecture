@@ -17,7 +17,6 @@ export class CitiesController extends Controller<CitiesPresenterVM> {
     }
 
     bookmarkCity(cityId: string) {
-        console.log("bookmark :"+cityId)
         this.bookmarkCityUseCase.execute(new BookmarkCityRequest(cityId), this.presenter)
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { CityController, CityControllerFactory, CityPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { ActivatedRoute } from '@angular/router'
 import { Observable } from 'rxjs'
@@ -14,7 +14,8 @@ import { Observable } from 'rxjs'
                          route: ActivatedRoute) => presenterFactory.build(route.snapshot.params.cityId),
             deps: [CityControllerFactory, ActivatedRoute]
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CityComponent implements OnInit {
     vm$: Observable<CityPresenterVM> = new Observable<CityPresenterVM>(subscriber =>

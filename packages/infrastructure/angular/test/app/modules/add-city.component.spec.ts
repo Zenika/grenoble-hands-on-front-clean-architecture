@@ -196,7 +196,7 @@ class AddCityComponentWrapper {
     }
 
     isFormDisabled() {
-        return this.component.getByRole('button', { name: /create/i }).hasAttribute('disabled')
+        return this.component.getByRole('button', {hidden: true}).hasAttribute('disabled')
     }
 
     updateCityName(value: string) {
@@ -218,6 +218,6 @@ class AddCityComponentWrapper {
     }
 
     submitForm() {
-        return fireEvent.submit(this.component.getByRole('form'))
+        return fireEvent.submit(this.component.getByRole('form', { hidden: true }))
     }
 }

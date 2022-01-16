@@ -14,8 +14,8 @@ export class RetrieveCityDailyWeatherUseCase {
             if (request.unite == 'F') {
                 return weather.map(w => {
                     w.unite = 'F'
-                    w.temperatureMin = w.temperatureMin * (9 / 5) + 32
-                    w.temperatureMax = w.temperatureMax * (9 / 5) + 32
+                    w.temperatureMin = this.convertToFahrenheit(w.temperatureMin)
+                    w.temperatureMax = this.convertToFahrenheit(w.temperatureMax)
                     return w
                 })
             } else {
@@ -23,5 +23,9 @@ export class RetrieveCityDailyWeatherUseCase {
             }
         })
         presenter.displayDailyWeather(weekWeather)
+    }
+
+    private convertToFahrenheit(temperature: number) {
+        return temperature * (9 / 5) + 32
     }
 }

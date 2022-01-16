@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { AddCityController, AddCityControllerFactory, AddCityPresenterVM } from '@grenoble-hands-on/web-adapters'
 import { Observable } from 'rxjs'
 
@@ -12,7 +12,8 @@ import { Observable } from 'rxjs'
             useFactory: (presenterFactory: AddCityControllerFactory) => presenterFactory.build(),
             deps: [AddCityControllerFactory]
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddCityComponent {
     vm$: Observable<AddCityPresenterVM> = new Observable<AddCityPresenterVM>(subscriber =>
