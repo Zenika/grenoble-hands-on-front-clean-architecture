@@ -2,10 +2,7 @@ import { WeatherMapper } from './mapper/WeatherMapper'
 import { DailyWeather7Timer } from './dto/DailyWeather7Timer'
 import { CityRepository, DailyWeather, HourlyWeather, WeatherRepository } from '@grenoble-hands-on/domain'
 import { HourlyWeather7Timer } from './dto/HourlyWeather7Timer'
-
-export interface HttpClient {
-    get<T>(url: string): Promise<T>
-}
+import { HttpClient } from './HttpClient'
 
 export class WeatherRepository7Timer implements WeatherRepository {
 
