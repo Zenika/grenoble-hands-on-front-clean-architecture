@@ -76,8 +76,8 @@ npm run react
 
 ## Contributing
 
-<a href="https://github.com/chocho01">
-  <img src="https://github.com/chocho01.png?size=50">
+<a href="https://github.com/mchoraine">
+  <img src="https://github.com/mchoraine.png?size=50">
 </a>
 
 
